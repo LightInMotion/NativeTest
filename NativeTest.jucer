@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="aB3KXd" name="NativeTest" projectType="guiapp" version="1.0.0"
+              bundleIdentifier="com.yourcompany.NativeTest" jucerVersion="3.0.0">
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX" objCExtraSuffix="c7R03f" juceFolder="../juce/modules"
+               extraLinkerFlags="-lusb-1.0-darwin">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="NativeTest"
+                       osxSDK="default" osxCompatibility="10.7 SDK" osxArchitecture="64BitIntel"
+                       libraryPath="../../Source/Native/"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="2" targetName="NativeTest"
+                       osxSDK="default" osxCompatibility="10.7 SDK" osxArchitecture="64BitIntel"
+                       libraryPath="../../Source/Native/"/>
+      </CONFIGURATIONS>
+    </XCODE_MAC>
+    <VS2010 targetFolder="Builds/VisualStudio2010" libraryType="1" juceFolder="../juce/modules">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="NativeTest"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="2" targetName="NativeTest"/>
+      </CONFIGURATIONS>
+    </VS2010>
+    <LINUX_MAKE targetFolder="Builds/Linux" juceFolder="../juce/modules">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="NativeTest"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
+                       targetName="NativeTest"/>
+      </CONFIGURATIONS>
+    </LINUX_MAKE>
+  </EXPORTFORMATS>
+  <MAINGROUP id="U3dy7s" name="NativeTest">
+    <GROUP id="{AC26B227-F2C9-67AD-58E2-EA77B4A29FA4}" name="BlueLite">
+      <GROUP id="{B8C7406E-E38D-80EB-4916-495532CA3288}" name="Native">
+        <FILE id="O85xyk" name="UsbDevice_Win.cpp" compile="0" resource="0"
+              file="Source/Native/UsbDevice_Win.cpp"/>
+        <FILE id="IuO3AT" name="libusb.h" compile="0" resource="0" file="Source/Native/libusb.h"/>
+        <FILE id="gd8zRP" name="UsbDevice_Unix.cpp" compile="0" resource="0"
+              file="Source/Native/UsbDevice_Unix.cpp"/>
+      </GROUP>
+      <FILE id="sK6AhB" name="UsbDevice.cpp" compile="1" resource="0" file="Source/UsbDevice.cpp"/>
+      <FILE id="MtOeTN" name="UsbDevice.h" compile="0" resource="0" file="Source/UsbDevice.h"/>
+    </GROUP>
+    <GROUP id="{DE0EFEC2-E357-A5DF-7171-6764ED593CB5}" name="Source">
+      <FILE id="Jr5qhK" name="MainWindow.cpp" compile="1" resource="0" file="Source/MainWindow.cpp"/>
+      <FILE id="Du8UmD" name="MainWindow.h" compile="0" resource="0" file="Source/MainWindow.h"/>
+      <FILE id="L9pa6I" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_gui_audio" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="1"/>
+  </MODULES>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>
