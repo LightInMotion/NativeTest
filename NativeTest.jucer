@@ -22,7 +22,7 @@
                        isDebug="0" optimisation="2" targetName="NativeTest"/>
       </CONFIGURATIONS>
     </VS2010>
-    <LINUX_MAKE targetFolder="Builds/Linux" juceFolder="../juce/modules">
+    <LINUX_MAKE targetFolder="Builds/Linux" juceFolder="../juce/modules" extraLinkerFlags="-lusb-1.0">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
                        targetName="NativeTest"/>
