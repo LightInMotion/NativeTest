@@ -1,0 +1,19 @@
+Linux requires that write access be given to the USB devices
+in question. This is done with something call udev.
+
+There is a config file checked in. To install it:
+
+	$ sudo cp 10-bluelite.rules /etc/udev/rules.d/
+	$ sudo udevadm control --reload-rules
+
+On older versions of udevadm, the option is "--reload_rules"
+(note the underscore).
+
+If the machine doesn't have udevadm, you'll need to restart
+for the rules to take effect.
+
+Last, the permission for access is granted to the "adm" group.
+
+If your user account doesn't belong to the adm group:
+
+	$ sudo usermod -a -G adm YOUR-USER-NAME
