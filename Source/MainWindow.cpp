@@ -7,43 +7,7 @@
 #include "MainWindow.h"
 
 #include "UsbDevice.h"
-
-#define MAX_INTEL_HEX_RECORD_LENGTH 16
-
-typedef struct _INTEL_HEX_RECORD
-{
-    uint8  Length;
-    uint16  Address;
-    uint8  Type;
-    uint8  Data[MAX_INTEL_HEX_RECORD_LENGTH];
-} INTEL_HEX_RECORD, *PINTEL_HEX_RECORD;
-
-INTEL_HEX_RECORD x1idle[] = {
-    16,
-    0x0,
-    0,
-    {0x02,0x00,0x03,0x75,0x81,0x07,0x90,0x7F,0xAB,0x74,0x18,0xF0,0x90,0x78,0x49,0x74},
-    16,
-    0x10,
-    0,
-    {0x01,0xF0,0xD2,0x0F,0xD2,0x0A,0xC2,0x0B,0xD2,0x08,0x85,0x21,0xB1,0x75,0xB6,0x8D},
-    16,
-    0x20,
-    0,
-    {0x75,0x20,0x00,0x85,0x20,0xB0,0x75,0xB5,0x03,0x90,0x7F,0xAB,0xE0,0x30,0xE3,0x03},
-    16,
-    0x30,
-    0,
-    {0x02,0x00,0x41,0x78,0x50,0xA4,0xA4,0xA4,0xA4,0xD8,0xFA,0xC2,0x0F,0x85,0x21,0xB1},
-    8,
-    0x40,
-    0,
-    {0xA4,0xD2,0x0F,0x85,0x21,0xB1,0x80,0xE1},
-    0,
-    0x0,
-    1,
-    {0}
-};
+#include "IntelHexReader.h"
 
 
 //==============================================================================
@@ -69,15 +33,16 @@ MainAppWindow::MainAppWindow()
             if (! usbDevice.controlTransfer((2 << 5), 0xa0, 0xe600, 0, &b, 1, 500).wasOk())
                 Logger::outputDebugString ("Could not set reset");
             
-            int idx = 0;
-            while (x1idle[idx].Type == 0)
+            IntelHexReader hexReader ("minifirm_hex");
+            MemoryBlock block;
+            uint16 address;
+            while (hexReader.readLineAsBinary (block, address))
             {
-                if (! usbDevice.controlTransfer((2 << 5), 0xa0, x1idle[idx].Address,
-                        0, x1idle[idx].Data, x1idle[idx].Length, 500).wasOk())
+                if (! usbDevice.controlTransfer ((2 << 5), 0xa0, address, 0,
+                                                 (uint8*)block.getData(), block.getSize(), 500))
                     Logger::outputDebugString ("Code transfer error");
-                idx++;
             }
-            
+                        
             b = 0;
             if (! usbDevice.controlTransfer((2 << 5), 0xa0, 0xe600, 0, &b, 1, 500).wasOk())
                 Logger::outputDebugString ("Could not release reset");

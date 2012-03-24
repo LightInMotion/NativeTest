@@ -44,7 +44,7 @@ public:
     Result resetDevice();
     
     //==============================================================================
-    Result controlTransfer (uint8 requestType, uint8 request, uint16 value, uint16 index, uint8 *data, uint16 length, uint32 timeout);
+    Result controlTransfer (uint8 requestType, uint8 request, uint16 value, uint16 index, uint8* data, uint16 length, uint32 timeout);
     
 private:
     //==============================================================================

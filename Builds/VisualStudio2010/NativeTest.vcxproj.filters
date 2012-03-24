@@ -202,6 +202,9 @@
     <ClCompile Include="..\..\Firmware\X1IDLE.HEX">
       <Filter>NativeTest\Firmware Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\IntelHexReader.cpp">
+      <Filter>NativeTest\BlueLite</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\BlueLiteX1Mini.cpp">
       <Filter>NativeTest\BlueLite</Filter>
     </ClCompile>
@@ -1020,6 +1023,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\IntelHexReader.h">
+      <Filter>NativeTest\BlueLite</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\BlueLiteX1Mini.h">
       <Filter>NativeTest\BlueLite</Filter>
     </ClInclude>
