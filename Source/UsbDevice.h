@@ -1,11 +1,7 @@
 /*
-  ==============================================================================
-
     UsbDevice.h
-    Created: 23 Mar 2012 8:47:43am
-    Author:  Joe Fitzpatrick
 
-  ==============================================================================
+    (Semi) Generic USB Device Access 
 */
 
 #ifndef __USBDEVICE_H_424472D6__
@@ -23,18 +19,30 @@ public:
     virtual ~UsbOSHandle() {}
 };
 
+
+//==============================================================================
 //==============================================================================
 // USB Device
 class UsbDevice
 {
 public:
     //==============================================================================
-    UsbDevice (uint16 vendorID, uint16 productID, int interface = 0);
+    UsbDevice (uint16 vendorID_, uint16 productID_, int interface_)
+        : vendorID (vendorID_), productID (productID_),
+          interface (interface_), osHandle (nullptr) {}
+
     ~UsbDevice() {}
     
     //==============================================================================
     int getCount();
-
+    
+    Result openDevice (int index);
+    void closeDevice() { osHandle = nullptr; }
+    
+    //==============================================================================
+    Result setInterfaceAlternateSetting (int alternateSetting);
+    Result resetDevice();
+    
 private:
     //==============================================================================
     uint16 vendorID;

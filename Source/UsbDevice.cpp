@@ -1,7 +1,7 @@
 /*
     UsbDevice.cpp
 
-    (Semi) Generic USB Device
+    (Semi) Generic USB Device Access
 */
 
 #include "UsbDevice.h"
@@ -12,12 +12,3 @@
   #include "Native/UsbDevice_Win.cpp"
 #endif
 
-//==============================================================================
-UsbDevice::UsbDevice (uint16 vendorID_, uint16 productID_, int interface_)
-    : vendorID (vendorID_),
-      productID (productID_),
-      interface (interface_),
-      osHandle (nullptr)
-{
-    
-}

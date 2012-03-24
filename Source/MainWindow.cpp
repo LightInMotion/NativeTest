@@ -22,7 +22,15 @@ MainAppWindow::MainAppWindow()
     setVisible (true);
     
     UsbDevice usbDevice (0x4a9, 0x210c, 0);
-    usbDevice.getCount();
+    if (usbDevice.getCount() > 0)
+    {
+        if (usbDevice.openDevice (0).wasOk())
+        {
+            usbDevice.setInterfaceAlternateSetting (1);
+            usbDevice.resetDevice();
+            usbDevice.closeDevice();
+        }
+    }
 }
 
 MainAppWindow::~MainAppWindow()
