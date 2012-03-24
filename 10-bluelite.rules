@@ -1,0 +1,6 @@
+SUBSYSTEM!="usb_device", ACTION!="add", GOTO="bluelite_rules_end"
+
+# Mini gen2
+ATTRS{idVendor}=="04a9", ATTRS{idProduct}=="210c", GROUP="adm"
+
+LABEL="bluelite_rules_end"
