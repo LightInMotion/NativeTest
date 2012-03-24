@@ -32,7 +32,18 @@
     </LINUX_MAKE>
   </EXPORTFORMATS>
   <MAINGROUP id="U3dy7s" name="NativeTest">
+    <GROUP id="{D5BDE6B8-839C-AD51-641E-0EB31E237593}" name="Firmware Files">
+      <FILE id="XysZCQ" name="minifirm.hex" compile="0" resource="1" file="Firmware/minifirm.hex"/>
+      <FILE id="IY16Gk" name="X1FIRM.HEX" compile="0" resource="1" file="Firmware/X1FIRM.HEX"/>
+      <FILE id="e5IJl8" name="X1IDLE.HEX" compile="0" resource="1" file="Firmware/X1IDLE.HEX"/>
+    </GROUP>
     <GROUP id="{AC26B227-F2C9-67AD-58E2-EA77B4A29FA4}" name="BlueLite">
+      <FILE id="M6tNjQ" name="BlueLiteX1Mini.cpp" compile="1" resource="0"
+            file="Source/BlueLiteX1Mini.cpp"/>
+      <FILE id="zc22lJ" name="BlueLiteX1Mini.h" compile="0" resource="0"
+            file="Source/BlueLiteX1Mini.h"/>
+      <FILE id="sK6AhB" name="UsbDevice.cpp" compile="1" resource="0" file="Source/UsbDevice.cpp"/>
+      <FILE id="MtOeTN" name="UsbDevice.h" compile="0" resource="0" file="Source/UsbDevice.h"/>
       <GROUP id="{B8C7406E-E38D-80EB-4916-495532CA3288}" name="Native">
         <FILE id="O85xyk" name="UsbDevice_Win.cpp" compile="0" resource="0"
               file="Source/Native/UsbDevice_Win.cpp"/>
@@ -40,8 +51,6 @@
         <FILE id="gd8zRP" name="UsbDevice_Unix.cpp" compile="0" resource="0"
               file="Source/Native/UsbDevice_Unix.cpp"/>
       </GROUP>
-      <FILE id="sK6AhB" name="UsbDevice.cpp" compile="1" resource="0" file="Source/UsbDevice.cpp"/>
-      <FILE id="MtOeTN" name="UsbDevice.h" compile="0" resource="0" file="Source/UsbDevice.h"/>
     </GROUP>
     <GROUP id="{DE0EFEC2-E357-A5DF-7171-6764ED593CB5}" name="Source">
       <FILE id="Jr5qhK" name="MainWindow.cpp" compile="1" resource="0" file="Source/MainWindow.cpp"/>

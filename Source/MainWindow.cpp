@@ -1,11 +1,7 @@
 /*
-  ==============================================================================
+    MainWindow.cpp
 
-    This file was auto-generated!
-
-    It contains the basic outline for a simple desktop window.
-
-  ==============================================================================
+    The main window (duh) and it's content component
 */
 
 #include "MainWindow.h"

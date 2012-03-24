@@ -1,11 +1,7 @@
 /*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic outline for a simple desktop window.
-
-  ==============================================================================
+    MainWindow.cpp
+ 
+    The main window (duh)
 */
 
 #ifndef __MAINWINDOW_H_FC7EECA1__
