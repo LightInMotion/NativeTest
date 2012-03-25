@@ -195,6 +195,9 @@ Result UsbDevice::openDevice (int index)
     // Close open session (if any)
     osHandle = nullptr;
 
+    // Save the index
+    deviceIndex = index;
+    
     // Get a new context
     LibUsbContext::Ptr c = new LibUsbContext();
     if (c->get() == nullptr)
@@ -221,10 +224,10 @@ Result UsbDevice::openDevice (int index)
             {
                 LibUsbDeviceHandle::Ptr devH = new LibUsbDeviceHandle (c, dev);
                 if (devH->get() == nullptr)
-                    return Result::fail ("Could not open " + deviceName + ".");
+                    return Result::fail ("Could not open " + deviceName + String(index) + ".");
                 
                 if (libusb_claim_interface (*devH, interface) < 0)
-                    return Result::fail (deviceName + " is already inuse.");
+                    return Result::fail (deviceName + String(index) + " is already inuse.");
                 
                 osHandle = new UnixOSHandle (interface, c, devH);
                 return Result::ok();
@@ -234,7 +237,7 @@ Result UsbDevice::openDevice (int index)
         }
 	}
     
-    return Result::fail ("Could not find " + deviceName + ".");
+    return Result::fail ("Could not find " + deviceName + String(index) + ".");
 }
 
 //==============================================================================
@@ -247,8 +250,8 @@ Result UsbDevice::setInterfaceAlternateSetting (int alternateSetting)
     if (libusb_set_interface_alt_setting (*device, 
                                           interface, 
                                           alternateSetting) < 0)
-        return Result::fail ("Could not set alternate interface on " + deviceName + ".");
-    
+        return Result::fail ("Could not set alternate interface on " + 
+                             deviceName + String(deviceIndex) + ".");
     
     return Result::ok();
 }
@@ -261,7 +264,7 @@ Result UsbDevice::resetDevice()
         return Result::fail (deviceName + " is not open.");
 
     if (libusb_reset_device (*device) < 0)
-        return Result::fail ("Could not reset " + deviceName + ".");
+        return Result::fail ("Could not reset " + deviceName + String(deviceIndex) + ".");
     
     return Result::ok();
 }
@@ -279,10 +282,24 @@ Result UsbDevice::controlTransfer (RequestType requestType,
 
     if (libusb_control_transfer (*device, requestType, request, 
                                  value, index, data, length, timeout) < 0)
-        return Result::fail ("Transfer error with " + deviceName + ".");
+        return Result::fail ("Transfer error with " + deviceName + String(deviceIndex) + ".");
 
     return Result::ok();
 }
 
+//==============================================================================
+Result UsbDevice::bulkTransfer (EndPoint endPoint, 
+                                uint8* data, 
+                                int length, 
+                                int& transferred, 
+                                uint32 timeout)
+{
+    const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
+    if (device == nullptr)
+        return Result::fail (deviceName + " is not open.");
 
-
+    if (libusb_bulk_transfer (*device, endPoint, data, length, &transferred, 500) < 0)
+        return Result::fail ("Transfer error with " + deviceName + String(deviceIndex) + ".");
+        
+    return Result::ok();
+}

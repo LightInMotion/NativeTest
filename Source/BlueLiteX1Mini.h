@@ -30,6 +30,12 @@ public:
     
     Result open (int index);
     void close();
+
+private:
+    //==============================================================================
+    Result loadFirmware (const String& firmware);
+    
+    Result sendConfig();
     
 private:
     //==============================================================================
