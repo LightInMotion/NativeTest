@@ -131,7 +131,7 @@ public:
     
     ~UnixOSHandle() 
     {
-        // If there are handles when we are deleted, clean up 
+        // If there are handles when we are deleted, release the interface
         if (device != nullptr)
         {
             if (interface >= 0)
@@ -140,7 +140,7 @@ public:
     }
     
     //==============================================================================
-    static LibUsbDeviceHandle::Ptr getDevice (const ScopedPointer<UsbOSHandle>& handle)
+    static const LibUsbDeviceHandle::Ptr getDevice (const ScopedPointer<UsbOSHandle>& handle)
     {
         if (handle == nullptr)
             return nullptr;
@@ -192,13 +192,18 @@ int UsbDevice::getCount()
 //==============================================================================
 Result UsbDevice::openDevice (int index)
 {
+    // Close open session (if any)
+    osHandle = nullptr;
+
+    // Get a new context
     LibUsbContext::Ptr c = new LibUsbContext();
     if (c->get() == nullptr)
         return Result::fail ("Could not initialize USB services.");
 
+    // Search the device list for a matching device
     LibUsbDeviceList::Ptr devs = new LibUsbDeviceList (c);
     if (devs->get() == nullptr)
-        return Result::fail ("Could not obtain device information.");
+        return Result::fail ("Could not obtain USB device information.");
     
     int count = 0;
     int idx = 0;
@@ -216,10 +221,10 @@ Result UsbDevice::openDevice (int index)
             {
                 LibUsbDeviceHandle::Ptr devH = new LibUsbDeviceHandle (c, dev);
                 if (devH->get() == nullptr)
-                    return Result::fail ("Could not open device.");
+                    return Result::fail ("Could not open " + deviceName + ".");
                 
                 if (libusb_claim_interface (*devH, interface) < 0)
-                    return Result::fail ("Device is already inuse.");
+                    return Result::fail (deviceName + " is already inuse.");
                 
                 osHandle = new UnixOSHandle (interface, c, devH);
                 return Result::ok();
@@ -229,20 +234,20 @@ Result UsbDevice::openDevice (int index)
         }
 	}
     
-    return Result::fail ("Could not open device.");
+    return Result::fail ("Could not find " + deviceName + ".");
 }
 
 //==============================================================================
 Result UsbDevice::setInterfaceAlternateSetting (int alternateSetting)
 {
-    LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
+    const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
-        return Result::fail ("Device is not open.");
+        return Result::fail (deviceName + " is not open.");
     
     if (libusb_set_interface_alt_setting (*device, 
                                           interface, 
                                           alternateSetting) < 0)
-        return Result::fail ("Could not set alternate.");
+        return Result::fail ("Could not set alternate interface on " + deviceName + ".");
     
     
     return Result::ok();
@@ -251,31 +256,31 @@ Result UsbDevice::setInterfaceAlternateSetting (int alternateSetting)
 //==============================================================================
 Result UsbDevice::resetDevice()
 {
-    LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
+    const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
-        return Result::fail ("Device is not open.");
+        return Result::fail (deviceName + " is not open.");
 
     if (libusb_reset_device (*device) < 0)
-        return Result::fail ("Could not reset device.");
+        return Result::fail ("Could not reset " + deviceName + ".");
     
     return Result::ok();
 }
 
 //==============================================================================
-Result UsbDevice::controlTransfer (uint8 requestType, 
+Result UsbDevice::controlTransfer (RequestType requestType, 
                                    uint8 request, 
                                    uint16 value, uint16 index, 
                                    uint8* data, uint16 length, 
                                    uint32 timeout)
 {
-    LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
+    const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
-        return Result::fail ("Device is not open.");
+        return Result::fail (deviceName + " is not open.");
 
     if (libusb_control_transfer (*device, requestType, request, 
                                  value, index, data, length, timeout) < 0)
-        return Result::fail ("Transfer error.");
-    
+        return Result::fail ("Transfer error with " + deviceName + ".");
+
     return Result::ok();
 }
 

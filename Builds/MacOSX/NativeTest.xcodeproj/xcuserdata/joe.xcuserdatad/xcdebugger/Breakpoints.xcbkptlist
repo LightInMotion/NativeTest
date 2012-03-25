@@ -8,24 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../../Source/MainWindow.cpp"
-         timestampString = "354323741.603974"
+         timestampString = "354343255.973074"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "36"
-         endingLineNumber = "36"
-         landmarkName = "MainAppWindow::MainAppWindow()"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../../Source/MainWindow.cpp"
-         timestampString = "354323795.853453"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "50"
-         endingLineNumber = "50"
+         startingLineNumber = "22"
+         endingLineNumber = "22"
          landmarkName = "MainAppWindow::MainAppWindow()"
          landmarkType = "5">
       </FileBreakpoint>

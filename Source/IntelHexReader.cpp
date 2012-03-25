@@ -24,6 +24,27 @@ IntelHexReader::IntelHexReader (const char* data, int size)
 }
 
 //==============================================================================
+int IntelHexReader::getTotalLength()
+{
+    if (dataStream == nullptr)
+        return 0;
+
+    return static_cast<int>(dataStream->getTotalLength());
+}
+
+//==============================================================================
+int IntelHexReader::getUnparsedLength()
+{
+    if (dataStream == nullptr)
+        return 0;
+    
+    if (dataStream->isExhausted())
+        return 0;
+    
+    return static_cast<int>(dataStream->getTotalLength() - dataStream->getPosition());
+}
+
+//==============================================================================
 bool IntelHexReader::readLineAsBinary (MemoryBlock& data, uint16& address)
 {
     if (dataStream == nullptr)

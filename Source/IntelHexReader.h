@@ -19,6 +19,10 @@ public:
     IntelHexReader (const char* data, int size);
     
     ~IntelHexReader() {}
+
+    //==============================================================================
+    int getTotalLength();
+    int getUnparsedLength();
     
     //==============================================================================
     bool readLineAsBinary (MemoryBlock& data, uint16& address);
