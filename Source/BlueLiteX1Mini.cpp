@@ -99,18 +99,18 @@ Result BlueLiteX1Mini::open (int index)
     // In range
     if (index < 0 || index > 15)
         return Result::fail ("Only devices in the range of 0 to 15 can be opened");
-        
+    
     // Try to open the physical device
     Result r = usbDevice.openDevice (index);
     if (r.wasOk())
-    {    
+    {   
         // Put the chip into an alternate interface
         r = usbDevice.setInterfaceAlternateSetting (1);
         if (r.wasOk())
         {
             // Load the firmware
-            r = loadFirmware ("minifirm_hex");
-            if (r.wasOk())
+//            r = loadFirmware ("minifirm_hex");
+//            if (r.wasOk())
             {
                 // Send the DMX configuration
                 r = sendConfig();
@@ -125,6 +125,16 @@ Result BlueLiteX1Mini::open (int index)
                     time.control    = BlueLiteHelpers::BlinkControl;
                     
                     int transferred;
+                    r = usbDevice.bulkTransfer (UsbDevice::EndOut2, 
+                                                (uint8*)&time, 
+                                                sizeof(time), transferred);
+                    // Initialize Time
+                    zerostruct<BlueLiteHelpers::TimePacket> (time);
+                    time.type       = BlueLiteHelpers::TimeType;
+                    time.stype      = BlueLiteHelpers::Smpte30fps;
+                    time.command    = BlueLiteHelpers::WriteCmd;
+                    time.control    = BlueLiteHelpers::FreezeControl;
+                    
                     r = usbDevice.bulkTransfer (UsbDevice::EndOut2, 
                                                 (uint8*)&time, 
                                                 sizeof(time), transferred);
@@ -145,7 +155,7 @@ void BlueLiteX1Mini::close()
 {
     if (usbDevice.isOpen())
     {
-        loadFirmware ("X1IDLE_HEX");
+//        loadFirmware ("X1IDLE_HEX");
         usbDevice.closeDevice();
     }
 }

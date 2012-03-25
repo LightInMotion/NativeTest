@@ -96,6 +96,8 @@ public:
         EndIn15     = 0x8f,        
     };
     
+    Result clearHalt (EndPoint endPoint);
+    
     Result bulkTransfer (EndPoint endPoint, uint8* data, int length,
                          int& transferred, uint32 timeout = 500);
     

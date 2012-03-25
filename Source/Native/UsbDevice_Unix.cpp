@@ -18,7 +18,7 @@ public:
         if (libusb_init (&context) < 0)
             context = nullptr;
         
-        libusb_set_debug (context, 3);
+//        libusb_set_debug (context, 3);
     }
     
     ~LibUsbContext() 
@@ -237,12 +237,12 @@ Result UsbDevice::openDevice (int index)
                 if (devH->get() == nullptr)
                     return Result::fail ("Could not open " + deviceName + String(index) + ".");
  
-                if (libusb_set_configuration (*devH, 1) < 0)
-                    return Result::fail (deviceName + String(index) + " could not be set to config 1.");
-                
                 if (libusb_claim_interface (*devH, interface) < 0)
                     return Result::fail (deviceName + String(index) + " is already inuse.");
                 
+                if (libusb_set_configuration (*devH, 1) < 0)
+                    return Result::fail (deviceName + String(index) + " could not be set to config 1.");
+                                
                 osHandle = new UnixOSHandle (interface, c, devH);
                 return Result::ok();
             }
@@ -271,11 +271,11 @@ Result UsbDevice::setInterfaceAlternateSetting (int alternateSetting)
     if (libusb_release_interface (*device, interface) < 0)
         return Result::fail ("Could not release claim on " +
                              deviceName + String(deviceIndex) + ".");
-    
+*/    
     if (libusb_claim_interface (*device, interface) < 0)
         return Result::fail ("Could not claim interface on " +
                              deviceName + String(deviceIndex) + ".");
-*/
+
     return Result::ok();
 }
 
@@ -290,6 +290,20 @@ Result UsbDevice::resetDevice()
         return Result::fail ("Could not reset " + deviceName + String(deviceIndex) + ".");
     
     return Result::ok();
+}
+
+//==============================================================================
+Result UsbDevice::clearHalt (EndPoint endPoint)
+{
+    const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
+    if (device == nullptr)
+        return Result::fail (deviceName + " is not open.");
+    
+    if (libusb_clear_halt (*device, endPoint) < 0)
+        return Result::fail ("Could no clear endpoint " + String(endPoint) +
+                             " on " + deviceName + String(deviceIndex) + ".");
+    
+    return Result::ok();    
 }
 
 //==============================================================================

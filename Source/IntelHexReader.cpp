@@ -94,6 +94,7 @@ bool IntelHexReader::readLineAsBinary (MemoryBlock& data, uint16& address)
     // trim prefix and csum
     data.removeSection (data.getSize() - 1, 1);
     data.removeSection (0, 4);
+        
     return true;
 }
 
