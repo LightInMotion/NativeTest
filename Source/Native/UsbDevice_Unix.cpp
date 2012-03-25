@@ -236,6 +236,9 @@ Result UsbDevice::openDevice (int index)
                 LibUsbDeviceHandle::Ptr devH = new LibUsbDeviceHandle (c, dev);
                 if (devH->get() == nullptr)
                     return Result::fail ("Could not open " + deviceName + String(index) + ".");
+ 
+                if (libusb_set_configuration (*devH, 1) < 0)
+                    return Result::fail (deviceName + String(index) + " could not be set to config 1.");
                 
                 if (libusb_claim_interface (*devH, interface) < 0)
                     return Result::fail (deviceName + String(index) + " is already inuse.");
@@ -264,6 +267,7 @@ Result UsbDevice::setInterfaceAlternateSetting (int alternateSetting)
         return Result::fail ("Could not set alternate interface on " + 
                              deviceName + String(deviceIndex) + ".");
 
+/*    
     if (libusb_release_interface (*device, interface) < 0)
         return Result::fail ("Could not release claim on " +
                              deviceName + String(deviceIndex) + ".");
@@ -271,7 +275,7 @@ Result UsbDevice::setInterfaceAlternateSetting (int alternateSetting)
     if (libusb_claim_interface (*device, interface) < 0)
         return Result::fail ("Could not claim interface on " +
                              deviceName + String(deviceIndex) + ".");
-
+*/
     return Result::ok();
 }
 
