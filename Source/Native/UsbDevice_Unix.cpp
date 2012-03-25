@@ -17,6 +17,8 @@ public:
     {
         if (libusb_init (&context) < 0)
             context = nullptr;
+        
+        libusb_set_debug (context, 3);
     }
     
     ~LibUsbContext() 
@@ -149,6 +151,15 @@ public:
         return ((UnixOSHandle*)os)->device;
     }
     
+    static UnixOSHandle* getSelf (const ScopedPointer<UsbOSHandle>& handle)
+    {
+        if (handle == nullptr)
+            return nullptr;
+        
+        UsbOSHandle *os = handle.get();
+        return (UnixOSHandle*)os;
+    }
+    
     //==============================================================================
     int interface;
     LibUsbContext::Ptr context;
@@ -252,7 +263,15 @@ Result UsbDevice::setInterfaceAlternateSetting (int alternateSetting)
                                           alternateSetting) < 0)
         return Result::fail ("Could not set alternate interface on " + 
                              deviceName + String(deviceIndex) + ".");
+
+    if (libusb_release_interface (*device, interface) < 0)
+        return Result::fail ("Could not release claim on " +
+                             deviceName + String(deviceIndex) + ".");
     
+    if (libusb_claim_interface (*device, interface) < 0)
+        return Result::fail ("Could not claim interface on " +
+                             deviceName + String(deviceIndex) + ".");
+
     return Result::ok();
 }
 

@@ -46,18 +46,22 @@ public:
     Result resetDevice();
     
     //==============================================================================
-    typedef enum {
+    enum RequestType
+    {
         StandardOut = (0 << 5),
         StandardIn  = (0 << 5) + 1,
         ClassOut    = (1 << 5),
         ClassIn     = (1 << 5) + 1,
         VendorOut   = (2 << 5),
         VendorIn    = (2 << 5) + 1,
-    } RequestType;
+    };
     
-    Result controlTransfer (RequestType requestType, uint8 request, uint16 value, uint16 index, uint8* data, uint16 length, uint32 timeout);
+    Result controlTransfer (RequestType requestType, uint8 request, 
+                            uint16 value, uint16 index, uint8* data, 
+                            uint16 length, uint32 timeout = 500);
     
-    typedef enum {
+    enum EndPoint
+    {
         EndOut0     = 0x00,
         EndIn0      = 0x80,
         EndOut1     = 0x01,
@@ -90,9 +94,10 @@ public:
         EndIn14     = 0x8e,
         EndOut15    = 0x0f,
         EndIn15     = 0x8f,        
-    } EndPoint;
+    };
     
-    Result bulkTransfer (EndPoint endPoint, uint8* data, int length, int& transferred, uint32 timeout);
+    Result bulkTransfer (EndPoint endPoint, uint8* data, int length,
+                         int& transferred, uint32 timeout = 500);
     
 private:
     //==============================================================================
