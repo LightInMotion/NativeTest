@@ -237,12 +237,12 @@ Result UsbDevice::openDevice (int index)
                 if (devH->get() == nullptr)
                     return Result::fail ("Could not open " + deviceName + String(index) + ".");
  
-                if (libusb_claim_interface (*devH, interface) < 0)
-                    return Result::fail (deviceName + String(index) + " is already inuse.");
-                
                 if (libusb_set_configuration (*devH, 1) < 0)
                     return Result::fail (deviceName + String(index) + " could not be set to config 1.");
-                                
+                
+                if (libusb_claim_interface (*devH, interface) < 0)
+                    return Result::fail (deviceName + String(index) + " is already inuse.");
+                                                
                 osHandle = new UnixOSHandle (interface, c, devH);
                 return Result::ok();
             }
