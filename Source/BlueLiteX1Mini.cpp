@@ -98,7 +98,7 @@ Result BlueLiteX1Mini::open (int index)
 {
     // In range
     if (index < 0 || index > 15)
-        return Result::fail ("Only devices in the range of 0 to 15 can be opened");
+        return Result::fail ("Only devices in the range of 0 to 15 can be opened.");
     
     // Try to open the physical device
     Result r = usbDevice.openDevice (index);
