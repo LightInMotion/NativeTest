@@ -7,8 +7,12 @@
 #include "libusb.h"
 
 //==============================================================================
-//==============================================================================
 // Helper classes for libusb
+//
+// These are all reference counted objects, so after the initial new and
+// assignment to their declared ::Ptr typedef, they will be automatically
+// Released when the last user goes out of scope
+//
 class LibUsbContext : public ReferenceCountedObject
 {
 public:
@@ -265,15 +269,6 @@ Result UsbDevice::setInterfaceAlternateSetting (int alternateSetting)
                                           interface, 
                                           alternateSetting) < 0)
         return Result::fail ("Could not set alternate interface on " + 
-                             deviceName + String(deviceIndex) + ".");
-
-/*    
-    if (libusb_release_interface (*device, interface) < 0)
-        return Result::fail ("Could not release claim on " +
-                             deviceName + String(deviceIndex) + ".");
-*/    
-    if (libusb_claim_interface (*device, interface) < 0)
-        return Result::fail ("Could not claim interface on " +
                              deviceName + String(deviceIndex) + ".");
 
     return Result::ok();

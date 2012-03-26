@@ -9,7 +9,7 @@
 
 
 //==============================================================================
-namespace BlueLiteHelpers
+namespace BlueLite
 {
     const int DmxPageSize = 32;
     const int DmxAllPages = (512 / DmxPageSize);
@@ -97,8 +97,9 @@ namespace BlueLiteHelpers
 Result BlueLiteX1Mini::open (int index)
 {
     // In range
-    if (index < 0 || index > 15)
-        return Result::fail ("Only devices in the range of 0 to 15 can be opened.");
+    if (index < 0 || index >= maxDevice)
+        return Result::fail ("Only devices in the range of 0 to " +
+                             String(maxDevice) + " can be opened.");
     
     // Try to open the physical device
     Result r = usbDevice.openDevice (index);
@@ -117,27 +118,7 @@ Result BlueLiteX1Mini::open (int index)
                 if (r.wasOk())
                 {
                     // Initialize Time
-                    BlueLiteHelpers::TimePacket time;
-                    zerostruct<BlueLiteHelpers::TimePacket> (time);
-                    time.type       = BlueLiteHelpers::TimeType;
-                    time.stype      = BlueLiteHelpers::Smpte30fps;
-                    time.command    = BlueLiteHelpers::WriteCmd;
-                    time.control    = BlueLiteHelpers::BlinkControl;
-                    
-                    int transferred;
-                    r = usbDevice.bulkTransfer (UsbDevice::EndOut2, 
-                                                (uint8*)&time, 
-                                                sizeof(time), transferred);
-                    // Initialize Time
-                    zerostruct<BlueLiteHelpers::TimePacket> (time);
-                    time.type       = BlueLiteHelpers::TimeType;
-                    time.stype      = BlueLiteHelpers::Smpte30fps;
-                    time.command    = BlueLiteHelpers::WriteCmd;
-                    time.control    = BlueLiteHelpers::FreezeControl;
-                    
-                    r = usbDevice.bulkTransfer (UsbDevice::EndOut2, 
-                                                (uint8*)&time, 
-                                                sizeof(time), transferred);
+                    r = sendTime();
                     if (r.wasOk())
                         return r;
                 }
@@ -195,23 +176,37 @@ Result BlueLiteX1Mini::loadFirmware (const String& firmware)
 Result BlueLiteX1Mini::sendConfig()
 {
     // Set the configuration
-    BlueLiteHelpers::ConfigPacket conf;
-    zerostruct<BlueLiteHelpers::ConfigPacket> (conf);
-    conf.type = BlueLiteHelpers::ConfigType;
-    conf.dmx1 = BlueLiteHelpers::DmxAllPages;
-    conf.dmx2 = BlueLiteHelpers::DmxAllPages;
-    conf.dmx3 = BlueLiteHelpers::DmxAllPages;
-    conf.dmx4 = BlueLiteHelpers::DmxAllPages;
+    BlueLite::ConfigPacket conf;
+    zerostruct<BlueLite::ConfigPacket> (conf);
+    conf.type = BlueLite::ConfigType;
+    conf.dmx1 = BlueLite::DmxAllPages;
+    conf.dmx2 = BlueLite::DmxAllPages;
+    conf.dmx3 = BlueLite::DmxAllPages;
+    conf.dmx4 = BlueLite::DmxAllPages;
     conf.inBaseH = 0;
     conf.inBaseL = 1;
 
     int transferred;
     Result r = usbDevice.bulkTransfer (UsbDevice::EndOut2, 
-                                       (uint8*)(&conf), sizeof (conf), 
-                                       transferred);
+            (uint8*)(&conf), sizeof (conf), transferred);
+    
     if (! r.wasOk())
         return r;
     
     return Result::ok();
 }
 
+//==============================================================================
+Result BlueLiteX1Mini::sendTime()
+{
+    BlueLite::TimePacket time;
+    zerostruct<BlueLite::TimePacket> (time);
+    time.type       = BlueLite::TimeType;
+    time.stype      = BlueLite::Smpte30fps;
+    time.command    = BlueLite::WriteCmd;
+    time.control    = BlueLite::FreezeControl || BlueLite::NoPhysControl;
+    
+    int transferred;
+    return usbDevice.bulkTransfer (UsbDevice::EndOut2, (uint8*)&time, 
+                                   sizeof(time), transferred);
+}
