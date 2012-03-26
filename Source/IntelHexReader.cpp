@@ -87,9 +87,9 @@ bool IntelHexReader::readLineAsBinary (MemoryBlock& data, uint16& address)
         return false;
     
     // get address
-    address = data[1];
+    address = (uint8) data[1];
     address <<= 8;
-    address += data[2];
+    address += (uint8) data[2];
     
     // trim prefix and csum
     data.removeSection (data.getSize() - 1, 1);
