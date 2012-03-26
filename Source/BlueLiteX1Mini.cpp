@@ -109,8 +109,8 @@ Result BlueLiteX1Mini::open (int index)
         if (r.wasOk())
         {
             // Load the firmware
-//            r = loadFirmware ("minifirm_hex");
-//            if (r.wasOk())
+            r = loadFirmware ("minifirm_hex");
+            if (r.wasOk())
             {
                 // Send the DMX configuration
                 r = sendConfig();
@@ -155,7 +155,7 @@ void BlueLiteX1Mini::close()
 {
     if (usbDevice.isOpen())
     {
-//        loadFirmware ("X1IDLE_HEX");
+        loadFirmware ("X1IDLE_HEX");
         usbDevice.closeDevice();
     }
 }
