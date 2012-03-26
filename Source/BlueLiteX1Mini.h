@@ -17,13 +17,8 @@ class BlueLiteX1Mini
 {
 public:
     //==============================================================================
-    BlueLiteX1Mini() : usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini") {}
-
-    ~BlueLiteX1Mini() 
-    { 
-        if (usbDevice.isOpen())
-            close(); 
-    }
+    BlueLiteX1Mini();
+    ~BlueLiteX1Mini(); 
     
     //==============================================================================
     inline int getCount() { return usbDevice.getCount(); }
@@ -32,7 +27,7 @@ public:
     void close();
 
     //==============================================================================
-    const int maxDevice = 8;
+    const int maxDevice;
     
 private:
     //==============================================================================
