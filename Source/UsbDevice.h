@@ -37,8 +37,8 @@ public:
     int getCount();
     
     Result openDevice (int index);
-    inline bool isOpen() { return (osHandle != nullptr); }
-    inline int getIndex() { return deviceIndex; }
+    inline bool isOpen() { return (osHandle != nullptr); } const
+    inline int getIndex() { return deviceIndex; } const
     void closeDevice() { osHandle = nullptr; }
     
     //==============================================================================
@@ -58,7 +58,7 @@ public:
     
     Result controlTransfer (RequestType requestType, uint8 request, 
                             uint16 value, uint16 index, uint8* data, 
-                            uint16 length, uint32 timeout = 500);
+                            uint16 length, uint32 timeout = 500) const;
     
     enum EndPoint
     {
@@ -99,7 +99,7 @@ public:
     Result clearHalt (EndPoint endPoint);
     
     Result bulkTransfer (EndPoint endPoint, uint8* data, int length,
-                         int& transferred, uint32 timeout = 500);
+                         int& transferred, uint32 timeout = 500) const;
     
 private:
     //==============================================================================
@@ -115,5 +115,48 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (UsbDevice)
 };
 
+//==============================================================================
+//==============================================================================
+class BulkReader;
+
+class BulkReadListener
+{
+public:
+    //==============================================================================
+    BulkReadListener() {}
+    virtual ~BulkReadListener() {}
+    
+    //==============================================================================
+    virtual void bulkDataRead (const BulkReader* bulkReader, const MemoryBlock& data) const = 0;
+    
+    //==============================================================================
+private:
+    JUCE_LEAK_DETECTOR (BulkReadListener);
+};
+
+//==============================================================================
+class BulkReader : Thread
+{
+public:
+    //==============================================================================
+    BulkReader (const UsbDevice& usbDevice, UsbDevice::EndPoint endPoint, 
+                int readSize, const BulkReadListener& listener);
+    ~BulkReader();
+    
+private:
+    //==============================================================================
+    void run();
+    
+private:
+    //==============================================================================
+    const UsbDevice& usbDevice;
+    UsbDevice::EndPoint endPoint;
+    int readSize;
+    const BulkReadListener& listener;
+    MemoryBlock data;
+    
+    //==============================================================================
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BulkReader)    
+};
 
 #endif  // __USBDEVICE_H_424472D6__

@@ -306,7 +306,7 @@ Result UsbDevice::controlTransfer (RequestType requestType,
                                    uint8 request, 
                                    uint16 value, uint16 index, 
                                    uint8* data, uint16 length, 
-                                   uint32 timeout)
+                                   uint32 timeout) const
 {
     const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
@@ -324,14 +324,19 @@ Result UsbDevice::bulkTransfer (EndPoint endPoint,
                                 uint8* data, 
                                 int length, 
                                 int& transferred, 
-                                uint32 timeout)
+                                uint32 timeout) const
 {
     const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
         return Result::fail (deviceName + " is not open.");
 
-    if (libusb_bulk_transfer (*device, endPoint, data, length, &transferred, 500) < 0)
-        return Result::fail ("Transfer error with " + deviceName + String(deviceIndex) + ".");
+    int n = libusb_bulk_transfer (*device, endPoint, data, length, &transferred, 500);
+    if (n < 0)
+    {
+        if (n == LIBUSB_ERROR_TIMEOUT)
+            return Result::fail ("Timeout for " + deviceName + String(deviceIndex) + ".");
         
+        return Result::fail ("Transfer error with " + deviceName + String(deviceIndex) + ".");
+    }
     return Result::ok();
 }

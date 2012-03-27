@@ -10,10 +10,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "UsbDevice.h"
 
-class UsbDevice;
-
 //==============================================================================
-class BlueLiteX1Mini : Thread
+class BlueLiteX1Mini : public BulkReadListener
 {
 public:
     //==============================================================================
@@ -29,22 +27,22 @@ public:
     //==============================================================================
     const int maxDevice;
     
-    Result sendConfig();
-    
-private:
+private:    
     //==============================================================================
-    void run();
+    void bulkDataRead (const BulkReader* bulkReader, const MemoryBlock& data) const; 
     
     //==============================================================================
     Result loadFirmware (const String& firmware);
     
     //==============================================================================
-//    Result sendConfig();
+    Result sendConfig();
     Result sendTime();
     
 private:
     //==============================================================================
     UsbDevice usbDevice;
+    ScopedPointer<BulkReader> timeReader;
+    ScopedPointer<BulkReader> dmxInputReader;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlueLiteX1Mini)

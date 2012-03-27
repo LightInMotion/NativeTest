@@ -97,9 +97,10 @@ namespace BlueLite
 //==============================================================================
 //==============================================================================
 BlueLiteX1Mini::BlueLiteX1Mini()
-    : Thread ("Mini Time Thread"),
-      maxDevice (BlueLite::maxDevice),
-      usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini")
+    : maxDevice (BlueLite::maxDevice),
+      usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini"),
+      timeReader (nullptr),
+      dmxInputReader (nullptr)
 {
 }
 
@@ -137,7 +138,13 @@ Result BlueLiteX1Mini::open (int index)
                     r = sendTime();
                     if (r.wasOk())
                     {
-                        startThread();
+                        timeReader = new BulkReader (usbDevice, 
+                                                     UsbDevice::EndIn1, 
+                                                     64, *this);
+                        
+                        dmxInputReader = new BulkReader (usbDevice,
+                                                         UsbDevice::EndIn6,
+                                                         64, *this);
                         return r;
                     }
                 }
@@ -155,7 +162,8 @@ void BlueLiteX1Mini::close()
 {
     if (usbDevice.isOpen())
     {
-        stopThread (1000);
+        timeReader = nullptr;
+        dmxInputReader = nullptr;
         loadFirmware ("X1IDLE_HEX");
         usbDevice.closeDevice();
     }
@@ -232,28 +240,22 @@ Result BlueLiteX1Mini::sendTime()
 }
 
 //==============================================================================
-void BlueLiteX1Mini::run()
+void BlueLiteX1Mini::bulkDataRead (const BulkReader* bulkReader, 
+                                   const MemoryBlock& data) const
 {
-    Logger::outputDebugString ("Thread Start");
-    sleep (100);
-    
-    while (! threadShouldExit())
     {
-        uint8 packet[64];
-        
-        int transferred;
-        if (! usbDevice.bulkTransfer (UsbDevice::EndIn1, packet, 
-                                      sizeof(packet), transferred))
+        if (bulkReader == timeReader)
         {
-            Logger::outputDebugString ("Thread read error");
-            return;
+            if (data.getSize() >= 10)
+            {
+                uint8* packet = (uint8*)data.getData();
+                Logger::outputDebugString(String::formatted ("%02x %02x %d%d:%d%d:%d%d:%d%d",
+                                                             packet[0], packet[1], 
+                                                             packet[2], packet[3], 
+                                                             packet[4], packet[5],
+                                                             packet[6], packet[7],
+                                                             packet[8], packet[9]));
+            }
         }
-        
-        Logger::outputDebugString(String::formatted ("%02x %02x %d%d:%d%d:%d%d:%d%d",
-                                                     packet[0], packet[1], 
-                                                     packet[2], packet[3], 
-                                                     packet[4], packet[5],
-                                                     packet[6], packet[7],
-                                                     packet[8], packet[9]));
     }
 }

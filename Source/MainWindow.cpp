@@ -50,12 +50,4 @@ void MainAppWindow::closeButtonPressed()
 //==============================================================================
 void MainAppWindow::timerCallback()
 {
-    if (! blueliteMini.sendConfig())
-    {
-        Logger::outputDebugString ("Send Config Failed");
-        stopTimer();
-        return;
-    }
-    
-    Logger::outputDebugString("Send Config");
 }
