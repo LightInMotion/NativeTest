@@ -17,17 +17,8 @@ class BlueLiteX1Mini : Thread
 {
 public:
     //==============================================================================
-    BlueLiteX1Mini() : Thread ("Mini USB Thread"), 
-                       usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini") 
-    {
-        Thread::setPriority (10);
-    }
-
-    ~BlueLiteX1Mini() 
-    { 
-        if (usbDevice.isOpen())
-            close(); 
-    }
+    BlueLiteX1Mini();
+    ~BlueLiteX1Mini(); 
     
     //==============================================================================
     inline int getCount() { return usbDevice.getCount(); }
@@ -36,7 +27,7 @@ public:
     void close();
 
     //==============================================================================
-    const int maxDevice = 8;
+    const int maxDevice;
     
     Result sendConfig();
     

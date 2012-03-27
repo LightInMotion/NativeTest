@@ -11,6 +11,8 @@
 //==============================================================================
 namespace BlueLite
 {
+    const int maxDevice = 8;
+
     const int DmxPageSize = 32;
     const int DmxAllPages = (512 / DmxPageSize);
     
@@ -93,6 +95,20 @@ namespace BlueLite
 
 
 //==============================================================================
+//==============================================================================
+BlueLiteX1Mini::BlueLiteX1Mini()
+    : Thread ("Mini Time Thread"),
+      maxDevice (BlueLite::maxDevice),
+      usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini")
+{
+}
+
+BlueLiteX1Mini::~BlueLiteX1Mini()
+{
+    if (usbDevice.isOpen())
+        usbDevice.closeDevice();
+}
+
 //==============================================================================
 Result BlueLiteX1Mini::open (int index)
 {
