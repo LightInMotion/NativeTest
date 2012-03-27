@@ -138,11 +138,11 @@ Result BlueLiteX1Mini::open (int index)
                     r = sendTime();
                     if (r.wasOk())
                     {
-                        timeReader = new BulkReader (usbDevice, 
+                        timeReader = new UsbBulkReader (usbDevice, 
                                                      UsbDevice::EndIn1, 
                                                      64, *this);
                         
-                        dmxInputReader = new BulkReader (usbDevice,
+                        dmxInputReader = new UsbBulkReader (usbDevice,
                                                          UsbDevice::EndIn6,
                                                          64, *this);
                         return r;
@@ -240,11 +240,11 @@ Result BlueLiteX1Mini::sendTime()
 }
 
 //==============================================================================
-void BlueLiteX1Mini::bulkDataRead (const BulkReader* bulkReader, 
+void BlueLiteX1Mini::bulkDataRead (const UsbBulkReader* UsbBulkReader, 
                                    const MemoryBlock& data) const
 {
     {
-        if (bulkReader == timeReader)
+        if (UsbBulkReader == timeReader)
         {
             if (data.getSize() >= 10)
             {

@@ -13,26 +13,27 @@
 #endif
 
 //==============================================================================
-BulkReader::BulkReader (const UsbDevice& usbDevice_, 
+UsbBulkReader::UsbBulkReader (const UsbDevice& usbDevice_, 
                         UsbDevice::EndPoint endPoint_,
                         int readSize_,
-                        const BulkReadListener& listener_)
-    : Thread ("BulkReader Thread"),
+                        const UsbBulkReadListener& listener_)
+    : Thread ("UsbBulkReader Thread"),
       usbDevice (usbDevice_),
       endPoint (endPoint_),
       readSize (readSize_),
       listener (listener_),
       data (readSize_)
 {
+    setPriority (10);
     startThread();
 }
 
-BulkReader::~BulkReader()
+UsbBulkReader::~UsbBulkReader()
 {
     stopThread (-1);
 }
 
-void BulkReader::run()
+void UsbBulkReader::run()
 {
     while (! threadShouldExit())
     {
@@ -53,14 +54,14 @@ void BulkReader::run()
         {
             if (! r.getErrorMessage().startsWith ("Timeout"))
             {
-                Logger::outputDebugString ("BulkReader aborting: " + r.getErrorMessage());
+                Logger::outputDebugString ("UsbBulkReader aborting: " + r.getErrorMessage());
                 data.setSize (0);
                 listener.bulkDataRead (this, data);
                 return;
             }
-            Logger::outputDebugString ("BulkReader timeout");
+            Logger::outputDebugString ("UsbBulkReader timeout");
         }
     }
     
-    Logger::outputDebugString ("BulkReader thread exiting normally");
+    Logger::outputDebugString ("UsbBulkReader thread exiting normally");
 }

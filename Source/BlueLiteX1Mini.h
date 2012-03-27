@@ -11,7 +11,7 @@
 #include "UsbDevice.h"
 
 //==============================================================================
-class BlueLiteX1Mini : public BulkReadListener
+class BlueLiteX1Mini : public UsbBulkReadListener
 {
 public:
     //==============================================================================
@@ -29,7 +29,7 @@ public:
     
 private:    
     //==============================================================================
-    void bulkDataRead (const BulkReader* bulkReader, const MemoryBlock& data) const; 
+    void bulkDataRead (const UsbBulkReader* UsbBulkReader, const MemoryBlock& data) const; 
     
     //==============================================================================
     Result loadFirmware (const String& firmware);
@@ -41,8 +41,8 @@ private:
 private:
     //==============================================================================
     UsbDevice usbDevice;
-    ScopedPointer<BulkReader> timeReader;
-    ScopedPointer<BulkReader> dmxInputReader;
+    ScopedPointer<UsbBulkReader> timeReader;
+    ScopedPointer<UsbBulkReader> dmxInputReader;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlueLiteX1Mini)

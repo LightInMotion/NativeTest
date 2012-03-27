@@ -6,6 +6,8 @@
 
 #include "libusb.h"
 
+#define _LIBUSB_TIMEOUT (500)
+
 //==============================================================================
 // Helper classes for libusb
 //
@@ -305,15 +307,14 @@ Result UsbDevice::clearHalt (EndPoint endPoint)
 Result UsbDevice::controlTransfer (RequestType requestType, 
                                    uint8 request, 
                                    uint16 value, uint16 index, 
-                                   uint8* data, uint16 length, 
-                                   uint32 timeout) const
+                                   uint8* data, uint16 length) const
 {
     const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
         return Result::fail (deviceName + " is not open.");
 
     if (libusb_control_transfer (*device, requestType, request, 
-                                 value, index, data, length, timeout) < 0)
+                                 value, index, data, length, _LIBUSB_TIMEOUT) < 0)
         return Result::fail ("Transfer error with " + deviceName + String(deviceIndex) + ".");
 
     return Result::ok();
@@ -323,14 +324,13 @@ Result UsbDevice::controlTransfer (RequestType requestType,
 Result UsbDevice::bulkTransfer (EndPoint endPoint, 
                                 uint8* data, 
                                 int length, 
-                                int& transferred, 
-                                uint32 timeout) const
+                                int& transferred) const
 {
     const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
         return Result::fail (deviceName + " is not open.");
 
-    int n = libusb_bulk_transfer (*device, endPoint, data, length, &transferred, 500);
+    int n = libusb_bulk_transfer (*device, endPoint, data, length, &transferred, _LIBUSB_TIMEOUT);
     if (n < 0)
     {
         if (n == LIBUSB_ERROR_TIMEOUT)
