@@ -13,11 +13,15 @@
 class UsbDevice;
 
 //==============================================================================
-class BlueLiteX1Mini
+class BlueLiteX1Mini : Thread
 {
 public:
     //==============================================================================
-    BlueLiteX1Mini() : usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini") {}
+    BlueLiteX1Mini() : Thread ("Mini USB Thread"), 
+                       usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini") 
+    {
+        Thread::setPriority (10);
+    }
 
     ~BlueLiteX1Mini() 
     { 
@@ -34,12 +38,17 @@ public:
     //==============================================================================
     const int maxDevice = 8;
     
+    Result sendConfig();
+    
 private:
+    //==============================================================================
+    void run();
+    
     //==============================================================================
     Result loadFirmware (const String& firmware);
     
     //==============================================================================
-    Result sendConfig();
+//    Result sendConfig();
     Result sendTime();
     
 private:

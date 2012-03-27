@@ -17,8 +17,6 @@ MainAppWindow::MainAppWindow()
     centreWithSize (500, 400);
     setVisible (true);
     
-    BlueLiteX1Mini blueliteMini;
-    
     int count = blueliteMini.getCount();
     Logger::outputDebugString (String(count) + " BlueLite Mini(s) found");
     if (count)
@@ -27,8 +25,7 @@ MainAppWindow::MainAppWindow()
         if (r.wasOk())
         {
             Logger::outputDebugString ("BlueLite 0 opened");
-            blueliteMini.close();
-            Logger::outputDebugString ("BlueLite 0 closed");
+            startTimer (100);
         }
         else
             Logger::outputDebugString (r.getErrorMessage());
@@ -37,9 +34,25 @@ MainAppWindow::MainAppWindow()
 
 MainAppWindow::~MainAppWindow()
 {
+    stopTimer();
+    blueliteMini.close();
+    Logger::outputDebugString ("BlueLite 0 closed");
 }
 
 void MainAppWindow::closeButtonPressed()
 {
     JUCEApplication::getInstance()->systemRequestedQuit();
+}
+
+//==============================================================================
+void MainAppWindow::timerCallback()
+{
+    if (! blueliteMini.sendConfig())
+    {
+        Logger::outputDebugString ("Send Config Failed");
+        stopTimer();
+        return;
+    }
+    
+    Logger::outputDebugString("Send Config");
 }

@@ -120,7 +120,10 @@ Result BlueLiteX1Mini::open (int index)
                     // Initialize Time
                     r = sendTime();
                     if (r.wasOk())
+                    {
+                        startThread();
                         return r;
+                    }
                 }
             }
         }
@@ -136,6 +139,7 @@ void BlueLiteX1Mini::close()
 {
     if (usbDevice.isOpen())
     {
+        stopThread (1000);
         loadFirmware ("X1IDLE_HEX");
         usbDevice.closeDevice();
     }
@@ -204,9 +208,36 @@ Result BlueLiteX1Mini::sendTime()
     time.type       = BlueLite::TimeType;
     time.stype      = BlueLite::Smpte30fps;
     time.command    = BlueLite::WriteCmd;
-    time.control    = BlueLite::FreezeControl || BlueLite::NoPhysControl;
+    time.control    = /* BlueLite::FreezeControl || */ BlueLite::NoPhysControl;
     
     int transferred;
     return usbDevice.bulkTransfer (UsbDevice::EndOut2, (uint8*)&time, 
                                    sizeof(time), transferred);
+}
+
+//==============================================================================
+void BlueLiteX1Mini::run()
+{
+    Logger::outputDebugString ("Thread Start");
+    sleep (100);
+    
+    while (! threadShouldExit())
+    {
+        uint8 packet[64];
+        
+        int transferred;
+        if (! usbDevice.bulkTransfer (UsbDevice::EndIn1, packet, 
+                                      sizeof(packet), transferred))
+        {
+            Logger::outputDebugString ("Thread read error");
+            return;
+        }
+        
+        Logger::outputDebugString(String::formatted ("%02x %02x %d%d:%d%d:%d%d:%d%d",
+                                                     packet[0], packet[1], 
+                                                     packet[2], packet[3], 
+                                                     packet[4], packet[5],
+                                                     packet[6], packet[7],
+                                                     packet[8], packet[9]));
+    }
 }
