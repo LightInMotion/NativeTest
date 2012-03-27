@@ -14,7 +14,10 @@ MainAppWindow::MainAppWindow()
                       Colours::lightgrey,
                       DocumentWindow::allButtons)
 {
-    centreWithSize (500, 400);
+    setResizable (true, false);
+    setResizeLimits (100, 100, 8192, 8192);
+    centreWithSize (320, 480);    
+    setUsingNativeTitleBar (true);
     setVisible (true);
     
     int count = blueliteMini.getCount();
