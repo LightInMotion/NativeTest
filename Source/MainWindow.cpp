@@ -19,20 +19,21 @@ MainAppWindow::MainAppWindow()
     centreWithSize (320, 480);    
     setUsingNativeTitleBar (true);
     setVisible (true);
-    
-    int count = blueliteMini.getCount();
-    Logger::outputDebugString (String(count) + " BlueLite Mini(s) found");
-    if (count)
+
+    if (! blueliteMini.isOpen())
     {
-        Result r = blueliteMini.open (0);
-        if (r.wasOk())
+        int count = blueliteMini.getCount();
+        Logger::outputDebugString (String(count) + " BlueLite Mini(s) found");
+        if (count)
         {
-            Logger::outputDebugString ("BlueLite 0 opened");
-            startTimer (100);
+            Result r = blueliteMini.open (0);
+            if (r.wasOk())
+                Logger::outputDebugString ("BlueLite 0 opened");
+            else
+                Logger::outputDebugString (r.getErrorMessage());
         }
-        else
-            Logger::outputDebugString (r.getErrorMessage());
     }
+//    startTimer (1000);
 }
 
 MainAppWindow::~MainAppWindow()

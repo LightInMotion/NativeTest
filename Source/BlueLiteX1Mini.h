@@ -21,7 +21,9 @@ public:
     //==============================================================================
     inline int getCount() { return usbDevice.getCount(); }
     
+    //==============================================================================
     Result open (int index);
+    bool isOpen() { return usbDevice.isOpen(); }
     void close();
 
     //==============================================================================
@@ -29,7 +31,7 @@ public:
     
 private:    
     //==============================================================================
-    void bulkDataRead (const UsbBulkReader* UsbBulkReader, const MemoryBlock& data) const; 
+    void bulkDataRead (UsbDevice::EndPoint endPoint, const uint8* data, int size) const;
     
     //==============================================================================
     Result loadFirmware (const String& firmware);
@@ -41,8 +43,6 @@ private:
 private:
     //==============================================================================
     UsbDevice usbDevice;
-    ScopedPointer<UsbBulkReader> timeReader;
-    ScopedPointer<UsbBulkReader> dmxInputReader;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlueLiteX1Mini)

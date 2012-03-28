@@ -98,9 +98,7 @@ namespace BlueLite
 //==============================================================================
 BlueLiteX1Mini::BlueLiteX1Mini()
     : maxDevice (BlueLite::maxDevice),
-      usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini"),
-      timeReader (nullptr),
-      dmxInputReader (nullptr)
+      usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini")
 {
 }
 
@@ -138,13 +136,9 @@ Result BlueLiteX1Mini::open (int index)
                     r = sendTime();
                     if (r.wasOk())
                     {
-                        timeReader = new UsbBulkReader (usbDevice, 
-                                                     UsbDevice::EndIn1, 
-                                                     64, *this);
-                        
-                        dmxInputReader = new UsbBulkReader (usbDevice,
-                                                         UsbDevice::EndIn6,
-                                                         64, *this);
+                        usbDevice.addBulkReadListener (this, UsbDevice::EndIn1, 64);
+                        usbDevice.addBulkReadListener (this, UsbDevice::EndIn6, 64);
+                        usbDevice.startBulkReads();
                         return r;
                     }
                 }
@@ -162,10 +156,8 @@ void BlueLiteX1Mini::close()
 {
     if (usbDevice.isOpen())
     {
-        timeReader = nullptr;
-        dmxInputReader = nullptr;
-        loadFirmware ("X1IDLE_HEX");
-        usbDevice.closeDevice();
+            loadFirmware ("X1IDLE_HEX");
+            usbDevice.closeDevice();
     }
 }
 
@@ -240,15 +232,15 @@ Result BlueLiteX1Mini::sendTime()
 }
 
 //==============================================================================
-void BlueLiteX1Mini::bulkDataRead (const UsbBulkReader* UsbBulkReader, 
-                                   const MemoryBlock& data) const
+void BlueLiteX1Mini::bulkDataRead (UsbDevice::EndPoint endPoint, 
+                                   const uint8* data, int size) const
 {
     {
-        if (UsbBulkReader == timeReader)
+        if (endPoint == UsbDevice::EndIn1)
         {
-            if (data.getSize() >= 10)
+            if (size >= 10)
             {
-                uint8* packet = (uint8*)data.getData();
+                const uint8* packet = data;
                 Logger::outputDebugString(String::formatted ("%02x %02x %d%d:%d%d:%d%d:%d%d",
                                                              packet[0], packet[1], 
                                                              packet[2], packet[3], 
@@ -256,6 +248,10 @@ void BlueLiteX1Mini::bulkDataRead (const UsbBulkReader* UsbBulkReader,
                                                              packet[6], packet[7],
                                                              packet[8], packet[9]));
             }
+        }
+        else if (endPoint == UsbDevice::EndIn6)
+        {
+            Logger::outputDebugString ("Dmx Input received >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         }
     }
 }

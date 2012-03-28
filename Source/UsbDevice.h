@@ -23,6 +23,9 @@ public:
 //==============================================================================
 //==============================================================================
 // USB Device
+
+class UsbBulkReadListener;
+
 class UsbDevice
 {
 public:
@@ -101,6 +104,10 @@ public:
     Result bulkTransfer (EndPoint endPoint, uint8* data, int length,
                          int& transferred) const;
     
+    //==============================================================================
+    Result addBulkReadListener (UsbBulkReadListener* listener, EndPoint endPoint, int size);
+    Result startBulkReads();
+    
 private:
     //==============================================================================
     uint16 vendorID;
@@ -117,8 +124,6 @@ private:
 
 //==============================================================================
 //==============================================================================
-class UsbBulkReader;
-
 class UsbBulkReadListener
 {
 public:
@@ -127,36 +132,12 @@ public:
     virtual ~UsbBulkReadListener() {}
     
     //==============================================================================
-    virtual void bulkDataRead (const UsbBulkReader* UsbBulkReader, const MemoryBlock& data) const = 0;
+    virtual void bulkDataRead (UsbDevice::EndPoint endPoint, const uint8* data, int size) const = 0;
     
     //==============================================================================
 private:
     JUCE_LEAK_DETECTOR (UsbBulkReadListener);
 };
 
-//==============================================================================
-class UsbBulkReader : Thread
-{
-public:
-    //==============================================================================
-    UsbBulkReader (const UsbDevice& usbDevice, UsbDevice::EndPoint endPoint, 
-                int readSize, const UsbBulkReadListener& listener);
-    ~UsbBulkReader();
-    
-private:
-    //==============================================================================
-    void run();
-    
-private:
-    //==============================================================================
-    const UsbDevice& usbDevice;
-    UsbDevice::EndPoint endPoint;
-    int readSize;
-    const UsbBulkReadListener& listener;
-    MemoryBlock data;
-    
-    //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (UsbBulkReader)    
-};
 
 #endif  // __USBDEVICE_H_424472D6__

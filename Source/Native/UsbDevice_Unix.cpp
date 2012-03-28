@@ -6,7 +6,7 @@
 
 #include "libusb.h"
 
-#define _LIBUSB_TIMEOUT (500)
+#define _LIBUSB_TIMEOUT (5000)
 
 //==============================================================================
 // Helper classes for libusb
@@ -122,29 +122,113 @@ private:
     JUCE_LEAK_DETECTOR(LibUsbDeviceHandle)    
 };
 
+//==============================================================================
+class LibUsbBulkTransfer
+{
+public:
+    //==============================================================================
+    LibUsbBulkTransfer (UsbBulkReadListener* listener_, LibUsbDeviceHandle::Ptr device_, 
+                        UsbDevice::EndPoint endPoint_, int size)
+        : listener (listener_),
+          device (device_),
+          endPoint (endPoint_),
+          data (size),
+          submitted (false),
+          transfer (nullptr)
+    {
+        transfer = libusb_alloc_transfer (0);
+        if (transfer)
+        {
+            libusb_fill_bulk_transfer (transfer, device->get(), endPoint, 
+                                       (uint8*)data.getData(), size, 
+                                       transferCallback, this, 0);
+            setSubmitted (true);
+            if (libusb_submit_transfer (transfer) < 0)
+                setSubmitted (false);
+        }
+    }
+    
+    ~LibUsbBulkTransfer () 
+    {
+        if (transfer != nullptr)
+        {
+            if (isSubmitted())
+            {
+                if (libusb_cancel_transfer (transfer) == 0)
+                    while (isSubmitted());
+            }
+            libusb_free_transfer (transfer);
+            transfer = nullptr;
+        }
+    }
+
+    //==============================================================================
+    inline UsbDevice::EndPoint getEndPoint() { return endPoint; }
+    inline UsbBulkReadListener* getListener() { return listener; }
+    inline bool isSubmitted() { return submitted; }
+    inline void setSubmitted (bool val) { submitted = val; }
+    inline MemoryBlock& getMemoryBlock() { return data; }
+    
+private:
+    //==============================================================================
+    static void transferCallback (struct libusb_transfer *transfer)
+    {
+        LibUsbBulkTransfer* bulkTransfer = (LibUsbBulkTransfer*) transfer->user_data;
+        if (transfer->status != LIBUSB_TRANSFER_COMPLETED)
+        {
+            bulkTransfer->setSubmitted (false);
+            return;
+        }
+        else
+        {
+            bulkTransfer->getListener()->bulkDataRead(bulkTransfer->getEndPoint(), 
+                                                      (uint8 *)bulkTransfer->getMemoryBlock().getData(),
+                                                      transfer->actual_length);
+        }
+        
+        if (libusb_submit_transfer (transfer) < 0)
+            bulkTransfer->setSubmitted (false);
+    }
+    
+    //==============================================================================
+    UsbBulkReadListener* listener;
+    LibUsbDeviceHandle::Ptr device;
+    UsbDevice::EndPoint endPoint;
+    MemoryBlock data;
+    volatile bool submitted;
+    struct libusb_transfer* transfer;
+    
+    //==============================================================================
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LibUsbBulkTransfer)    
+};
 
 //==============================================================================
 //==============================================================================
 // We keep our OS handles in a helper class
-class UnixOSHandle : public UsbOSHandle
+class UnixOSHandle : public UsbOSHandle, public Thread
 {
 public:
     //==============================================================================
     UnixOSHandle (int interface_, LibUsbContext::Ptr context_, LibUsbDeviceHandle::Ptr device_)
-        : interface (interface_),
+        : Thread ("Usb Thread"),
+          interface (interface_),
           context (context_),
           device (device_)
     {
+        setPriority (10);
     }
     
     ~UnixOSHandle() 
     {
-        // If there are handles when we are deleted, release the interface
+        // If there are handles when we are deleted, release the interface        
         if (device != nullptr)
         {
+            transfers.clear();
+            stopThread (-1);        
+            
             if (interface >= 0)
                 libusb_release_interface (*device, interface);            
-        }        
+        }
     }
     
     //==============================================================================
@@ -170,7 +254,20 @@ public:
     int interface;
     LibUsbContext::Ptr context;
     LibUsbDeviceHandle::Ptr device;
-
+    OwnedArray<LibUsbBulkTransfer> transfers;
+    
+    //==============================================================================
+    void run()
+    {
+        while (! threadShouldExit())
+        {
+            struct timeval tv = { 1, 0 };
+            if (libusb_handle_events_timeout (*context, &tv) < 0)
+                return;
+        }
+    }
+    
+private:
     //==============================================================================
     JUCE_LEAK_DETECTOR(UnixOSHandle)
 };
@@ -340,3 +437,34 @@ Result UsbDevice::bulkTransfer (EndPoint endPoint,
     }
     return Result::ok();
 }
+
+//==============================================================================
+Result UsbDevice::addBulkReadListener (UsbBulkReadListener* listener, 
+                                       EndPoint endPoint, int size)
+{
+    const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
+    if (device == nullptr)
+        return Result::fail (deviceName + " is not open.");
+    
+    UnixOSHandle* unixHandle = UnixOSHandle::getSelf (osHandle);
+    
+    for (int n = 0; n < unixHandle->transfers.size(); ++n)
+    {
+        if (unixHandle->transfers[n]->getEndPoint() == endPoint)
+            return Result::fail ("Endpoint " + String(endPoint) + " already in use.");
+    }
+    
+    unixHandle->transfers.add (new LibUsbBulkTransfer(listener, device, endPoint, size));
+    return Result::ok();
+}
+
+Result UsbDevice::startBulkReads()
+{
+    UnixOSHandle* unixHandle = UnixOSHandle::getSelf (osHandle);
+    if (unixHandle == nullptr)
+        return Result::fail (deviceName + " is not open.");
+        
+    unixHandle->startThread();
+    return Result::ok();
+}
+
