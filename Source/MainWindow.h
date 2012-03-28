@@ -34,6 +34,8 @@ public:
 private:
     //==============================================================================
     BlueLiteX1Mini blueliteMini;
+    MemoryBlock testData;
+    uint8 lastTestValue;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainAppWindow)

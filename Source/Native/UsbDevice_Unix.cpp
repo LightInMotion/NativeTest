@@ -390,6 +390,7 @@ Result UsbDevice::openDevice (int index)
                 if (devH->get() == nullptr)
                     return Result::fail ("Could not open " + deviceName + String(index) + ".");
  
+                // Configuration might have been selected by OS (or another app)
                 int config;
                 if (libusb_get_configuration (*devH, &config) < 0)
                     return Result::fail ("Could not read current configuration from " +

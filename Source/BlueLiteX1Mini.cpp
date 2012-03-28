@@ -11,10 +11,12 @@
 //==============================================================================
 namespace BlueLite
 {
-    const int maxDevice = 8;
+    const int MaxDevice = 8;
 
+    const int DmxUniverseSize = 512;
+    
     const int DmxPageSize = 32;
-    const int DmxAllPages = (512 / DmxPageSize);
+    const int DmxAllPages = (DmxUniverseSize / DmxPageSize);
     
     enum PacketType 
     {
@@ -97,9 +99,14 @@ namespace BlueLite
 //==============================================================================
 //==============================================================================
 BlueLiteX1Mini::BlueLiteX1Mini()
-    : maxDevice (BlueLite::maxDevice),
-      usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini")
+    : maxDevice (BlueLite::MaxDevice),
+      universeSize (BlueLite::DmxUniverseSize),
+      usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini"),
+      dmxPacket (BlueLite::DmxUniverseSize + sizeof(BlueLite::DataPacket))
 {
+    // We'll send this same packet again and again.
+    dmxPacket.fillWith (0);
+    dmxPacket[0] = BlueLite::DataType;
 }
 
 BlueLiteX1Mini::~BlueLiteX1Mini()
@@ -158,6 +165,33 @@ void BlueLiteX1Mini::close()
         loadFirmware ("X1IDLE_HEX");
         usbDevice.closeDevice();
     }
+}
+
+//==============================================================================
+Result BlueLiteX1Mini::updateUniverseData (uint16 offset, const MemoryBlock& newData)
+{
+    if ((offset + newData.getSize()) > universeSize)
+        return Result::fail ("Data is larger than universe.");
+    
+    dmxPacket.copyFrom (newData.getData(), offset + sizeof(BlueLite::DataPacket), newData.getSize());
+    
+    int transferred;
+    Result r = usbDevice.bulkTransfer (UsbDevice::EndOut2, (uint8*) dmxPacket.getData(),
+                                       dmxPacket.getSize(), transferred);
+    
+    if (transferred != dmxPacket.getSize())
+        Logger::outputDebugString ("Undersized bulk transfer of dmx data");
+    
+    return r;
+}
+
+//==============================================================================
+MemoryBlock BlueLiteX1Mini::readUniverseData()
+{
+    MemoryBlock dmx ((uint8*) dmxPacket.getData() + sizeof(BlueLite::DataPacket), 
+                     universeSize);
+    
+    return dmx;
 }
 
 //==============================================================================
@@ -239,18 +273,20 @@ void BlueLiteX1Mini::bulkDataRead (UsbDevice::EndPoint endPoint,
         {
             if (size >= 10)
             {
-                const uint8* packet = data;
                 Logger::outputDebugString(String::formatted ("%02x %02x %d%d:%d%d:%d%d:%d%d",
-                                                             packet[0], packet[1], 
-                                                             packet[2], packet[3], 
-                                                             packet[4], packet[5],
-                                                             packet[6], packet[7],
-                                                             packet[8], packet[9]));
+                                                             data[0], data[1], 
+                                                             data[2], data[3], 
+                                                             data[4], data[5],
+                                                             data[6], data[7],
+                                                             data[8], data[9]));
             }
         }
         else if (endPoint == UsbDevice::EndIn6)
         {
-            Logger::outputDebugString ("Dmx Input received >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            Logger::outputDebugString (">>>>>>>>>>>>>> Dmx Input received: " +
+                                       String::formatted ("%02x %02x %02x %02x",
+                                                          data[0], data[1],
+                                                          data[2], data[3]));
         }
     }
 }

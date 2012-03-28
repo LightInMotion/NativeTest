@@ -27,8 +27,13 @@ public:
     void close();
 
     //==============================================================================
-    const int maxDevice;
+    Result updateUniverseData (uint16 offset, const MemoryBlock& newData);
+    MemoryBlock readUniverseData();
     
+    //==============================================================================
+    const int maxDevice;
+    const int universeSize;
+
 private:    
     //==============================================================================
     void bulkDataRead (UsbDevice::EndPoint endPoint, const uint8* data, int size) const;
@@ -43,6 +48,7 @@ private:
 private:
     //==============================================================================
     UsbDevice usbDevice;
+    MemoryBlock dmxPacket;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlueLiteX1Mini)
