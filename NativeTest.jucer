@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="aB3KXd" name="NativeTest" projectType="guiapp" version="1.0.0"
-              bundleIdentifier="com.yourcompany.NativeTest" jucerVersion="3.0.0">
+              bundleIdentifier="co.limsc.NativeTest" jucerVersion="3.0.0">
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" objCExtraSuffix="c7R03f" juceFolder="../juce/modules"
                extraLinkerFlags="-lusb-1.0-darwin">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="NativeTest"
-                       osxSDK="default" osxCompatibility="10.7 SDK" osxArchitecture="64BitIntel"
+                       osxSDK="default" osxCompatibility="10.5 SDK" osxArchitecture="32BitUniversal"
                        libraryPath="../../Source/Native/"/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="2" targetName="NativeTest"
-                       osxSDK="default" osxCompatibility="10.7 SDK" osxArchitecture="64BitIntel"
+                       osxSDK="default" osxCompatibility="10.5 SDK" osxArchitecture="32BitUniversal"
                        libraryPath="../../Source/Native/"/>
       </CONFIGURATIONS>
     </XCODE_MAC>
