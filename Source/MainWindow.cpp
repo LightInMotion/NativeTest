@@ -32,6 +32,12 @@ MainAppWindow::MainAppWindow()
             else
                 Logger::outputDebugString (r.getErrorMessage());
         }
+        else
+            AlertWindow::showMessageBox (AlertWindow::InfoIcon, 
+                                         "No Compatible Hardware Found",
+                                         "You need to connect a BlueLite X1 Mini to a USB port on your computer.",
+                                         "Ok");            
+        
     }
 //    startTimer (1000);
 }
