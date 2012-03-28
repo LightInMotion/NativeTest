@@ -30,7 +30,10 @@ MainAppWindow::MainAppWindow()
             if (r.wasOk())
                 Logger::outputDebugString ("BlueLite 0 opened");
             else
-                Logger::outputDebugString (r.getErrorMessage());
+                AlertWindow::showMessageBox (AlertWindow::InfoIcon, 
+                                             "Hardware Communication Error",
+                                             r.getErrorMessage(),
+                                             "Ok");            
         }
         else
             AlertWindow::showMessageBox (AlertWindow::InfoIcon, 

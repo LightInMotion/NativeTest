@@ -106,6 +106,7 @@ public:
     
     //==============================================================================
     Result addBulkReadListener (UsbBulkReadListener* listener, EndPoint endPoint, int size);
+    Result removeBulkReadListener (EndPoint endPoint);
     Result startBulkReads();
     
 private:

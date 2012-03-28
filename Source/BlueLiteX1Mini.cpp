@@ -156,8 +156,8 @@ void BlueLiteX1Mini::close()
 {
     if (usbDevice.isOpen())
     {
-            loadFirmware ("X1IDLE_HEX");
-            usbDevice.closeDevice();
+        loadFirmware ("X1IDLE_HEX");
+        usbDevice.closeDevice();
     }
 }
 

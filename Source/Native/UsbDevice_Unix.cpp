@@ -23,7 +23,8 @@ public:
     {
         if (libusb_init (&context) < 0)
             context = nullptr;
-        
+
+//      Uncomment for usb Debugging Messages 
 //        libusb_set_debug (context, 3);
     }
     
@@ -127,7 +128,7 @@ class LibUsbBulkTransfer
 {
 public:
     //==============================================================================
-    LibUsbBulkTransfer (UsbBulkReadListener* listener_, LibUsbDeviceHandle::Ptr device_, 
+    LibUsbBulkTransfer (const UsbBulkReadListener* listener_, LibUsbDeviceHandle::Ptr device_, 
                         UsbDevice::EndPoint endPoint_, int size)
         : listener (listener_),
           device (device_),
@@ -142,6 +143,10 @@ public:
             libusb_fill_bulk_transfer (transfer, device->get(), endPoint, 
                                        (uint8*)data.getData(), size, 
                                        transferCallback, this, 0);
+            
+            // We set true before passing in because the handling
+            // is in another thread and we are trusting
+            // submitted to be an automic, not using a lock
             setSubmitted (true);
             if (libusb_submit_transfer (transfer) < 0)
                 setSubmitted (false);
@@ -154,17 +159,20 @@ public:
         {
             if (isSubmitted())
             {
+                // We could hang here if the USB library doesn't
+                // cancel the transfer
                 if (libusb_cancel_transfer (transfer) == 0)
                     while (isSubmitted());
             }
+            
             libusb_free_transfer (transfer);
-            transfer = nullptr;
         }
     }
 
     //==============================================================================
+    // These are inline, but could be expanded if locking is required
     inline UsbDevice::EndPoint getEndPoint() { return endPoint; }
-    inline UsbBulkReadListener* getListener() { return listener; }
+    inline const UsbBulkReadListener* getListener() { return listener; }
     inline bool isSubmitted() { return submitted; }
     inline void setSubmitted (bool val) { submitted = val; }
     inline MemoryBlock& getMemoryBlock() { return data; }
@@ -191,7 +199,7 @@ private:
     }
     
     //==============================================================================
-    UsbBulkReadListener* listener;
+    const UsbBulkReadListener* listener;
     LibUsbDeviceHandle::Ptr device;
     UsbDevice::EndPoint endPoint;
     MemoryBlock data;
@@ -205,7 +213,7 @@ private:
 //==============================================================================
 //==============================================================================
 // We keep our OS handles in a helper class
-class UnixOSHandle : public UsbOSHandle, public Thread
+class UnixOSHandle : public UsbOSHandle, Thread
 {
 public:
     //==============================================================================
@@ -249,19 +257,66 @@ public:
         UsbOSHandle *os = handle.get();
         return (UnixOSHandle*)os;
     }
+
+    //==============================================================================
+    void startTransfers()
+    {
+        startThread();
+    }
     
+    //==============================================================================
+    bool addTransfer (const UsbBulkReadListener* listener, LibUsbDeviceHandle::Ptr device,
+                      UsbDevice::EndPoint endPoint, int size)
+    {
+        if (findTransferIndex(endPoint, nullptr))
+            return false;
+        
+        transfers.add (new LibUsbBulkTransfer(listener, device, endPoint, size));
+        return true;
+    }
+
+    //==============================================================================
+    bool removeTransfer (UsbDevice::EndPoint endPoint)
+    {
+        int index;
+        if (! findTransferIndex (endPoint, &index))
+            return false;
+        
+        transfers.remove (index);
+        return true;
+    }
+    
+private:
     //==============================================================================
     int interface;
     LibUsbContext::Ptr context;
     LibUsbDeviceHandle::Ptr device;
     OwnedArray<LibUsbBulkTransfer> transfers;
     
+private:
+    //==============================================================================
+    bool findTransferIndex (UsbDevice::EndPoint endPoint, int* index)
+    {
+        for (int n = 0; n < transfers.size(); ++n)
+        {
+            if (transfers[n]->getEndPoint() == endPoint)
+            {
+                if (index != nullptr)
+                    *index = n;
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
     //==============================================================================
     void run()
     {
+        struct timeval tv = { 0, 500000 };
+
         while (! threadShouldExit())
         {
-            struct timeval tv = { 1, 0 };
             if (libusb_handle_events_timeout (*context, &tv) < 0)
                 return;
         }
@@ -448,23 +503,35 @@ Result UsbDevice::addBulkReadListener (UsbBulkReadListener* listener,
     
     UnixOSHandle* unixHandle = UnixOSHandle::getSelf (osHandle);
     
-    for (int n = 0; n < unixHandle->transfers.size(); ++n)
-    {
-        if (unixHandle->transfers[n]->getEndPoint() == endPoint)
-            return Result::fail ("Endpoint " + String(endPoint) + " already in use.");
-    }
-    
-    unixHandle->transfers.add (new LibUsbBulkTransfer(listener, device, endPoint, size));
+    if (! unixHandle->addTransfer (listener, device, endPoint, size))
+        return Result::fail ("Endpoint " + String(endPoint) + " already in use.");
+        
     return Result::ok();
 }
 
+//==============================================================================
+Result UsbDevice::removeBulkReadListener (EndPoint endPoint)
+{
+    const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
+    if (device == nullptr)
+        return Result::fail (deviceName + " is not open.");
+    
+    UnixOSHandle* unixHandle = UnixOSHandle::getSelf (osHandle);
+
+    if (! unixHandle->removeTransfer (endPoint))
+        return Result::fail ("Endpoint " + String(endPoint) + " is not streaming.");
+    
+    return Result::ok();
+}
+
+//==============================================================================
 Result UsbDevice::startBulkReads()
 {
     UnixOSHandle* unixHandle = UnixOSHandle::getSelf (osHandle);
     if (unixHandle == nullptr)
         return Result::fail (deviceName + " is not open.");
         
-    unixHandle->startThread();
+    unixHandle->startTransfers();
     return Result::ok();
 }
 
