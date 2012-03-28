@@ -390,8 +390,16 @@ Result UsbDevice::openDevice (int index)
                 if (devH->get() == nullptr)
                     return Result::fail ("Could not open " + deviceName + String(index) + ".");
  
-                if (libusb_set_configuration (*devH, 1) < 0)
-                    return Result::fail (deviceName + String(index) + " could not be set to config 1.");
+                int config;
+                if (libusb_get_configuration (*devH, &config) < 0)
+                    return Result::fail ("Could not read current configuration from " +
+                                         deviceName + String(index) + ".");
+                
+                if (config != 1)
+                {
+                    if (libusb_set_configuration (*devH, 1) < 0)
+                        return Result::fail (deviceName + String(index) + " could not be set to config 1.");
+                }
                 
                 if (libusb_claim_interface (*devH, interface) < 0)
                     return Result::fail (deviceName + String(index) + " is already inuse.");

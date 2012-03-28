@@ -30,16 +30,24 @@ MainAppWindow::MainAppWindow()
             if (r.wasOk())
                 Logger::outputDebugString ("BlueLite 0 opened");
             else
+            {
                 AlertWindow::showMessageBox (AlertWindow::InfoIcon, 
                                              "Hardware Communication Error",
                                              r.getErrorMessage(),
-                                             "Ok");            
+                                             "Ok");  
+
+                JUCEApplication::getInstance()->systemRequestedQuit();
+            }
         }
         else
+        {
             AlertWindow::showMessageBox (AlertWindow::InfoIcon, 
                                          "No Compatible Hardware Found",
                                          "You need to connect a BlueLite X1 Mini to a USB port on your computer.",
-                                         "Ok");            
+                                         "Ok");
+
+            JUCEApplication::getInstance()->systemRequestedQuit();
+        }
         
     }
 //    startTimer (1000);
