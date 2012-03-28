@@ -224,6 +224,7 @@ public:
           device (device_)
     {
         setPriority (10);
+        startThread();
     }
     
     ~UnixOSHandle() 
@@ -256,12 +257,6 @@ public:
         
         UsbOSHandle *os = handle.get();
         return (UnixOSHandle*)os;
-    }
-
-    //==============================================================================
-    void startTransfers()
-    {
-        startThread();
     }
     
     //==============================================================================
@@ -523,15 +518,3 @@ Result UsbDevice::removeBulkReadListener (EndPoint endPoint)
     
     return Result::ok();
 }
-
-//==============================================================================
-Result UsbDevice::startBulkReads()
-{
-    UnixOSHandle* unixHandle = UnixOSHandle::getSelf (osHandle);
-    if (unixHandle == nullptr)
-        return Result::fail (deviceName + " is not open.");
-        
-    unixHandle->startTransfers();
-    return Result::ok();
-}
-

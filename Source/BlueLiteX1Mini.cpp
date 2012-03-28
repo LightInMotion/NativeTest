@@ -138,7 +138,6 @@ Result BlueLiteX1Mini::open (int index)
                     {
                         usbDevice.addBulkReadListener (this, UsbDevice::EndIn1, 64);
                         usbDevice.addBulkReadListener (this, UsbDevice::EndIn6, 64);
-                        usbDevice.startBulkReads();
                         return r;
                     }
                 }
