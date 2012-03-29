@@ -46,6 +46,9 @@ OBJECTS := \
   $(OBJDIR)/IntelHexReader_5ed5ab11.o \
   $(OBJDIR)/BlueLiteX1Mini_be473881.o \
   $(OBJDIR)/UsbDevice_a591255b.o \
+  $(OBJDIR)/TimeComponent_5ed54811.o \
+  $(OBJDIR)/DmxOutComponent_f607555f.o \
+  $(OBJDIR)/TestTabsComponent_7ce90a8e.o \
   $(OBJDIR)/DmxInComponent_e1f85bd2.o \
   $(OBJDIR)/MainWindow_499ac812.o \
   $(OBJDIR)/Main_90ebc5c2.o \
@@ -84,6 +87,21 @@ $(OBJDIR)/BlueLiteX1Mini_be473881.o: ../../Source/BlueLiteX1Mini.cpp
 $(OBJDIR)/UsbDevice_a591255b.o: ../../Source/UsbDevice.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling UsbDevice.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/TimeComponent_5ed54811.o: ../../Source/TimeComponent.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling TimeComponent.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/DmxOutComponent_f607555f.o: ../../Source/DmxOutComponent.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling DmxOutComponent.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/TestTabsComponent_7ce90a8e.o: ../../Source/TestTabsComponent.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling TestTabsComponent.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/DmxInComponent_e1f85bd2.o: ../../Source/DmxInComponent.cpp

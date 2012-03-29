@@ -57,6 +57,17 @@
       </GROUP>
     </GROUP>
     <GROUP id="{DE0EFEC2-E357-A5DF-7171-6764ED593CB5}" name="Source">
+      <FILE id="KsCioW" name="TimeComponent.cpp" compile="1" resource="0"
+            file="Source/TimeComponent.cpp"/>
+      <FILE id="RBJskX" name="TimeComponent.h" compile="0" resource="0" file="Source/TimeComponent.h"/>
+      <FILE id="UolDUA" name="DmxOutComponent.cpp" compile="1" resource="0"
+            file="Source/DmxOutComponent.cpp"/>
+      <FILE id="HymECV" name="DmxOutComponent.h" compile="0" resource="0"
+            file="Source/DmxOutComponent.h"/>
+      <FILE id="uY2Dlw" name="TestTabsComponent.cpp" compile="1" resource="0"
+            file="Source/TestTabsComponent.cpp"/>
+      <FILE id="VB3zDJ" name="TestTabsComponent.h" compile="0" resource="0"
+            file="Source/TestTabsComponent.h"/>
       <FILE id="FQCxG1" name="DmxInComponent.cpp" compile="1" resource="0"
             file="Source/DmxInComponent.cpp"/>
       <FILE id="jvQrhk" name="DmxInComponent.h" compile="0" resource="0"

@@ -5,7 +5,7 @@
 */
 
 #include "MainWindow.h"
-#include "DmxInComponent.h"
+#include "TestTabsComponent.h"
 #include "BlueLiteX1Mini.h"
 
 //==============================================================================
@@ -16,7 +16,7 @@ public:
     ContentComp(BlueLiteX1Mini& blueliteMini_)
     : blueliteMini (blueliteMini_)
     {
-        DmxInComponent* view = new DmxInComponent (blueliteMini);
+        TestTabsComponent* view = new TestTabsComponent (blueliteMini);
         showView (view);
     }
     
@@ -41,18 +41,22 @@ public:
 private:
     ScopedPointer<Component> currentView;
     BlueLiteX1Mini& blueliteMini;
+    
+    TooltipWindow tooltipWindow; // to add tooltips to an application, you
+    // just need to create one of these and leave it
+    // there to do its work..    
 };
 
 //==============================================================================
 MainAppWindow::MainAppWindow()
     : DocumentWindow (JUCEApplication::getInstance()->getApplicationName(),
-                      Colours::lightgrey,
+                      Colour (0xff233746),
                       DocumentWindow::allButtons),
       lastTestValue (0)
 {
     setResizable (true, false);
     setResizeLimits (100, 100, 8192, 8192);
-    centreWithSize (320, 480);    
+    centreWithSize (480, 320);    
     setUsingNativeTitleBar (true);
     setVisible (true);
 
@@ -90,7 +94,7 @@ MainAppWindow::MainAppWindow()
         }
         
     }
-    startTimer (33);
+//    startTimer (33);
     
     ContentComp* contentComp = new ContentComp (blueliteMini);
     setContentOwned(contentComp, false);    
@@ -116,7 +120,7 @@ void MainAppWindow::timerCallback()
 {
     if (blueliteMini.isOpen())
     {
-        Logger::outputDebugString ("DMX Send " + String(lastTestValue));
+//        Logger::outputDebugString ("DMX Send " + String(lastTestValue));
 
         Result r = blueliteMini.updateUniverseData (0, testData);
         if (! r.wasOk())

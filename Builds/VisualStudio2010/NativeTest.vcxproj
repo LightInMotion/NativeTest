@@ -135,6 +135,9 @@
     <ClCompile Include="..\..\Source\Native\UsbDevice_Unix.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\Source\TimeComponent.cpp"/>
+    <ClCompile Include="..\..\Source\DmxOutComponent.cpp"/>
+    <ClCompile Include="..\..\Source\TestTabsComponent.cpp"/>
     <ClCompile Include="..\..\Source\DmxInComponent.cpp"/>
     <ClCompile Include="..\..\Source\MainWindow.cpp"/>
     <ClCompile Include="..\..\Source\Main.cpp"/>
@@ -867,6 +870,9 @@
     <ClInclude Include="..\..\Source\BlueLiteX1Mini.h"/>
     <ClInclude Include="..\..\Source\UsbDevice.h"/>
     <ClInclude Include="..\..\Source\Native\libusb.h"/>
+    <ClInclude Include="..\..\Source\TimeComponent.h"/>
+    <ClInclude Include="..\..\Source\DmxOutComponent.h"/>
+    <ClInclude Include="..\..\Source\TestTabsComponent.h"/>
     <ClInclude Include="..\..\Source\DmxInComponent.h"/>
     <ClInclude Include="..\..\Source\MainWindow.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.h"/>

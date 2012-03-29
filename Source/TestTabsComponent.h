@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Mar 2012 10:09:03am
+  Creation date:  29 Mar 2012 10:11:25am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,8 +19,8 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_DMXINCOMPONENT_DMXINCOMPONENT_F58981FB__
-#define __JUCER_HEADER_DMXINCOMPONENT_DMXINCOMPONENT_F58981FB__
+#ifndef __JUCER_HEADER_TESTTABSCOMPONENT_TESTTABSCOMPONENT_1A83E643__
+#define __JUCER_HEADER_TESTTABSCOMPONENT_TESTTABSCOMPONENT_1A83E643__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "BlueLiteX1Mini.h"
@@ -37,12 +37,12 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class DmxInComponent  : public Component
+class TestTabsComponent  : public Component
 {
 public:
     //==============================================================================
-    DmxInComponent (BlueLiteX1Mini& blueliteMini_);
-    ~DmxInComponent();
+    TestTabsComponent (BlueLiteX1Mini& blueliteMini_);
+    ~TestTabsComponent();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
@@ -62,13 +62,14 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    TabbedComponent* tabbedComponent;
 
 
     //==============================================================================
     // (prevent copy constructor and operator= being generated..)
-    DmxInComponent (const DmxInComponent&);
-    const DmxInComponent& operator= (const DmxInComponent&);
+    TestTabsComponent (const TestTabsComponent&);
+    const TestTabsComponent& operator= (const TestTabsComponent&);
 };
 
 
-#endif   // __JUCER_HEADER_DMXINCOMPONENT_DMXINCOMPONENT_F58981FB__
+#endif   // __JUCER_HEADER_TESTTABSCOMPONENT_TESTTABSCOMPONENT_1A83E643__

@@ -217,6 +217,15 @@
     <ClCompile Include="..\..\Source\Native\UsbDevice_Unix.cpp">
       <Filter>NativeTest\BlueLite\Native</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\TimeComponent.cpp">
+      <Filter>NativeTest\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\DmxOutComponent.cpp">
+      <Filter>NativeTest\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\TestTabsComponent.cpp">
+      <Filter>NativeTest\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\DmxInComponent.cpp">
       <Filter>NativeTest\Source</Filter>
     </ClCompile>
@@ -1037,6 +1046,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Native\libusb.h">
       <Filter>NativeTest\BlueLite\Native</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\TimeComponent.h">
+      <Filter>NativeTest\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\DmxOutComponent.h">
+      <Filter>NativeTest\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\TestTabsComponent.h">
+      <Filter>NativeTest\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\DmxInComponent.h">
       <Filter>NativeTest\Source</Filter>

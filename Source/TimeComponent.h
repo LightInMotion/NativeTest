@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Mar 2012 10:09:03am
+  Creation date:  29 Mar 2012 10:13:33am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,8 +19,8 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_DMXINCOMPONENT_DMXINCOMPONENT_F58981FB__
-#define __JUCER_HEADER_DMXINCOMPONENT_DMXINCOMPONENT_F58981FB__
+#ifndef __JUCER_HEADER_TIMECOMPONENT_TIMECOMPONENT_5DB28AE4__
+#define __JUCER_HEADER_TIMECOMPONENT_TIMECOMPONENT_5DB28AE4__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "BlueLiteX1Mini.h"
@@ -37,12 +37,12 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class DmxInComponent  : public Component
+class TimeComponent  : public Component
 {
 public:
     //==============================================================================
-    DmxInComponent (BlueLiteX1Mini& blueliteMini_);
-    ~DmxInComponent();
+    TimeComponent (BlueLiteX1Mini& blueliteMini_);
+    ~TimeComponent();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
@@ -66,9 +66,9 @@ private:
 
     //==============================================================================
     // (prevent copy constructor and operator= being generated..)
-    DmxInComponent (const DmxInComponent&);
-    const DmxInComponent& operator= (const DmxInComponent&);
+    TimeComponent (const TimeComponent&);
+    const TimeComponent& operator= (const TimeComponent&);
 };
 
 
-#endif   // __JUCER_HEADER_DMXINCOMPONENT_DMXINCOMPONENT_F58981FB__
+#endif   // __JUCER_HEADER_TIMECOMPONENT_TIMECOMPONENT_5DB28AE4__
