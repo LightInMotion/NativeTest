@@ -31,12 +31,19 @@ public:
     MemoryBlock readUniverseData();
     
     //==============================================================================
+    void addInputEvent (const WaitableEvent* event);
+    void removeInputEvent (const WaitableEvent* event);
+    
+    MemoryBlock readDmxInput();
+    
+    //==============================================================================
     const int maxDevice;
     const int universeSize;
+    const int inputChannelCount;
 
 private:    
     //==============================================================================
-    void bulkDataRead (UsbDevice::EndPoint endPoint, const uint8* data, int size) const;
+    void bulkDataRead (UsbDevice::EndPoint endPoint, const uint8* data, int size);
     
     //==============================================================================
     Result loadFirmware (const String& firmware);
@@ -49,6 +56,9 @@ private:
     //==============================================================================
     UsbDevice usbDevice;
     MemoryBlock dmxPacket;
+    
+    Array <const WaitableEvent*, CriticalSection> inputEventList;
+    MemoryBlock dmxInput;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlueLiteX1Mini)

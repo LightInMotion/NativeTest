@@ -15,6 +15,8 @@ namespace BlueLite
 
     const int DmxUniverseSize = 512;
     
+    const int InputChannelCount = 48;
+    
     const int DmxPageSize = 32;
     const int DmxAllPages = (DmxUniverseSize / DmxPageSize);
     
@@ -101,9 +103,14 @@ namespace BlueLite
 BlueLiteX1Mini::BlueLiteX1Mini()
     : maxDevice (BlueLite::MaxDevice),
       universeSize (BlueLite::DmxUniverseSize),
+      inputChannelCount (BlueLite::InputChannelCount),
       usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini"),
-      dmxPacket (BlueLite::DmxUniverseSize + sizeof(BlueLite::DataPacket))
+      dmxPacket (BlueLite::DmxUniverseSize + sizeof(BlueLite::DataPacket)),
+      dmxInput (BlueLite::InputChannelCount)
 {
+    // Assume inputs are 0
+    dmxInput.fillWith (0);
+    
     // We'll send this same packet again and again.
     dmxPacket.fillWith (0);
     dmxPacket[0] = BlueLite::DataType;
@@ -188,10 +195,26 @@ Result BlueLiteX1Mini::updateUniverseData (uint16 offset, const MemoryBlock& new
 //==============================================================================
 MemoryBlock BlueLiteX1Mini::readUniverseData()
 {
-    MemoryBlock dmx ((uint8*) dmxPacket.getData() + sizeof(BlueLite::DataPacket), 
+    return MemoryBlock ((uint8*) dmxPacket.getData() + sizeof(BlueLite::DataPacket), 
                      universeSize);
-    
-    return dmx;
+}
+
+//==============================================================================
+void BlueLiteX1Mini::addInputEvent (const WaitableEvent* event)
+{
+    inputEventList.addIfNotAlreadyThere (event);
+}
+
+void BlueLiteX1Mini::removeInputEvent (const WaitableEvent* event)
+{
+    inputEventList.removeValue (event);
+}
+
+//==============================================================================
+MemoryBlock BlueLiteX1Mini::readDmxInput()
+{
+    const ScopedLock lock (inputEventList.getLock());
+    return (MemoryBlock (dmxInput));
 }
 
 //==============================================================================
@@ -266,7 +289,7 @@ Result BlueLiteX1Mini::sendTime()
 
 //==============================================================================
 void BlueLiteX1Mini::bulkDataRead (UsbDevice::EndPoint endPoint, 
-                                   const uint8* data, int size) const
+                                   const uint8* data, int size)
 {
     {
         if (endPoint == UsbDevice::EndIn1)
@@ -284,10 +307,20 @@ void BlueLiteX1Mini::bulkDataRead (UsbDevice::EndPoint endPoint,
         }
         else if (endPoint == UsbDevice::EndIn6)
         {
-            Logger::outputDebugString (">>>>>>>>>>>>>> Dmx Input received: " +
-                                       String::formatted ("%02x %02x %02x %02x",
-                                                          data[0], data[1],
-                                                          data[2], data[3]));
+            if (size >= inputChannelCount)
+            {
+                Logger::outputDebugString (">>>>>>>>>>>>>> Dmx Input received: " +
+                                           String::formatted ("%02x %02x %02x %02x",
+                                                              data[0], data[1],
+                                                              data[2], data[3]));
+                const ScopedLock lock (inputEventList.getLock());
+
+                dmxInput.copyFrom (data, 0, inputChannelCount);
+             
+                int listSize = inputEventList.size();
+                for (int n = 0; n < listSize; ++n)
+                    inputEventList[n]->signal();
+            }
         }
     }
 }

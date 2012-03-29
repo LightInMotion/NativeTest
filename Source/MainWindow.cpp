@@ -51,8 +51,7 @@ private:
 MainAppWindow::MainAppWindow()
     : DocumentWindow (JUCEApplication::getInstance()->getApplicationName(),
                       Colour (0xff233746),
-                      DocumentWindow::allButtons),
-      lastTestValue (0)
+                      DocumentWindow::allButtons)
 {
     setResizable (true, false);
     setResizeLimits (100, 100, 8192, 8192);
@@ -68,11 +67,7 @@ MainAppWindow::MainAppWindow()
         {
             Result r = blueliteMini.open (0);
             if (r.wasOk())
-            {
                 Logger::outputDebugString ("BlueLite 0 opened");
-                testData.setSize (blueliteMini.universeSize);
-                testData.fillWith (lastTestValue);
-            }
             else
             {
                 AlertWindow::showMessageBox (AlertWindow::InfoIcon, 
@@ -120,12 +115,8 @@ void MainAppWindow::timerCallback()
 {
     if (blueliteMini.isOpen())
     {
-//        Logger::outputDebugString ("DMX Send " + String(lastTestValue));
+        Logger::outputDebugString ("Polling Input...");
 
-        Result r = blueliteMini.updateUniverseData (0, testData);
-        if (! r.wasOk())
-            Logger::outputDebugString ("DMX test write error: " + r.getErrorMessage());
-        
-        testData.fillWith(++lastTestValue);
+        blueliteMini.readDmxInput();
     }
 }

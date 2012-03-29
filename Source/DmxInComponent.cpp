@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Mar 2012 10:09:03am
+  Creation date:  29 Mar 2012 12:15:31pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -30,7 +30,8 @@
 
 //==============================================================================
 DmxInComponent::DmxInComponent (BlueLiteX1Mini& blueliteMini_)
-    : blueliteMini (blueliteMini_)
+    : Thread ("Dmx Input Thread"),
+      blueliteMini (blueliteMini_)
 {
 
     //[UserPreSize]
@@ -40,6 +41,8 @@ DmxInComponent::DmxInComponent (BlueLiteX1Mini& blueliteMini_)
 
 
     //[Constructor] You can add your own custom stuff here..
+    blueliteMini.addInputEvent (&inputEvent);
+    startThread();
     //[/Constructor]
 }
 
@@ -51,6 +54,10 @@ DmxInComponent::~DmxInComponent()
 
 
     //[Destructor]. You can add your own custom destruction code here..
+    signalThreadShouldExit();
+    blueliteMini.removeInputEvent (&inputEvent);
+    inputEvent.signal();
+    stopThread (-1);
     //[/Destructor]
 }
 
@@ -73,6 +80,18 @@ void DmxInComponent::resized()
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+void DmxInComponent::run()
+{
+    while (! threadShouldExit())
+    {
+        inputEvent.wait();
+        if (threadShouldExit())
+            return;
+        
+        Logger::outputDebugString ("Input!");
+//        sleep(100);
+    }
+}
 //[/MiscUserCode]
 
 
@@ -85,10 +104,10 @@ void DmxInComponent::resized()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="DmxInComponent" componentName=""
-                 parentClasses="public Component" constructorParams="BlueLiteX1Mini&amp; blueliteMini_"
-                 variableInitialisers="blueliteMini (blueliteMini_)" snapPixels="8"
-                 snapActive="1" snapShown="1" overlayOpacity="0.330000013" fixedSize="0"
-                 initialWidth="416" initialHeight="440">
+                 parentClasses="public Component, Thread" constructorParams="BlueLiteX1Mini&amp; blueliteMini_"
+                 variableInitialisers="Thread (&quot;Dmx Input Thread&quot;),&#10;blueliteMini (blueliteMini_)"
+                 snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330000013"
+                 fixedSize="0" initialWidth="416" initialHeight="440">
   <BACKGROUND backgroundColour="ffffff"/>
 </JUCER_COMPONENT>
 

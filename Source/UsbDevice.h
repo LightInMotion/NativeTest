@@ -132,7 +132,7 @@ public:
     virtual ~UsbBulkReadListener() {}
     
     //==============================================================================
-    virtual void bulkDataRead (UsbDevice::EndPoint endPoint, const uint8* data, int size) const = 0;
+    virtual void bulkDataRead (UsbDevice::EndPoint endPoint, const uint8* data, int size) = 0;
     
     //==============================================================================
 private:

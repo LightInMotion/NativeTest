@@ -128,7 +128,7 @@ class LibUsbBulkTransfer
 {
 public:
     //==============================================================================
-    LibUsbBulkTransfer (const UsbBulkReadListener* listener_, LibUsbDeviceHandle::Ptr device_, 
+    LibUsbBulkTransfer (UsbBulkReadListener* listener_, LibUsbDeviceHandle::Ptr device_, 
                         UsbDevice::EndPoint endPoint_, int size)
         : listener (listener_),
           device (device_),
@@ -172,7 +172,7 @@ public:
     //==============================================================================
     // These are inline, but could be expanded if locking is required
     inline UsbDevice::EndPoint getEndPoint() { return endPoint; }
-    inline const UsbBulkReadListener* getListener() { return listener; }
+    inline UsbBulkReadListener* getListener() { return listener; }
     inline bool isSubmitted() { return submitted; }
     inline void setSubmitted (bool val) { submitted = val; }
     inline MemoryBlock& getMemoryBlock() { return data; }
@@ -199,7 +199,7 @@ private:
     }
     
     //==============================================================================
-    const UsbBulkReadListener* listener;
+    UsbBulkReadListener* listener;
     LibUsbDeviceHandle::Ptr device;
     UsbDevice::EndPoint endPoint;
     MemoryBlock data;
@@ -260,7 +260,7 @@ public:
     }
     
     //==============================================================================
-    bool addTransfer (const UsbBulkReadListener* listener, LibUsbDeviceHandle::Ptr device,
+    bool addTransfer (UsbBulkReadListener* listener, LibUsbDeviceHandle::Ptr device,
                       UsbDevice::EndPoint endPoint, int size)
     {
         if (findTransferIndex(endPoint, nullptr))
