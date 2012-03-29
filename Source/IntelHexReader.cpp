@@ -79,7 +79,20 @@ bool IntelHexReader::readLineAsBinary (MemoryBlock& data, uint16& address)
         return false;
     
     // Malformed?
+    // Length
     if (data.getSize() != data[0] + 5)
+        return false;
+    
+    // Checksum
+    uint8 csum = 0;
+    int csumsize = data.getSize() - 1;
+    for (int n = 0; n < csumsize ; ++n)
+        csum += data[n];
+    
+    csum--;
+    csum ^= 0xFF;
+    
+    if (csum != (uint8) data[data.getSize() - 1])
         return false;
     
     // check type
