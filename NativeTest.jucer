@@ -57,6 +57,10 @@
       </GROUP>
     </GROUP>
     <GROUP id="{DE0EFEC2-E357-A5DF-7171-6764ED593CB5}" name="Source">
+      <FILE id="FQCxG1" name="DmxInComponent.cpp" compile="1" resource="0"
+            file="Source/DmxInComponent.cpp"/>
+      <FILE id="jvQrhk" name="DmxInComponent.h" compile="0" resource="0"
+            file="Source/DmxInComponent.h"/>
       <FILE id="Jr5qhK" name="MainWindow.cpp" compile="1" resource="0" file="Source/MainWindow.cpp"/>
       <FILE id="Du8UmD" name="MainWindow.h" compile="0" resource="0" file="Source/MainWindow.h"/>
       <FILE id="L9pa6I" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>

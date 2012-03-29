@@ -46,6 +46,7 @@ OBJECTS := \
   $(OBJDIR)/IntelHexReader_5ed5ab11.o \
   $(OBJDIR)/BlueLiteX1Mini_be473881.o \
   $(OBJDIR)/UsbDevice_a591255b.o \
+  $(OBJDIR)/DmxInComponent_e1f85bd2.o \
   $(OBJDIR)/MainWindow_499ac812.o \
   $(OBJDIR)/Main_90ebc5c2.o \
   $(OBJDIR)/BinaryData_ce4232d4.o \
@@ -83,6 +84,11 @@ $(OBJDIR)/BlueLiteX1Mini_be473881.o: ../../Source/BlueLiteX1Mini.cpp
 $(OBJDIR)/UsbDevice_a591255b.o: ../../Source/UsbDevice.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling UsbDevice.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/DmxInComponent_e1f85bd2.o: ../../Source/DmxInComponent.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling DmxInComponent.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/MainWindow_499ac812.o: ../../Source/MainWindow.cpp

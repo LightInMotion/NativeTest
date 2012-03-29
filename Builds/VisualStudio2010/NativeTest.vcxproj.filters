@@ -217,6 +217,9 @@
     <ClCompile Include="..\..\Source\Native\UsbDevice_Unix.cpp">
       <Filter>NativeTest\BlueLite\Native</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\DmxInComponent.cpp">
+      <Filter>NativeTest\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\MainWindow.cpp">
       <Filter>NativeTest\Source</Filter>
     </ClCompile>
@@ -1034,6 +1037,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Native\libusb.h">
       <Filter>NativeTest\BlueLite\Native</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\DmxInComponent.h">
+      <Filter>NativeTest\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\MainWindow.h">
       <Filter>NativeTest\Source</Filter>

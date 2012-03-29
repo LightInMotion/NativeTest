@@ -5,8 +5,43 @@
 */
 
 #include "MainWindow.h"
-
+#include "DmxInComponent.h"
 #include "BlueLiteX1Mini.h"
+
+//==============================================================================
+class ContentComp : public Component
+{
+public:
+    //==============================================================================
+    ContentComp(BlueLiteX1Mini& blueliteMini_)
+    : blueliteMini (blueliteMini_)
+    {
+        DmxInComponent* view = new DmxInComponent (blueliteMini);
+        showView (view);
+    }
+    
+    ~ContentComp()
+    {
+    }
+    
+    //==============================================================================
+    void resized()
+    {
+        currentView->setBounds (0, 0, getWidth(), getHeight());
+    }
+    
+    //==============================================================================
+    void showView (Component* viewComp)
+    {
+        currentView = viewComp;
+        addAndMakeVisible (currentView);
+        resized();
+    }
+    
+private:
+    ScopedPointer<Component> currentView;
+    BlueLiteX1Mini& blueliteMini;
+};
 
 //==============================================================================
 MainAppWindow::MainAppWindow()
@@ -56,11 +91,17 @@ MainAppWindow::MainAppWindow()
         
     }
     startTimer (33);
+    
+    ContentComp* contentComp = new ContentComp (blueliteMini);
+    setContentOwned(contentComp, false);    
 }
 
 MainAppWindow::~MainAppWindow()
 {
     stopTimer();
+    
+    clearContentComponent();
+    
     blueliteMini.close();
     Logger::outputDebugString ("BlueLite 0 closed");
 }
