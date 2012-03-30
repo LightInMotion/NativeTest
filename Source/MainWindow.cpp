@@ -6,6 +6,7 @@
 
 #include "MainWindow.h"
 #include "TestTabsComponent.h"
+#include "BlueLiteX1.h"
 #include "BlueLiteX1Mini.h"
 
 //==============================================================================
@@ -13,10 +14,10 @@ class ContentComp : public Component
 {
 public:
     //==============================================================================
-    ContentComp(BlueLiteX1Mini& blueliteMini_)
-    : blueliteMini (blueliteMini_)
+    ContentComp(BlueLiteDevice::Ptr blueliteDevice_)
+    : blueliteDevice (blueliteDevice_)
     {
-        TestTabsComponent* view = new TestTabsComponent (blueliteMini);
+        TestTabsComponent* view = new TestTabsComponent (blueliteDevice);
         showView (view);
     }
     
@@ -40,7 +41,7 @@ public:
     
 private:
     ScopedPointer<Component> currentView;
-    BlueLiteX1Mini& blueliteMini;
+    BlueLiteDevice::Ptr blueliteDevice;
     
     TooltipWindow tooltipWindow; // to add tooltips to an application, you
     // just need to create one of these and leave it
@@ -59,39 +60,45 @@ MainAppWindow::MainAppWindow()
     setUsingNativeTitleBar (true);
     setVisible (true);
 
-    if (! blueliteMini.isOpen())
+    blueliteDevice = new BlueLiteX1();
+    int count = blueliteDevice->getCount();
+    
+    if (! count)
     {
-        int count = blueliteMini.getCount();
-        Logger::outputDebugString (String(count) + " BlueLite Mini(s) found");
-        if (count)
-        {
-            Result r = blueliteMini.open (0);
-            if (r.wasOk())
-                Logger::outputDebugString ("BlueLite 0 opened");
-            else
-            {
-                AlertWindow::showMessageBox (AlertWindow::InfoIcon, 
-                                             "Hardware Communication Error",
-                                             r.getErrorMessage(),
-                                             "Ok");  
+        blueliteDevice = new BlueLiteX1Mini();
+        count = blueliteDevice->getCount();
+    }
+    
+    Logger::outputDebugString (String(count) + " BlueLite Device(s) found");
 
-                JUCEApplication::getInstance()->systemRequestedQuit();
-            }
-        }
+    if (count)
+    {
+        Result r = blueliteDevice->open (0);
+        if (r.wasOk())
+            Logger::outputDebugString ("BlueLite 0 opened");
         else
         {
             AlertWindow::showMessageBox (AlertWindow::InfoIcon, 
-                                         "No Compatible Hardware Found",
-                                         "You need to connect a BlueLite X1 Mini to a USB port on your computer.",
-                                         "Ok");
+                                         "Hardware Communication Error",
+                                         r.getErrorMessage(),
+                                         "Ok");  
 
             JUCEApplication::getInstance()->systemRequestedQuit();
         }
-        
     }
+    else
+    {
+        AlertWindow::showMessageBox (AlertWindow::InfoIcon, 
+                                     "No Compatible Hardware Found",
+                                     "You need to connect a BlueLite X1 or BlueLite X1 Mini to a USB port on your computer.",
+                                     "Ok");
+
+        JUCEApplication::getInstance()->systemRequestedQuit();
+    }
+
 //    startTimer (33);
     
-    ContentComp* contentComp = new ContentComp (blueliteMini);
+    ContentComp* contentComp = new ContentComp (blueliteDevice);
     setContentOwned(contentComp, false);    
 }
 
@@ -101,8 +108,11 @@ MainAppWindow::~MainAppWindow()
     
     clearContentComponent();
     
-    blueliteMini.close();
-    Logger::outputDebugString ("BlueLite 0 closed");
+    if (blueliteDevice != nullptr)
+    {
+        blueliteDevice->close();
+        Logger::outputDebugString ("BlueLite 0 closed");
+    }
 }
 
 void MainAppWindow::closeButtonPressed()
@@ -113,10 +123,13 @@ void MainAppWindow::closeButtonPressed()
 //==============================================================================
 void MainAppWindow::timerCallback()
 {
-    if (blueliteMini.isOpen())
+    if (blueliteDevice == nullptr)
+        return;
+    
+    if (blueliteDevice->isOpen())
     {
         Logger::outputDebugString ("Polling Input...");
 
-        blueliteMini.readDmxInput();
+        blueliteDevice->readDmxInput();
     }
 }

@@ -126,6 +126,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\BlueLiteX1.cpp"/>
     <ClCompile Include="..\..\Source\IntelHexReader.cpp"/>
     <ClCompile Include="..\..\Source\BlueLiteX1Mini.cpp"/>
     <ClCompile Include="..\..\Source\UsbDevice.cpp"/>
@@ -866,6 +867,10 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_basics\juce_gui_basics.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\BlueLiteUsb.h"/>
+    <ClInclude Include="..\..\Source\BlueLiteDevice.h"/>
+    <ClInclude Include="..\..\Source\BlueLiteEvent.h"/>
+    <ClInclude Include="..\..\Source\BlueLiteX1.h"/>
     <ClInclude Include="..\..\Source\IntelHexReader.h"/>
     <ClInclude Include="..\..\Source\BlueLiteX1Mini.h"/>
     <ClInclude Include="..\..\Source\UsbDevice.h"/>

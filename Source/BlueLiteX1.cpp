@@ -1,20 +1,20 @@
 /*
-    BlueLiteX1Mini.cpp
+    BlueLiteX1.cpp
 
-    Low Level Access to X1 Mini 
+    Low Level Access to BlueLite X1
 */
 
 #include "BlueLiteUsb.h"
 #include "IntelHexReader.h"
-#include "BlueLiteX1Mini.h"
+#include "BlueLiteX1.h"
 
 //==============================================================================
-BlueLiteX1Mini::BlueLiteX1Mini()
+BlueLiteX1::BlueLiteX1()
     : maxDevice (BlueLite::MaxDevice),
-      dmxDataSize (BlueLite::MiniDmxDataSize),
+      dmxDataSize (BlueLite::X1DmxDataSize),
       dmxInputSize (BlueLite::DmxInputSize),
-      usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini"),
-      dmxPacket (BlueLite::MiniDmxDataSize + sizeof(BlueLite::DataPacket)),
+      usbDevice (0x4a9, 0x2109, 0, "BlueLite X1"),
+      dmxPacket (BlueLite::X1DmxDataSize + sizeof(BlueLite::DataPacket)),
       dmxInput (BlueLite::DmxInputSize),
       timeInput (10)
 {
@@ -26,14 +26,14 @@ BlueLiteX1Mini::BlueLiteX1Mini()
     dmxPacket[0] = BlueLite::DataType;
 }
 
-BlueLiteX1Mini::~BlueLiteX1Mini()
+BlueLiteX1::~BlueLiteX1()
 {
     if (usbDevice.isOpen())
         usbDevice.closeDevice();
 }
 
 //==============================================================================
-Result BlueLiteX1Mini::open (int index)
+Result BlueLiteX1::open (int index)
 {
     // In range
     if (index < 0 || index >= maxDevice)
@@ -49,7 +49,7 @@ Result BlueLiteX1Mini::open (int index)
         if (r.wasOk())
         {
             // Load the firmware
-            r = loadFirmware ("minifirm_hex");
+            r = loadFirmware ("X1FIRM_HEX");
             if (r.wasOk())
             {
                 // Send the DMX configuration
@@ -61,7 +61,7 @@ Result BlueLiteX1Mini::open (int index)
                     if (r.wasOk())
                     {
                         usbDevice.addBulkReadListener (this, UsbDevice::EndIn1, 64);
-                        usbDevice.addBulkReadListener (this, UsbDevice::EndIn6, 64);
+                        usbDevice.addBulkReadListener (this, UsbDevice::EndIn2, 64);
                         return r;
                     }
                 }
@@ -70,12 +70,12 @@ Result BlueLiteX1Mini::open (int index)
         
         close();
     }
-        
+    
     return r;
 }
 
 //==============================================================================
-void BlueLiteX1Mini::close()
+void BlueLiteX1::close()
 {
     if (usbDevice.isOpen())
     {
@@ -85,7 +85,7 @@ void BlueLiteX1Mini::close()
 }
 
 //==============================================================================
-Result BlueLiteX1Mini::updateDmxData (uint16 offset, const MemoryBlock& newData)
+Result BlueLiteX1::updateDmxData (uint16 offset, const MemoryBlock& newData)
 {
     if ((offset + newData.getSize()) > dmxDataSize)
         return Result::fail ("Data is larger than universe.");
@@ -103,53 +103,53 @@ Result BlueLiteX1Mini::updateDmxData (uint16 offset, const MemoryBlock& newData)
 }
 
 //==============================================================================
-MemoryBlock BlueLiteX1Mini::readDmxData()
+MemoryBlock BlueLiteX1::readDmxData()
 {
     return MemoryBlock ((uint8*) dmxPacket.getData() + sizeof(BlueLite::DataPacket), 
                         dmxDataSize);
 }
 
 //==============================================================================
-void BlueLiteX1Mini::addInputEvent (BlueLiteEvent* event)
+void BlueLiteX1::addInputEvent (BlueLiteEvent* event)
 {
     inputEventList.addIfNotAlreadyThere (event);
 }
 
-void BlueLiteX1Mini::removeInputEvent (BlueLiteEvent* event)
+void BlueLiteX1::removeInputEvent (BlueLiteEvent* event)
 {
     inputEventList.removeObject (event);
 }
 
 //==============================================================================
-MemoryBlock BlueLiteX1Mini::readDmxInput()
+MemoryBlock BlueLiteX1::readDmxInput()
 {
     const ScopedLock lock (inputEventList.getLock());
     return (MemoryBlock (dmxInput));
 }
 
 //==============================================================================
-void BlueLiteX1Mini::addTimeEvent (BlueLiteEvent* event)
+void BlueLiteX1::addTimeEvent (BlueLiteEvent* event)
 {
     timeEventList.addIfNotAlreadyThere (event);
 }
 
-void BlueLiteX1Mini::removeTimeEvent (BlueLiteEvent* event)
+void BlueLiteX1::removeTimeEvent (BlueLiteEvent* event)
 {
     timeEventList.removeObject (event);
 }
 
 //==============================================================================
-MemoryBlock BlueLiteX1Mini::readTimeInput()
+MemoryBlock BlueLiteX1::readTimeInput()
 {
     const ScopedLock lock (timeEventList.getLock());
     return (MemoryBlock (timeInput));
 }
 
 //==============================================================================
-Result BlueLiteX1Mini::loadFirmware (const String& firmware)
+Result BlueLiteX1::loadFirmware (const String& firmware)
 {
     uint8 b = 1;            
-    Result r = usbDevice.controlTransfer(UsbDevice::VendorOut, 0xa0, 0xe600, 0, &b, 1);
+    Result r = usbDevice.controlTransfer(UsbDevice::VendorOut, 0xa0, 0x7f92, 0, &b, 1);
     if (! r.wasOk())
         return r;
     
@@ -169,7 +169,7 @@ Result BlueLiteX1Mini::loadFirmware (const String& firmware)
     }
     
     b = 0;
-    r = usbDevice.controlTransfer(UsbDevice::VendorOut, 0xa0, 0xe600, 0, &b, 1);
+    r = usbDevice.controlTransfer(UsbDevice::VendorOut, 0xa0, 0x7f92, 0, &b, 1);
     if (! r.wasOk())
         return r;
     
@@ -177,7 +177,7 @@ Result BlueLiteX1Mini::loadFirmware (const String& firmware)
 }
 
 //==============================================================================
-Result BlueLiteX1Mini::sendConfig()
+Result BlueLiteX1::sendConfig()
 {
     // Set the configuration
     BlueLite::ConfigPacket conf;
@@ -189,10 +189,10 @@ Result BlueLiteX1Mini::sendConfig()
     conf.dmx4 = BlueLite::DmxAllPages;
     conf.inBaseH = 0;
     conf.inBaseL = 1;
-
+    
     int transferred;
     Result r = usbDevice.bulkTransfer (UsbDevice::EndOut2, 
-            (uint8*)(&conf), sizeof (conf), transferred);
+                                       (uint8*)(&conf), sizeof (conf), transferred);
     
     if (! r.wasOk())
         return r;
@@ -201,7 +201,7 @@ Result BlueLiteX1Mini::sendConfig()
 }
 
 //==============================================================================
-Result BlueLiteX1Mini::sendTime()
+Result BlueLiteX1::sendTime()
 {
     BlueLite::TimePacket time;
     zerostruct<BlueLite::TimePacket> (time);
@@ -216,7 +216,7 @@ Result BlueLiteX1Mini::sendTime()
 }
 
 //==============================================================================
-void BlueLiteX1Mini::bulkDataRead (UsbDevice::EndPoint endPoint, 
+void BlueLiteX1::bulkDataRead (UsbDevice::EndPoint endPoint, 
                                    const uint8* data, int size)
 {
     {
@@ -224,12 +224,6 @@ void BlueLiteX1Mini::bulkDataRead (UsbDevice::EndPoint endPoint,
         {
             if (size >= 10)
             {
-//                Logger::outputDebugString(String::formatted ("%02x %02x %d%d:%d%d:%d%d:%d%d",
-//                                                             data[0], data[1], 
-//                                                             data[2], data[3], 
-//                                                             data[4], data[5],
-//                                                             data[6], data[7],
-//                                                             data[8], data[9]));
                 const ScopedLock lock (timeEventList.getLock());
                 
                 timeInput.copyFrom (data, 0, 10);
@@ -239,18 +233,14 @@ void BlueLiteX1Mini::bulkDataRead (UsbDevice::EndPoint endPoint,
                     timeEventList[n]->signal();
             }
         }
-        else if (endPoint == UsbDevice::EndIn6)
+        else if (endPoint == UsbDevice::EndIn2)
         {
             if (size >= dmxInputSize)
             {
-//                Logger::outputDebugString (">>>>>>>>>>>>>> Dmx Input received: " +
-//                                           String::formatted ("%02x %02x %02x %02x",
-//                                                              data[0], data[1],
-//                                                              data[2], data[3]));
                 const ScopedLock lock (inputEventList.getLock());
-
+                
                 dmxInput.copyFrom (data, 0, dmxInputSize);
-             
+                
                 int listSize = inputEventList.size();
                 for (int n = 0; n < listSize; ++n)
                     inputEventList[n]->signal();

@@ -1,23 +1,27 @@
 /*
-    BlueLiteX1Mini.h
+  ==============================================================================
 
-    Low Level Access to X1 Mini 
+    BlueLiteX1.h
+    Created: 29 Mar 2012 9:40:11pm
+    Author:  Joe Fitzpatrick
+
+  ==============================================================================
 */
 
-#ifndef __BLUELITEX1MINI_H_554C97D0__
-#define __BLUELITEX1MINI_H_554C97D0__
+#ifndef __BLUELITEX1_H_DE4CA899__
+#define __BLUELITEX1_H_DE4CA899__
 
 #include "BlueLiteDevice.h"
 #include "UsbDevice.h"
 
 //==============================================================================
-class BlueLiteX1Mini : public BlueLiteDevice,
-                       public UsbBulkReadListener
+class BlueLiteX1 : public BlueLiteDevice,
+                   public UsbBulkReadListener
 {
 public:
     //==============================================================================
-    BlueLiteX1Mini();
-    virtual ~BlueLiteX1Mini(); 
+    BlueLiteX1();
+    virtual ~BlueLiteX1(); 
     
     //==============================================================================
     const int getCount() { return usbDevice.getCount(); }
@@ -26,7 +30,7 @@ public:
     Result open (int index);
     bool isOpen() { return usbDevice.isOpen(); }
     void close();
-
+    
     //==============================================================================
     Result updateDmxData (uint16 offset, const MemoryBlock& newData);
     MemoryBlock readDmxData();
@@ -64,7 +68,7 @@ private:
     const int maxDevice;
     const int dmxDataSize;
     const int dmxInputSize;
-
+    
     UsbDevice usbDevice;
     MemoryBlock dmxPacket;
     
@@ -75,7 +79,7 @@ private:
     MemoryBlock timeInput;
     
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlueLiteX1Mini)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlueLiteX1)
 };
 
-#endif  // __BLUELITEX1MINI_H_554C97D0__
+#endif  // __BLUELITEX1_H_DE4CA899__

@@ -33,7 +33,7 @@ public:
     
 private:
     //==============================================================================
-    BlueLiteX1Mini blueliteMini;
+    BlueLiteDevice::Ptr blueliteDevice;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainAppWindow)

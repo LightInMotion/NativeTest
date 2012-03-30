@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Mar 2012 10:11:25am
+  Creation date:  29 Mar 2012 10:40:53pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,11 +19,11 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_TESTTABSCOMPONENT_TESTTABSCOMPONENT_1A83E643__
-#define __JUCER_HEADER_TESTTABSCOMPONENT_TESTTABSCOMPONENT_1A83E643__
+#ifndef __JUCER_HEADER_TESTTABSCOMPONENT_TESTTABSCOMPONENT_94A546B5__
+#define __JUCER_HEADER_TESTTABSCOMPONENT_TESTTABSCOMPONENT_94A546B5__
 
 //[Headers]     -- You can add your own extra header files here --
-#include "BlueLiteX1Mini.h"
+#include "BlueLiteDevice.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 //[/Headers]
 
@@ -41,7 +41,7 @@ class TestTabsComponent  : public Component
 {
 public:
     //==============================================================================
-    TestTabsComponent (BlueLiteX1Mini& blueliteMini_);
+    TestTabsComponent (BlueLiteDevice::Ptr blueliteDevice_);
     ~TestTabsComponent();
 
     //==============================================================================
@@ -58,7 +58,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    BlueLiteX1Mini& blueliteMini;
+    BlueLiteDevice::Ptr blueliteDevice;
     //[/UserVariables]
 
     //==============================================================================
@@ -72,4 +72,4 @@ private:
 };
 
 
-#endif   // __JUCER_HEADER_TESTTABSCOMPONENT_TESTTABSCOMPONENT_1A83E643__
+#endif   // __JUCER_HEADER_TESTTABSCOMPONENT_TESTTABSCOMPONENT_94A546B5__

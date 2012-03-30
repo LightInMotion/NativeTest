@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Mar 2012 9:14:07pm
+  Creation date:  29 Mar 2012 10:34:29pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -29,9 +29,9 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-TimeComponent::TimeComponent (BlueLiteX1Mini& blueliteMini_)
+TimeComponent::TimeComponent (BlueLiteDevice::Ptr blueliteDevice_)
     : Thread ("Time Input Thread"),
-      blueliteMini (blueliteMini_),
+      blueliteDevice (blueliteDevice_),
       timeLabel (0),
       label (0)
 {
@@ -63,7 +63,7 @@ TimeComponent::TimeComponent (BlueLiteX1Mini& blueliteMini_)
 
     //[Constructor] You can add your own custom stuff here..
     timeEvent = new BlueLiteEvent();
-    blueliteMini.addTimeEvent (timeEvent.getObject());
+    blueliteDevice->addTimeEvent (timeEvent.getObject());
     startThread();
     //[/Constructor]
 }
@@ -79,7 +79,7 @@ TimeComponent::~TimeComponent()
 
     //[Destructor]. You can add your own custom destruction code here..
     signalThreadShouldExit();
-    blueliteMini.removeTimeEvent (timeEvent.getObject());
+    blueliteDevice->removeTimeEvent (timeEvent.getObject());
     timeEvent->signal();
     stopThread (-1);
 
@@ -100,7 +100,7 @@ void TimeComponent::paint (Graphics& g)
 void TimeComponent::resized()
 {
     timeLabel->setBounds (40, 48, 144, 32);
-    label->setBounds (32, 16, 159, 24);
+    label->setBounds (40, 16, 159, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -116,7 +116,7 @@ void TimeComponent::run()
         if (threadShouldExit())
             return;
 
-        MemoryBlock lastTime = blueliteMini.readTimeInput();
+        MemoryBlock lastTime = blueliteDevice->readTimeInput();
         uint8* data = (uint8*) lastTime.getData();
 
         String s;
@@ -149,8 +149,8 @@ void TimeComponent::run()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="TimeComponent" componentName=""
-                 parentClasses="public Component, Thread" constructorParams="BlueLiteX1Mini&amp; blueliteMini_"
-                 variableInitialisers="Thread (&quot;Time Input Thread&quot;),&#10;blueliteMini (blueliteMini_)"
+                 parentClasses="public Component, Thread" constructorParams="BlueLiteDevice::Ptr blueliteDevice_"
+                 variableInitialisers="Thread (&quot;Time Input Thread&quot;),&#10;blueliteDevice (blueliteDevice_)"
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330000013"
                  fixedSize="0" initialWidth="600" initialHeight="400">
   <BACKGROUND backgroundColour="ffffff"/>
@@ -161,7 +161,7 @@ BEGIN_JUCER_METADATA
          fontname="Default monospaced font" fontsize="24" bold="0" italic="0"
          justification="33"/>
   <LABEL name="new label" id="a3352c40cfd209cf" memberName="label" virtualName=""
-         explicitFocusOrder="0" pos="32 16 159 24" textCol="fff0ffff"
+         explicitFocusOrder="0" pos="40 16 159 24" textCol="fff0ffff"
          edTextCol="ff000000" edBkgCol="0" labelText="Writing SMPTE Timecode"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="15" bold="0" italic="0" justification="33"/>

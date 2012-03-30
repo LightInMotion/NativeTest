@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Mar 2012 4:58:01pm
+  Creation date:  29 Mar 2012 10:39:15pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -29,9 +29,9 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-DmxInComponent::DmxInComponent (BlueLiteX1Mini& blueliteMini_)
+DmxInComponent::DmxInComponent (BlueLiteDevice::Ptr blueliteDevice_)
     : Thread ("Dmx Input Thread"),
-      blueliteMini (blueliteMini_),
+      blueliteDevice (blueliteDevice_),
       label1 (0),
       label2 (0),
       label3 (0),
@@ -619,7 +619,7 @@ DmxInComponent::DmxInComponent (BlueLiteX1Mini& blueliteMini_)
 
     //[Constructor] You can add your own custom stuff here..
     inputEvent = new BlueLiteEvent();
-    blueliteMini.addInputEvent (inputEvent.getObject());
+    blueliteDevice->addInputEvent (inputEvent.getObject());
     startThread();
     //[/Constructor]
 }
@@ -682,10 +682,10 @@ DmxInComponent::~DmxInComponent()
 
     //[Destructor]. You can add your own custom destruction code here..
     signalThreadShouldExit();
-    blueliteMini.removeInputEvent (inputEvent.getObject());
+    blueliteDevice->removeInputEvent (inputEvent.getObject());
     inputEvent->signal();
     stopThread (-1);
-    
+
     inputEvent = nullptr;
     //[/Destructor]
 }
@@ -702,57 +702,57 @@ void DmxInComponent::paint (Graphics& g)
 
 void DmxInComponent::resized()
 {
-    label1->setBounds (proportionOfWidth (0.1626f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.1128f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label2->setBounds (proportionOfWidth (0.2958f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.1128f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label3->setBounds (proportionOfWidth (0.4274f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.1128f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label4->setBounds (proportionOfWidth (0.5575f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.1128f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label5->setBounds (proportionOfWidth (0.6891f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.1128f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label6->setBounds (proportionOfWidth (0.8207f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.1128f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label7->setBounds (proportionOfWidth (0.1626f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.2199f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label8->setBounds (proportionOfWidth (0.2958f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.2199f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label9->setBounds (proportionOfWidth (0.4274f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.2199f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label10->setBounds (proportionOfWidth (0.5575f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.2199f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label11->setBounds (proportionOfWidth (0.6891f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.2199f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label12->setBounds (proportionOfWidth (0.8207f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.2199f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label13->setBounds (proportionOfWidth (0.1626f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.3231f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label14->setBounds (proportionOfWidth (0.2958f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.3231f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label15->setBounds (proportionOfWidth (0.4274f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.3231f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label16->setBounds (proportionOfWidth (0.5575f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.3231f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label17->setBounds (proportionOfWidth (0.6891f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.3231f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label18->setBounds (proportionOfWidth (0.8207f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.3231f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label19->setBounds (proportionOfWidth (0.1626f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.4302f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label20->setBounds (proportionOfWidth (0.2958f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.4302f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label21->setBounds (proportionOfWidth (0.4274f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.4302f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label22->setBounds (proportionOfWidth (0.5575f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.4302f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label23->setBounds (proportionOfWidth (0.6891f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.4302f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label24->setBounds (proportionOfWidth (0.8207f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.4302f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label25->setBounds (proportionOfWidth (0.1626f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.5296f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label26->setBounds (proportionOfWidth (0.2958f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.5296f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label27->setBounds (proportionOfWidth (0.4274f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.5296f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label28->setBounds (proportionOfWidth (0.5575f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.5296f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label29->setBounds (proportionOfWidth (0.6891f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.5296f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label30->setBounds (proportionOfWidth (0.8207f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.5296f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label31->setBounds (proportionOfWidth (0.1626f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.6367f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label32->setBounds (proportionOfWidth (0.2958f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.6367f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label33->setBounds (proportionOfWidth (0.4274f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.6367f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label34->setBounds (proportionOfWidth (0.5575f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.6367f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label35->setBounds (proportionOfWidth (0.6891f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.6367f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label36->setBounds (proportionOfWidth (0.8207f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.6367f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label37->setBounds (proportionOfWidth (0.1626f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.7438f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label38->setBounds (proportionOfWidth (0.2958f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.7438f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label39->setBounds (proportionOfWidth (0.4274f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.7438f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label40->setBounds (proportionOfWidth (0.5575f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.7438f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label41->setBounds (proportionOfWidth (0.6891f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.7438f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label42->setBounds (proportionOfWidth (0.8207f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.7438f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label43->setBounds (proportionOfWidth (0.1626f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.8509f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label44->setBounds (proportionOfWidth (0.2958f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.8509f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label45->setBounds (proportionOfWidth (0.4274f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.8509f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label46->setBounds (proportionOfWidth (0.5575f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.8509f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
-    label47->setBounds (proportionOfWidth (0.6891f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.8509f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label1->setBounds (proportionOfWidth (0.1619f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.1119f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label2->setBounds (proportionOfWidth (0.2950f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.1119f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label3->setBounds (proportionOfWidth (0.4266f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.1119f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label4->setBounds (proportionOfWidth (0.5583f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.1119f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label5->setBounds (proportionOfWidth (0.6899f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.1119f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label6->setBounds (proportionOfWidth (0.8215f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.1119f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label7->setBounds (proportionOfWidth (0.1619f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.2208f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label8->setBounds (proportionOfWidth (0.2950f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.2208f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label9->setBounds (proportionOfWidth (0.4266f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.2208f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label10->setBounds (proportionOfWidth (0.5583f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.2208f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label11->setBounds (proportionOfWidth (0.6899f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.2208f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label12->setBounds (proportionOfWidth (0.8215f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.2208f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label13->setBounds (proportionOfWidth (0.1619f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.3241f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label14->setBounds (proportionOfWidth (0.2950f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.3241f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label15->setBounds (proportionOfWidth (0.4266f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.3241f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label16->setBounds (proportionOfWidth (0.5583f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.3241f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label17->setBounds (proportionOfWidth (0.6899f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.3241f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label18->setBounds (proportionOfWidth (0.8215f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.3241f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label19->setBounds (proportionOfWidth (0.1619f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.4293f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label20->setBounds (proportionOfWidth (0.2950f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.4293f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label21->setBounds (proportionOfWidth (0.4266f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.4293f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label22->setBounds (proportionOfWidth (0.5583f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.4293f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label23->setBounds (proportionOfWidth (0.6899f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.4293f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label24->setBounds (proportionOfWidth (0.8215f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.4293f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label25->setBounds (proportionOfWidth (0.1619f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.5306f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label26->setBounds (proportionOfWidth (0.2950f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.5306f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label27->setBounds (proportionOfWidth (0.4266f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.5306f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label28->setBounds (proportionOfWidth (0.5583f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.5306f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label29->setBounds (proportionOfWidth (0.6899f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.5306f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label30->setBounds (proportionOfWidth (0.8215f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.5306f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label31->setBounds (proportionOfWidth (0.1619f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.6358f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label32->setBounds (proportionOfWidth (0.2950f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.6358f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label33->setBounds (proportionOfWidth (0.4266f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.6358f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label34->setBounds (proportionOfWidth (0.5583f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.6358f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label35->setBounds (proportionOfWidth (0.6899f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.6358f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label36->setBounds (proportionOfWidth (0.8215f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.6358f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label37->setBounds (proportionOfWidth (0.1619f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.7447f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label38->setBounds (proportionOfWidth (0.2950f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.7447f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label39->setBounds (proportionOfWidth (0.4266f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.7447f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label40->setBounds (proportionOfWidth (0.5583f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.7447f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label41->setBounds (proportionOfWidth (0.6899f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.7447f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label42->setBounds (proportionOfWidth (0.8215f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.7447f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label43->setBounds (proportionOfWidth (0.1619f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.8499f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label44->setBounds (proportionOfWidth (0.2950f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.8499f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label45->setBounds (proportionOfWidth (0.4266f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.8499f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label46->setBounds (proportionOfWidth (0.5583f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.8499f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
+    label47->setBounds (proportionOfWidth (0.6899f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.8499f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
     label48->setBounds (proportionOfWidth (0.8200f) - ((proportionOfWidth (0.0968f)) / 2), proportionOfHeight (0.8499f) - ((proportionOfHeight (0.0554f)) / 2), proportionOfWidth (0.0968f), proportionOfHeight (0.0554f));
     //[UserResized] Add your own custom resize handling here..
     Font f(label1->getHeight() * .9f, Font::plain);
-    
+
     for (int n = 0; n < 48; ++n)
         labels[n]->setFont (f);
     //[/UserResized]
@@ -764,26 +764,26 @@ void DmxInComponent::resized()
 void DmxInComponent::run()
 {
     int channels = 48;
-    if (blueliteMini.dmxInputSize < channels)
-        channels = blueliteMini.dmxInputSize;
-    
+    if (blueliteDevice->getDmxInputSize() < channels)
+        channels = blueliteDevice->getDmxInputSize();
+
     MemoryBlock last(channels);
     last.fillWith (0);
-    
+
     while (! threadShouldExit())
     {
         inputEvent->wait();
         if (threadShouldExit())
             return;
 
-        MemoryBlock newest = blueliteMini.readDmxInput();
+        MemoryBlock newest = blueliteDevice->readDmxInput();
 
-        do 
+        do
         {
             const MessageManagerLock mml (Thread::getCurrentThread());
             if (! mml.lockWasGained())
                 return;
-            
+
             for (int n = 0; n < channels; ++n)
             {
                 if (last[n] != newest[n])
@@ -793,9 +793,9 @@ void DmxInComponent::run()
                     last[n] = newest[n];
                 }
             }
-            
+
         } while (0);
-        
+
         // We don't want to update more than 20 Hz
         sleep(50);
     }
@@ -812,293 +812,293 @@ void DmxInComponent::run()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="DmxInComponent" componentName=""
-                 parentClasses="public Component, Thread" constructorParams="BlueLiteX1Mini&amp; blueliteMini_"
-                 variableInitialisers="Thread (&quot;Dmx Input Thread&quot;),&#10;blueliteMini (blueliteMini_)"
+                 parentClasses="public Component, Thread" constructorParams="BlueLiteDevice::Ptr blueliteDevice_"
+                 variableInitialisers="Thread (&quot;Dmx Input Thread&quot;),&#10;blueliteDevice (blueliteDevice_)"
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330000013"
                  fixedSize="0" initialWidth="416" initialHeight="440">
   <BACKGROUND backgroundColour="ffffff"/>
   <LABEL name="new label" id="15189880f5d76355" memberName="label1" virtualName=""
-         explicitFocusOrder="0" pos="16.188%c 11.185%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="16.238%c 11.152%c 9.646% 5.484%"
          tooltip="Input 1" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="c31769731f58af07" memberName="label2" virtualName=""
-         explicitFocusOrder="0" pos="29.501%c 11.185%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="29.421%c 11.152%c 9.646% 5.484%"
          tooltip="Input 2" textCol="fff0ffff" outlineCol="0" edTextCol="ff000000"
          edBkgCol="0" labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="1cc8f15ab2c52a93" memberName="label3" virtualName=""
-         explicitFocusOrder="0" pos="42.663%c 11.185%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="42.605%c 11.152%c 9.646% 5.484%"
          tooltip="Input 3" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="7f798d8839959534" memberName="label4" virtualName=""
-         explicitFocusOrder="0" pos="55.825%c 11.185%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="55.788%c 11.152%c 9.646% 5.484%"
          tooltip="Input 4" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="feaa02471b48585f" memberName="label5" virtualName=""
-         explicitFocusOrder="0" pos="68.986%c 11.185%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="68.971%c 11.152%c 9.646% 5.484%"
          tooltip="Input 5" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="4c90f163dd3b005e" memberName="label6" virtualName=""
-         explicitFocusOrder="0" pos="82.148%c 11.185%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="82.154%c 11.152%c 9.646% 5.484%"
          tooltip="Input 6" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="d0ab089596f98d3c" memberName="label7" virtualName=""
-         explicitFocusOrder="0" pos="16.188%c 22.084%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="16.238%c 22.121%c 9.646% 5.484%"
          tooltip="Input 7" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="e6003883517082c0" memberName="label8" virtualName=""
-         explicitFocusOrder="0" pos="29.501%c 22.084%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="29.421%c 22.121%c 9.646% 5.484%"
          tooltip="Input 8" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="52b8f1d361cc3acf" memberName="label9" virtualName=""
-         explicitFocusOrder="0" pos="42.663%c 22.084%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="42.605%c 22.121%c 9.646% 5.484%"
          tooltip="Input 9" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="18d7e1ff248cb6fc" memberName="label10" virtualName=""
-         explicitFocusOrder="0" pos="55.825%c 22.084%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="55.788%c 22.121%c 9.646% 5.484%"
          tooltip="Input 10" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="be035bdfb2600cb5" memberName="label11" virtualName=""
-         explicitFocusOrder="0" pos="68.986%c 22.084%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="68.971%c 22.121%c 9.646% 5.484%"
          tooltip="Input 11" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="9373bdb994907d3b" memberName="label12" virtualName=""
-         explicitFocusOrder="0" pos="82.148%c 22.084%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="82.154%c 22.121%c 9.646% 5.484%"
          tooltip="Input 12" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="5d38c72f1c437e8d" memberName="label13" virtualName=""
-         explicitFocusOrder="0" pos="16.188%c 32.409%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="16.238%c 32.358%c 9.646% 5.484%"
          tooltip="Input 13" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="4262175e6d7eccd5" memberName="label14" virtualName=""
-         explicitFocusOrder="0" pos="29.501%c 32.409%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="29.421%c 32.358%c 9.646% 5.484%"
          tooltip="Input 14" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="80156c89a2915f28" memberName="label15" virtualName=""
-         explicitFocusOrder="0" pos="42.663%c 32.409%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="42.605%c 32.358%c 9.646% 5.484%"
          tooltip="Input 15" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="e79837a03a082a65" memberName="label16" virtualName=""
-         explicitFocusOrder="0" pos="55.825%c 32.409%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="55.788%c 32.358%c 9.646% 5.484%"
          tooltip="Input 16" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="dd5028d8e3ca8557" memberName="label17" virtualName=""
-         explicitFocusOrder="0" pos="68.986%c 32.409%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="68.971%c 32.358%c 9.646% 5.484%"
          tooltip="Input 17" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="5e16fbd6fa0895dd" memberName="label18" virtualName=""
-         explicitFocusOrder="0" pos="82.148%c 32.409%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="82.154%c 32.358%c 9.646% 5.484%"
          tooltip="Input 18" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="15d00f18b383af47" memberName="label19" virtualName=""
-         explicitFocusOrder="0" pos="16.188%c 42.925%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="16.238%c 42.962%c 9.646% 5.484%"
          tooltip="Input 19" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="e83d969e06c0028e" memberName="label20" virtualName=""
-         explicitFocusOrder="0" pos="29.501%c 42.925%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="29.421%c 42.962%c 9.646% 5.484%"
          tooltip="Input 20" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="505c526e7e461aa3" memberName="label21" virtualName=""
-         explicitFocusOrder="0" pos="42.663%c 42.925%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="42.605%c 42.962%c 9.646% 5.484%"
          tooltip="Input 21" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="3d1006bbc067a4b7" memberName="label22" virtualName=""
-         explicitFocusOrder="0" pos="55.825%c 42.925%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="55.788%c 42.962%c 9.646% 5.484%"
          tooltip="Input 22" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="d25a571cb2345b2" memberName="label23" virtualName=""
-         explicitFocusOrder="0" pos="68.986%c 42.925%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="68.971%c 42.962%c 9.646% 5.484%"
          tooltip="Input 23" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="5ebc856772cde35c" memberName="label24" virtualName=""
-         explicitFocusOrder="0" pos="82.148%c 42.925%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="82.154%c 42.962%c 9.646% 5.484%"
          tooltip="Input 24" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="4d268d0dfc4d0d4a" memberName="label25" virtualName=""
-         explicitFocusOrder="0" pos="16.188%c 53.059%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="16.238%c 53.016%c 9.646% 5.484%"
          tooltip="Input 25" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="8af8955b3fd9ba88" memberName="label26" virtualName=""
-         explicitFocusOrder="0" pos="29.501%c 53.059%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="29.421%c 53.016%c 9.646% 5.484%"
          tooltip="Input 26" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="18da33ded767155c" memberName="label27" virtualName=""
-         explicitFocusOrder="0" pos="42.663%c 53.059%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="42.605%c 53.016%c 9.646% 5.484%"
          tooltip="Input 27" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="3705a794f5997ea3" memberName="label28" virtualName=""
-         explicitFocusOrder="0" pos="55.825%c 53.059%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="55.788%c 53.016%c 9.646% 5.484%"
          tooltip="Input 28" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="3edebbd39c807c32" memberName="label29" virtualName=""
-         explicitFocusOrder="0" pos="68.986%c 53.059%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="68.971%c 53.016%c 9.646% 5.484%"
          tooltip="Input 29" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="dab89528797af782" memberName="label30" virtualName=""
-         explicitFocusOrder="0" pos="82.148%c 53.059%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="82.154%c 53.016%c 9.646% 5.484%"
          tooltip="Input 30" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="81d39ef3d2f3a121" memberName="label31" virtualName=""
-         explicitFocusOrder="0" pos="16.188%c 63.576%c 9.682% 5.545%"
-         tooltip="Input 31" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
-         labelText="0" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         bold="0" italic="0" justification="36"/>
+         explicitFocusOrder="0" pos="16.238%c 63.62%c 9.646% 5.484%" tooltip="Input 31"
+         textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0" labelText="0"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="15" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="7a081ee787141aed" memberName="label32" virtualName=""
-         explicitFocusOrder="0" pos="29.501%c 63.576%c 9.682% 5.545%"
-         tooltip="Input 32" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
-         labelText="0" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         bold="0" italic="0" justification="36"/>
+         explicitFocusOrder="0" pos="29.421%c 63.62%c 9.646% 5.484%" tooltip="Input 32"
+         textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0" labelText="0"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="15" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="d41b9bd15453ae69" memberName="label33" virtualName=""
-         explicitFocusOrder="0" pos="42.663%c 63.576%c 9.682% 5.545%"
-         tooltip="Input 33" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
-         labelText="0" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         bold="0" italic="0" justification="36"/>
+         explicitFocusOrder="0" pos="42.605%c 63.62%c 9.646% 5.484%" tooltip="Input 33"
+         textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0" labelText="0"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="15" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="73c7c74d4c6b49ab" memberName="label34" virtualName=""
-         explicitFocusOrder="0" pos="55.825%c 63.576%c 9.682% 5.545%"
-         tooltip="Input 34" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
-         labelText="0" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         bold="0" italic="0" justification="36"/>
+         explicitFocusOrder="0" pos="55.788%c 63.62%c 9.646% 5.484%" tooltip="Input 34"
+         textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0" labelText="0"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="15" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="610d86587e7594ad" memberName="label35" virtualName=""
-         explicitFocusOrder="0" pos="68.986%c 63.576%c 9.682% 5.545%"
-         tooltip="Input 35" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
-         labelText="0" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         bold="0" italic="0" justification="36"/>
+         explicitFocusOrder="0" pos="68.971%c 63.62%c 9.646% 5.484%" tooltip="Input 35"
+         textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0" labelText="0"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="15" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="48551ae324f8fa13" memberName="label36" virtualName=""
-         explicitFocusOrder="0" pos="82.148%c 63.576%c 9.682% 5.545%"
-         tooltip="Input 36" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
-         labelText="0" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         bold="0" italic="0" justification="36"/>
+         explicitFocusOrder="0" pos="82.154%c 63.62%c 9.646% 5.484%" tooltip="Input 36"
+         textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0" labelText="0"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="15" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="445ae0caff48c99f" memberName="label37" virtualName=""
-         explicitFocusOrder="0" pos="16.188%c 74.474%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="16.238%c 74.406%c 9.646% 5.484%"
          tooltip="Input 37" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="6269ae5c080f7e3" memberName="label38" virtualName=""
-         explicitFocusOrder="0" pos="29.501%c 74.474%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="29.421%c 74.406%c 9.646% 5.484%"
          tooltip="Input 38" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="f35881063ff0bdfa" memberName="label39" virtualName=""
-         explicitFocusOrder="0" pos="42.663%c 74.474%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="42.605%c 74.406%c 9.646% 5.484%"
          tooltip="Input 39" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="188c2e24da9f4d4f" memberName="label40" virtualName=""
-         explicitFocusOrder="0" pos="55.825%c 74.474%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="55.788%c 74.406%c 9.646% 5.484%"
          tooltip="Input 40" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="33d5c609a62b3eb5" memberName="label41" virtualName=""
-         explicitFocusOrder="0" pos="68.986%c 74.474%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="68.971%c 74.406%c 9.646% 5.484%"
          tooltip="Input 41" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="cf8b3c2e1112295d" memberName="label42" virtualName=""
-         explicitFocusOrder="0" pos="82.148%c 74.474%c 9.682% 5.545%"
+         explicitFocusOrder="0" pos="82.154%c 74.406%c 9.646% 5.484%"
          tooltip="Input 42" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
          labelText="0" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="ebf321b6cb1f3575" memberName="label43" virtualName=""
-         explicitFocusOrder="0" pos="16.188%c 84.99%c 9.682% 5.545%" tooltip="Input 43"
-         textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0" labelText="0"
-         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="15" bold="0" italic="0" justification="36"/>
+         explicitFocusOrder="0" pos="16.238%c 85.009%c 9.646% 5.484%"
+         tooltip="Input 43" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
+         labelText="0" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="79bed6ab2d8b576f" memberName="label44" virtualName=""
-         explicitFocusOrder="0" pos="29.501%c 84.99%c 9.682% 5.545%" tooltip="Input 44"
-         textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0" labelText="0"
-         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="15" bold="0" italic="0" justification="36"/>
+         explicitFocusOrder="0" pos="29.421%c 85.009%c 9.646% 5.484%"
+         tooltip="Input 44" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
+         labelText="0" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="5630fad9d8727c42" memberName="label45" virtualName=""
-         explicitFocusOrder="0" pos="42.663%c 84.99%c 9.682% 5.545%" tooltip="Input 45"
-         textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0" labelText="0"
-         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="15" bold="0" italic="0" justification="36"/>
+         explicitFocusOrder="0" pos="42.605%c 85.009%c 9.646% 5.484%"
+         tooltip="Input 45" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
+         labelText="0" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="e4c6950921691c21" memberName="label46" virtualName=""
-         explicitFocusOrder="0" pos="55.825%c 84.99%c 9.682% 5.545%" tooltip="Input 46"
-         textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0" labelText="0"
-         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="15" bold="0" italic="0" justification="36"/>
+         explicitFocusOrder="0" pos="55.788%c 85.009%c 9.646% 5.484%"
+         tooltip="Input 46" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
+         labelText="0" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="b0fc2b69df3cb87d" memberName="label47" virtualName=""
-         explicitFocusOrder="0" pos="68.986%c 84.99%c 9.682% 5.545%" tooltip="Input 47"
-         textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0" labelText="0"
-         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="15" bold="0" italic="0" justification="36"/>
+         explicitFocusOrder="0" pos="68.971%c 85.009%c 9.646% 5.484%"
+         tooltip="Input 47" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
+         labelText="0" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="455065bd75f8b55" memberName="label48" virtualName=""
-         explicitFocusOrder="0" pos="81.997%c 84.99%c 9.682% 5.545%" tooltip="Input 48"
-         textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0" labelText="0"
-         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="15" bold="0" italic="0" justification="36"/>
+         explicitFocusOrder="0" pos="81.994%c 85.009%c 9.646% 5.484%"
+         tooltip="Input 48" textCol="fff0ffff" edTextCol="ff000000" edBkgCol="0"
+         labelText="0" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="36"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

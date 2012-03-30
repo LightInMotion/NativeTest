@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Mar 2012 9:14:07pm
+  Creation date:  29 Mar 2012 10:34:29pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,11 +19,11 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_TIMECOMPONENT_TIMECOMPONENT_71907473__
-#define __JUCER_HEADER_TIMECOMPONENT_TIMECOMPONENT_71907473__
+#ifndef __JUCER_HEADER_TIMECOMPONENT_TIMECOMPONENT_C3BAB86B__
+#define __JUCER_HEADER_TIMECOMPONENT_TIMECOMPONENT_C3BAB86B__
 
 //[Headers]     -- You can add your own extra header files here --
-#include "BlueLiteX1Mini.h"
+#include "BlueLiteDevice.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 //[/Headers]
 
@@ -42,7 +42,7 @@ class TimeComponent  : public Component,
 {
 public:
     //==============================================================================
-    TimeComponent (BlueLiteX1Mini& blueliteMini_);
+    TimeComponent (BlueLiteDevice::Ptr blueliteDevice_);
     ~TimeComponent();
 
     //==============================================================================
@@ -61,7 +61,7 @@ private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     void run();
 
-    BlueLiteX1Mini& blueliteMini;
+    BlueLiteDevice::Ptr blueliteDevice;
     BlueLiteEvent::Ptr timeEvent;
     //[/UserVariables]
 
@@ -77,4 +77,4 @@ private:
 };
 
 
-#endif   // __JUCER_HEADER_TIMECOMPONENT_TIMECOMPONENT_71907473__
+#endif   // __JUCER_HEADER_TIMECOMPONENT_TIMECOMPONENT_C3BAB86B__

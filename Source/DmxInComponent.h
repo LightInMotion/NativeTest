@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Mar 2012 4:58:01pm
+  Creation date:  29 Mar 2012 10:39:15pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,11 +19,11 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_DMXINCOMPONENT_DMXINCOMPONENT_D06B56FC__
-#define __JUCER_HEADER_DMXINCOMPONENT_DMXINCOMPONENT_D06B56FC__
+#ifndef __JUCER_HEADER_DMXINCOMPONENT_DMXINCOMPONENT_8008E7A0__
+#define __JUCER_HEADER_DMXINCOMPONENT_DMXINCOMPONENT_8008E7A0__
 
 //[Headers]     -- You can add your own extra header files here --
-#include "BlueLiteX1Mini.h"
+#include "BlueLiteDevice.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 //[/Headers]
 
@@ -42,7 +42,7 @@ class DmxInComponent  : public Component,
 {
 public:
     //==============================================================================
-    DmxInComponent (BlueLiteX1Mini& blueliteMini_);
+    DmxInComponent (BlueLiteDevice::Ptr blueliteDevice_);
     ~DmxInComponent();
 
     //==============================================================================
@@ -61,9 +61,9 @@ private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     void run();
 
-    BlueLiteX1Mini& blueliteMini;
+    BlueLiteDevice::Ptr blueliteDevice;
     BlueLiteEvent::Ptr inputEvent;
-    
+
     Array<Label*> labels;
     //[/UserVariables]
 
@@ -125,4 +125,4 @@ private:
 };
 
 
-#endif   // __JUCER_HEADER_DMXINCOMPONENT_DMXINCOMPONENT_D06B56FC__
+#endif   // __JUCER_HEADER_DMXINCOMPONENT_DMXINCOMPONENT_8008E7A0__

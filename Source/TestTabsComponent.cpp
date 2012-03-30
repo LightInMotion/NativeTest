@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Mar 2012 10:11:25am
+  Creation date:  29 Mar 2012 10:40:53pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -32,15 +32,15 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-TestTabsComponent::TestTabsComponent (BlueLiteX1Mini& blueliteMini_)
-    : blueliteMini (blueliteMini_),
+TestTabsComponent::TestTabsComponent (BlueLiteDevice::Ptr blueliteDevice_)
+    : blueliteDevice (blueliteDevice_),
       tabbedComponent (0)
 {
     addAndMakeVisible (tabbedComponent = new TabbedComponent (TabbedButtonBar::TabsAtTop));
     tabbedComponent->setTabBarDepth (35);
-    tabbedComponent->addTab (L"DMX Output", Colour (0xff344756), new DmxOutComponent (blueliteMini), true);
-    tabbedComponent->addTab (L"DMX Input", Colour (0xff435666), new DmxInComponent (blueliteMini), true);
-    tabbedComponent->addTab (L"Time", Colour (0xff546675), new TimeComponent (blueliteMini), true);
+    tabbedComponent->addTab (L"DMX Output", Colour (0xff344756), new DmxOutComponent (blueliteDevice), true);
+    tabbedComponent->addTab (L"DMX Input", Colour (0xff435666), new DmxInComponent (blueliteDevice), true);
+    tabbedComponent->addTab (L"Time", Colour (0xff546675), new TimeComponent (blueliteDevice), true);
     tabbedComponent->setCurrentTabIndex (0);
 
 
@@ -78,7 +78,7 @@ void TestTabsComponent::paint (Graphics& g)
 
 void TestTabsComponent::resized()
 {
-    tabbedComponent->setBounds (-1, 0, proportionOfWidth (1.0076f), proportionOfHeight (1.0023f));
+    tabbedComponent->setBounds (-1, 0, proportionOfWidth (1.0082f), proportionOfHeight (1.0023f));
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -98,20 +98,20 @@ void TestTabsComponent::resized()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="TestTabsComponent" componentName=""
-                 parentClasses="public Component" constructorParams="BlueLiteX1Mini&amp; blueliteMini_"
-                 variableInitialisers="blueliteMini (blueliteMini_)" snapPixels="8"
+                 parentClasses="public Component" constructorParams="BlueLiteDevice::Ptr blueliteDevice_"
+                 variableInitialisers="blueliteDevice (blueliteDevice_)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330000013" fixedSize="0"
                  initialWidth="600" initialHeight="400">
   <BACKGROUND backgroundColour="ffffff"/>
   <TABBEDCOMPONENT name="new tabbed component" id="16b48baabf12e68c" memberName="tabbedComponent"
-                   virtualName="" explicitFocusOrder="0" pos="-1 0 100.821% 100.228%"
+                   virtualName="" explicitFocusOrder="0" pos="-1 0 100.804% 100.183%"
                    orientation="top" tabBarDepth="35" initialTab="0">
     <TAB name="DMX Output" colour="ff344756" useJucerComp="1" contentClassName=""
-         constructorParams="blueliteMini" jucerComponentFile="DmxOutComponent.cpp"/>
+         constructorParams="blueliteDevice" jucerComponentFile="DmxOutComponent.cpp"/>
     <TAB name="DMX Input" colour="ff435666" useJucerComp="1" contentClassName=""
-         constructorParams="blueliteMini" jucerComponentFile="DmxInComponent.cpp"/>
+         constructorParams="blueliteDevice" jucerComponentFile="DmxInComponent.cpp"/>
     <TAB name="Time" colour="ff546675" useJucerComp="1" contentClassName=""
-         constructorParams="blueliteMini" jucerComponentFile="TimeComponent.cpp"/>
+         constructorParams="blueliteDevice" jucerComponentFile="TimeComponent.cpp"/>
   </TABBEDCOMPONENT>
 </JUCER_COMPONENT>
 

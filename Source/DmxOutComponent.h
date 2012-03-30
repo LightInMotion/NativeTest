@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Mar 2012 9:48:39am
+  Creation date:  29 Mar 2012 10:33:41pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,11 +19,11 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_DMXOUTCOMPONENT_DMXOUTCOMPONENT_DA692843__
-#define __JUCER_HEADER_DMXOUTCOMPONENT_DMXOUTCOMPONENT_DA692843__
+#ifndef __JUCER_HEADER_DMXOUTCOMPONENT_DMXOUTCOMPONENT_5FB2D384__
+#define __JUCER_HEADER_DMXOUTCOMPONENT_DMXOUTCOMPONENT_5FB2D384__
 
 //[Headers]     -- You can add your own extra header files here --
-#include "BlueLiteX1Mini.h"
+#include "BlueLiteDevice.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 //[/Headers]
 
@@ -42,7 +42,7 @@ class DmxOutComponent  : public Component,
 {
 public:
     //==============================================================================
-    DmxOutComponent (BlueLiteX1Mini& blueliteMini_);
+    DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_);
     ~DmxOutComponent();
 
     //==============================================================================
@@ -61,8 +61,8 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     void sendData();
-    
-    BlueLiteX1Mini& blueliteMini;
+
+    BlueLiteDevice::Ptr blueliteDevice;
     MemoryBlock dmxData;
     //[/UserVariables]
 
@@ -100,4 +100,4 @@ private:
 };
 
 
-#endif   // __JUCER_HEADER_DMXOUTCOMPONENT_DMXOUTCOMPONENT_DA692843__
+#endif   // __JUCER_HEADER_DMXOUTCOMPONENT_DMXOUTCOMPONENT_5FB2D384__

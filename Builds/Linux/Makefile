@@ -43,6 +43,7 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/BlueLiteX1_eee9660a.o \
   $(OBJDIR)/IntelHexReader_5ed5ab11.o \
   $(OBJDIR)/BlueLiteX1Mini_be473881.o \
   $(OBJDIR)/UsbDevice_a591255b.o \
@@ -73,6 +74,11 @@ clean:
 	-@rm -f $(OUTDIR)/$(TARGET)
 	-@rm -rf $(OBJDIR)/*
 	-@rm -rf $(OBJDIR)
+
+$(OBJDIR)/BlueLiteX1_eee9660a.o: ../../Source/BlueLiteX1.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling BlueLiteX1.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/IntelHexReader_5ed5ab11.o: ../../Source/IntelHexReader.cpp
 	-@mkdir -p $(OBJDIR)
