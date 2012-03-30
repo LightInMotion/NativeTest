@@ -74,7 +74,7 @@ MainAppWindow::MainAppWindow()
     {
         Result r = blueliteDevice->open (0);
         if (r.wasOk())
-            Logger::outputDebugString ("BlueLite 0 opened");
+            Logger::outputDebugString (blueliteDevice->getDeviceName() + " opened");
         else
         {
             AlertWindow::showMessageBox (AlertWindow::InfoIcon, 
@@ -110,7 +110,7 @@ MainAppWindow::~MainAppWindow()
     if (blueliteDevice != nullptr)
     {
         blueliteDevice->close();
-        Logger::outputDebugString ("BlueLite 0 closed");
+        Logger::outputDebugString (blueliteDevice->getDeviceName() + " closed");
     }
 }
 

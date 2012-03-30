@@ -47,6 +47,9 @@ public:
     virtual void close() = 0;
     
     //==============================================================================
+    virtual const String getDeviceName() = 0;
+    
+    //==============================================================================
     virtual Result updateDmxData (uint16 offset, const MemoryBlock& newData) = 0;
     virtual MemoryBlock readDmxData() = 0;
     

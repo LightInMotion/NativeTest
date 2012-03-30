@@ -44,6 +44,11 @@ public:
     inline int getIndex() { return deviceIndex; } const
     void closeDevice() { osHandle = nullptr; }
     
+    const String getDeviceName() const 
+    { 
+        return String (deviceName + "-" + String (deviceIndex)); 
+    } 
+    
     //==============================================================================
     Result setInterfaceAlternateSetting (int alternateSetting);
     Result resetDevice();

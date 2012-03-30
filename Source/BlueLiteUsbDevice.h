@@ -34,6 +34,8 @@ public:
     bool isOpen() { return usbDevice.isOpen(); }
     void close();
     
+    const String getDeviceName() { return usbDevice.getDeviceName(); }
+    
     //==============================================================================
     Result updateDmxData (uint16 offset, const MemoryBlock& newData);
     MemoryBlock readDmxData();

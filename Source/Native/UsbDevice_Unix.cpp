@@ -388,22 +388,22 @@ Result UsbDevice::openDevice (int index)
             {
                 LibUsbDeviceHandle::Ptr devH = new LibUsbDeviceHandle (c, dev);
                 if (devH->get() == nullptr)
-                    return Result::fail ("Could not open " + deviceName + String(index) + ".");
+                    return Result::fail ("Could not open " + getDeviceName() + ".");
  
                 // Configuration might have been selected by OS (or another app)
                 int config;
                 if (libusb_get_configuration (*devH, &config) < 0)
                     return Result::fail ("Could not read current configuration from " +
-                                         deviceName + String(index) + ".");
+                                         getDeviceName() + ".");
                 
                 if (config != 1)
                 {
                     if (libusb_set_configuration (*devH, 1) < 0)
-                        return Result::fail (deviceName + String(index) + " could not be set to config 1.");
+                        return Result::fail (getDeviceName() + " could not be set to config 1.");
                 }
                 
                 if (libusb_claim_interface (*devH, interface) < 0)
-                    return Result::fail (deviceName + String(index) + " is already inuse.");
+                    return Result::fail (getDeviceName() + " is already inuse.");
                                                 
                 osHandle = new UnixOSHandle (interface, c, devH);
                 return Result::ok();
@@ -413,7 +413,7 @@ Result UsbDevice::openDevice (int index)
         }
 	}
     
-    return Result::fail ("Could not find " + deviceName + String(index) + ".");
+    return Result::fail ("Could not find " + getDeviceName() + ".");
 }
 
 //==============================================================================
@@ -421,13 +421,13 @@ Result UsbDevice::setInterfaceAlternateSetting (int alternateSetting)
 {
     const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
-        return Result::fail (deviceName + " is not open.");
+        return Result::fail (getDeviceName() + " is not open.");
     
     if (libusb_set_interface_alt_setting (*device, 
                                           interface, 
                                           alternateSetting) < 0)
         return Result::fail ("Could not set alternate interface on " + 
-                             deviceName + String(deviceIndex) + ".");
+                             getDeviceName() + String(deviceIndex) + ".");
 
     return Result::ok();
 }
@@ -437,10 +437,10 @@ Result UsbDevice::resetDevice()
 {
     const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
-        return Result::fail (deviceName + " is not open.");
+        return Result::fail (getDeviceName() + " is not open.");
 
     if (libusb_reset_device (*device) < 0)
-        return Result::fail ("Could not reset " + deviceName + String(deviceIndex) + ".");
+        return Result::fail ("Could not reset " + getDeviceName() + ".");
     
     return Result::ok();
 }
@@ -450,11 +450,11 @@ Result UsbDevice::clearHalt (EndPoint endPoint)
 {
     const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
-        return Result::fail (deviceName + " is not open.");
+        return Result::fail (getDeviceName() + " is not open.");
     
     if (libusb_clear_halt (*device, endPoint) < 0)
         return Result::fail ("Could no clear endpoint " + String(endPoint) +
-                             " on " + deviceName + String(deviceIndex) + ".");
+                             " on " + getDeviceName() + ".");
     
     return Result::ok();    
 }
@@ -467,11 +467,11 @@ Result UsbDevice::controlTransfer (RequestType requestType,
 {
     const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
-        return Result::fail (deviceName + " is not open.");
+        return Result::fail (getDeviceName() + " is not open.");
 
     if (libusb_control_transfer (*device, requestType, request, 
                                  value, index, data, length, _LIBUSB_TIMEOUT) < 0)
-        return Result::fail ("Transfer error with " + deviceName + String(deviceIndex) + ".");
+        return Result::fail ("Transfer error with " + getDeviceName() + ".");
 
     return Result::ok();
 }
@@ -484,15 +484,15 @@ Result UsbDevice::bulkTransfer (EndPoint endPoint,
 {
     const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
-        return Result::fail (deviceName + " is not open.");
+        return Result::fail (getDeviceName() + " is not open.");
 
     int n = libusb_bulk_transfer (*device, endPoint, data, length, &transferred, _LIBUSB_TIMEOUT);
     if (n < 0)
     {
         if (n == LIBUSB_ERROR_TIMEOUT)
-            return Result::fail ("Timeout for " + deviceName + String(deviceIndex) + ".");
+            return Result::fail ("Timeout for " + getDeviceName() + ".");
         
-        return Result::fail ("Transfer error with " + deviceName + String(deviceIndex) + ".");
+        return Result::fail ("Transfer error with " + getDeviceName() + ".");
     }
     return Result::ok();
 }
@@ -503,7 +503,7 @@ Result UsbDevice::addBulkReadListener (UsbBulkReadListener* listener,
 {
     const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
-        return Result::fail (deviceName + " is not open.");
+        return Result::fail (getDeviceName() + " is not open.");
     
     UnixOSHandle* unixHandle = UnixOSHandle::getSelf (osHandle);
     
@@ -518,7 +518,7 @@ Result UsbDevice::removeBulkReadListener (EndPoint endPoint)
 {
     const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
     if (device == nullptr)
-        return Result::fail (deviceName + " is not open.");
+        return Result::fail (getDeviceName() + " is not open.");
     
     UnixOSHandle* unixHandle = UnixOSHandle::getSelf (osHandle);
 
