@@ -126,9 +126,14 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\BlueLiteX1.cpp"/>
+    <ClCompile Include="..\..\Source\BlueLiteUsbDevice.cpp"/>
+    <ClCompile Include="..\..\Source\BlueLiteX1.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\Source\IntelHexReader.cpp"/>
-    <ClCompile Include="..\..\Source\BlueLiteX1Mini.cpp"/>
+    <ClCompile Include="..\..\Source\BlueLiteX1Mini.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\Source\UsbDevice.cpp"/>
     <ClCompile Include="..\..\Source\Native\UsbDevice_Win.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -867,6 +872,8 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_basics\juce_gui_basics.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\BlueLiteUsbDevices.h"/>
+    <ClInclude Include="..\..\Source\BlueLiteUsbDevice.h"/>
     <ClInclude Include="..\..\Source\BlueLiteUsb.h"/>
     <ClInclude Include="..\..\Source\BlueLiteDevice.h"/>
     <ClInclude Include="..\..\Source\BlueLiteEvent.h"/>

@@ -8,8 +8,28 @@
 #define __BLUELITEDEVICE_H_3C6AC1F6__
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "BlueLiteEvent.h"
 
+//==============================================================================
+/*
+ Make our own event object, which is reference counted so that
+ it can't be deleted while we are still signalling it
+ */
+class BlueLiteEvent : public WaitableEvent, public ReferenceCountedObject
+{
+public:
+    BlueLiteEvent() {}
+    ~BlueLiteEvent() {}
+    
+    //==============================================================================    
+    typedef ReferenceCountedObjectPtr<BlueLiteEvent> Ptr;
+    
+private:
+    //==============================================================================
+    JUCE_LEAK_DETECTOR(BlueLiteEvent)    
+};
+
+
+//==============================================================================
 //==============================================================================
 class BlueLiteDevice : public ReferenceCountedObject
 {

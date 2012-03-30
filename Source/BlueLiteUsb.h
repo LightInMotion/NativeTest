@@ -1,11 +1,7 @@
 /*
-  ==============================================================================
-
     BlueLiteUsb.h
-    Created: 29 Mar 2012 9:59:02pm
-    Author:  Joe Fitzpatrick
 
-  ==============================================================================
+    BlueLite USB Interface Defines
 */
 
 #ifndef __BLUELITEUSB_H_EB3CE118__

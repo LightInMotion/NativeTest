@@ -7,7 +7,7 @@
 #ifndef __MAINWINDOW_H_FC7EECA1__
 #define __MAINWINDOW_H_FC7EECA1__
 
-#include "BlueLiteX1Mini.h"
+#include "BlueLiteDevice.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 
 

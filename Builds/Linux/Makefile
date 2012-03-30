@@ -43,9 +43,8 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
-  $(OBJDIR)/BlueLiteX1_eee9660a.o \
+  $(OBJDIR)/BlueLiteUsbDevice_3ad0d213.o \
   $(OBJDIR)/IntelHexReader_5ed5ab11.o \
-  $(OBJDIR)/BlueLiteX1Mini_be473881.o \
   $(OBJDIR)/UsbDevice_a591255b.o \
   $(OBJDIR)/TimeComponent_5ed54811.o \
   $(OBJDIR)/DmxOutComponent_f607555f.o \
@@ -75,19 +74,14 @@ clean:
 	-@rm -rf $(OBJDIR)/*
 	-@rm -rf $(OBJDIR)
 
-$(OBJDIR)/BlueLiteX1_eee9660a.o: ../../Source/BlueLiteX1.cpp
+$(OBJDIR)/BlueLiteUsbDevice_3ad0d213.o: ../../Source/BlueLiteUsbDevice.cpp
 	-@mkdir -p $(OBJDIR)
-	@echo "Compiling BlueLiteX1.cpp"
+	@echo "Compiling BlueLiteUsbDevice.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/IntelHexReader_5ed5ab11.o: ../../Source/IntelHexReader.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling IntelHexReader.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/BlueLiteX1Mini_be473881.o: ../../Source/BlueLiteX1Mini.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling BlueLiteX1Mini.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/UsbDevice_a591255b.o: ../../Source/UsbDevice.cpp

@@ -202,6 +202,9 @@
     <ClCompile Include="..\..\Firmware\X1IDLE.HEX">
       <Filter>NativeTest\Firmware Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\BlueLiteUsbDevice.cpp">
+      <Filter>NativeTest\BlueLite</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\BlueLiteX1.cpp">
       <Filter>NativeTest\BlueLite</Filter>
     </ClCompile>
@@ -1038,6 +1041,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\BlueLiteUsbDevices.h">
+      <Filter>NativeTest\BlueLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\BlueLiteUsbDevice.h">
+      <Filter>NativeTest\BlueLite</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\BlueLiteUsb.h">
       <Filter>NativeTest\BlueLite</Filter>
     </ClInclude>

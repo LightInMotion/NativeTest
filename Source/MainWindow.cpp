@@ -6,8 +6,7 @@
 
 #include "MainWindow.h"
 #include "TestTabsComponent.h"
-#include "BlueLiteX1.h"
-#include "BlueLiteX1Mini.h"
+#include "BlueLiteUsbDevices.h"
 
 //==============================================================================
 class ContentComp : public Component
