@@ -55,7 +55,7 @@ MainAppWindow::MainAppWindow()
 {
     setResizable (true, false);
     setResizeLimits (100, 100, 8192, 8192);
-    centreWithSize (480, 320);    
+    centreWithSize (640, 480);    
     setUsingNativeTitleBar (true);
     setVisible (true);
 
