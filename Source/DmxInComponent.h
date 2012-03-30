@@ -62,7 +62,7 @@ private:
     void run();
 
     BlueLiteX1Mini& blueliteMini;
-    WaitableEvent inputEvent;
+    BlueLiteEvent::Ptr inputEvent;
     
     Array<Label*> labels;
     

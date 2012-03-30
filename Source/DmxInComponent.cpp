@@ -618,7 +618,8 @@ DmxInComponent::DmxInComponent (BlueLiteX1Mini& blueliteMini_)
 
 
     //[Constructor] You can add your own custom stuff here..
-    blueliteMini.addInputEvent (&inputEvent);
+    inputEvent = new BlueLiteEvent();
+    blueliteMini.addInputEvent (inputEvent.getObject());
     startThread();
     //[/Constructor]
 }
@@ -681,9 +682,11 @@ DmxInComponent::~DmxInComponent()
 
     //[Destructor]. You can add your own custom destruction code here..
     signalThreadShouldExit();
-    blueliteMini.removeInputEvent (&inputEvent);
-    inputEvent.signal();
+    blueliteMini.removeInputEvent (inputEvent.getObject());
+    inputEvent->signal();
     stopThread (-1);
+    
+    inputEvent = nullptr;
     //[/Destructor]
 }
 
@@ -760,12 +763,16 @@ void DmxInComponent::resized()
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void DmxInComponent::run()
 {
-    MemoryBlock last(48);
+    int channels = 48;
+    if (blueliteMini.dmxInputSize < channels)
+        channels = blueliteMini.dmxInputSize;
+    
+    MemoryBlock last(channels);
     last.fillWith (0);
     
     while (! threadShouldExit())
     {
-        inputEvent.wait();
+        inputEvent->wait();
         if (threadShouldExit())
             return;
 
@@ -777,7 +784,7 @@ void DmxInComponent::run()
             if (! mml.lockWasGained())
                 return;
             
-            for (int n = 0; n < 48; ++n)
+            for (int n = 0; n < channels; ++n)
             {
                 if (last[n] != newest[n])
                 {
@@ -786,6 +793,7 @@ void DmxInComponent::run()
                     last[n] = newest[n];
                 }
             }
+            
         } while (0);
         
         // We don't want to update more than 20 Hz

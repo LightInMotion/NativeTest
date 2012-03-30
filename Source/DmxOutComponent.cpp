@@ -543,7 +543,7 @@ void DmxOutComponent::sliderValueChanged (Slider* sliderThatWasMoved)
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void DmxOutComponent::sendData()
 {
-    Result r = blueliteMini.updateUniverseData (0, dmxData);
+    Result r = blueliteMini.updateDmxData (0, dmxData);
     if (! r.wasOk())
         Logger::outputDebugString("DMX output error: " + r.getErrorMessage());
 }

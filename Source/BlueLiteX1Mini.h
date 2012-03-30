@@ -11,6 +11,26 @@
 #include "UsbDevice.h"
 
 //==============================================================================
+/*
+    Make our own event object, which is reference counted so that
+    it can't be deleted while we are still signalling it
+*/
+class BlueLiteEvent : public WaitableEvent, public ReferenceCountedObject
+{
+public:
+    BlueLiteEvent() {}
+    ~BlueLiteEvent() {}
+    
+    //==============================================================================    
+    typedef ReferenceCountedObjectPtr<BlueLiteEvent> Ptr;
+    
+private:
+    //==============================================================================
+    JUCE_LEAK_DETECTOR(BlueLiteEvent)    
+};
+
+//==============================================================================
+//==============================================================================
 class BlueLiteX1Mini : public UsbBulkReadListener
 {
 public:
@@ -27,19 +47,19 @@ public:
     void close();
 
     //==============================================================================
-    Result updateUniverseData (uint16 offset, const MemoryBlock& newData);
-    MemoryBlock readUniverseData();
+    Result updateDmxData (uint16 offset, const MemoryBlock& newData);
+    MemoryBlock readDmxData();
     
     //==============================================================================
-    void addInputEvent (const WaitableEvent* event);
-    void removeInputEvent (const WaitableEvent* event);
+    void addInputEvent (BlueLiteEvent* event);
+    void removeInputEvent (BlueLiteEvent* event);
     
     MemoryBlock readDmxInput();
     
     //==============================================================================
     const int maxDevice;
-    const int universeSize;
-    const int inputChannelCount;
+    const int dmxDataSize;
+    const int dmxInputSize;
 
 private:    
     //==============================================================================
@@ -57,7 +77,7 @@ private:
     UsbDevice usbDevice;
     MemoryBlock dmxPacket;
     
-    Array <const WaitableEvent*, CriticalSection> inputEventList;
+    ReferenceCountedArray<BlueLiteEvent, CriticalSection> inputEventList;
     MemoryBlock dmxInput;
     
     //==============================================================================

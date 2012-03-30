@@ -13,12 +13,12 @@ namespace BlueLite
 {
     const int MaxDevice = 8;
 
-    const int DmxUniverseSize = 512;
+    const int MiniDmxDataSize = 512;
     
-    const int InputChannelCount = 48;
+    const int DmxInputSize = 48;
     
     const int DmxPageSize = 32;
-    const int DmxAllPages = (DmxUniverseSize / DmxPageSize);
+    const int MiniDmxAllPages = (MiniDmxDataSize / DmxPageSize);
     
     enum PacketType 
     {
@@ -102,11 +102,11 @@ namespace BlueLite
 //==============================================================================
 BlueLiteX1Mini::BlueLiteX1Mini()
     : maxDevice (BlueLite::MaxDevice),
-      universeSize (BlueLite::DmxUniverseSize),
-      inputChannelCount (BlueLite::InputChannelCount),
+      dmxDataSize (BlueLite::MiniDmxDataSize),
+      dmxInputSize (BlueLite::DmxInputSize),
       usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini"),
-      dmxPacket (BlueLite::DmxUniverseSize + sizeof(BlueLite::DataPacket)),
-      dmxInput (BlueLite::InputChannelCount)
+      dmxPacket (BlueLite::MiniDmxDataSize + sizeof(BlueLite::DataPacket)),
+      dmxInput (BlueLite::DmxInputSize)
 {
     // Assume inputs are 0
     dmxInput.fillWith (0);
@@ -175,9 +175,9 @@ void BlueLiteX1Mini::close()
 }
 
 //==============================================================================
-Result BlueLiteX1Mini::updateUniverseData (uint16 offset, const MemoryBlock& newData)
+Result BlueLiteX1Mini::updateDmxData (uint16 offset, const MemoryBlock& newData)
 {
-    if ((offset + newData.getSize()) > universeSize)
+    if ((offset + newData.getSize()) > dmxDataSize)
         return Result::fail ("Data is larger than universe.");
     
     dmxPacket.copyFrom (newData.getData(), offset + sizeof(BlueLite::DataPacket), newData.getSize());
@@ -193,21 +193,21 @@ Result BlueLiteX1Mini::updateUniverseData (uint16 offset, const MemoryBlock& new
 }
 
 //==============================================================================
-MemoryBlock BlueLiteX1Mini::readUniverseData()
+MemoryBlock BlueLiteX1Mini::readDmxData()
 {
     return MemoryBlock ((uint8*) dmxPacket.getData() + sizeof(BlueLite::DataPacket), 
-                     universeSize);
+                        dmxDataSize);
 }
 
 //==============================================================================
-void BlueLiteX1Mini::addInputEvent (const WaitableEvent* event)
+void BlueLiteX1Mini::addInputEvent (BlueLiteEvent* event)
 {
     inputEventList.addIfNotAlreadyThere (event);
 }
 
-void BlueLiteX1Mini::removeInputEvent (const WaitableEvent* event)
+void BlueLiteX1Mini::removeInputEvent (BlueLiteEvent* event)
 {
-    inputEventList.removeValue (event);
+    inputEventList.removeObject (event);
 }
 
 //==============================================================================
@@ -255,10 +255,10 @@ Result BlueLiteX1Mini::sendConfig()
     BlueLite::ConfigPacket conf;
     zerostruct<BlueLite::ConfigPacket> (conf);
     conf.type = BlueLite::ConfigType;
-    conf.dmx1 = BlueLite::DmxAllPages;
-    conf.dmx2 = BlueLite::DmxAllPages;
-    conf.dmx3 = BlueLite::DmxAllPages;
-    conf.dmx4 = BlueLite::DmxAllPages;
+    conf.dmx1 = BlueLite::MiniDmxAllPages;
+    conf.dmx2 = BlueLite::MiniDmxAllPages;
+    conf.dmx3 = BlueLite::MiniDmxAllPages;
+    conf.dmx4 = BlueLite::MiniDmxAllPages;
     conf.inBaseH = 0;
     conf.inBaseL = 1;
 
@@ -280,7 +280,7 @@ Result BlueLiteX1Mini::sendTime()
     time.type       = BlueLite::TimeType;
     time.stype      = BlueLite::Smpte30fps;
     time.command    = BlueLite::WriteCmd;
-    time.control    = /* BlueLite::FreezeControl || */ BlueLite::NoPhysControl;
+    time.control    = BlueLite::FreezeControl | BlueLite::NoPhysControl;
     
     int transferred;
     return usbDevice.bulkTransfer (UsbDevice::EndOut2, (uint8*)&time, 
@@ -307,15 +307,15 @@ void BlueLiteX1Mini::bulkDataRead (UsbDevice::EndPoint endPoint,
         }
         else if (endPoint == UsbDevice::EndIn6)
         {
-            if (size >= inputChannelCount)
+            if (size >= dmxInputSize)
             {
-                Logger::outputDebugString (">>>>>>>>>>>>>> Dmx Input received: " +
-                                           String::formatted ("%02x %02x %02x %02x",
-                                                              data[0], data[1],
-                                                              data[2], data[3]));
+//                Logger::outputDebugString (">>>>>>>>>>>>>> Dmx Input received: " +
+//                                           String::formatted ("%02x %02x %02x %02x",
+//                                                              data[0], data[1],
+//                                                              data[2], data[3]));
                 const ScopedLock lock (inputEventList.getLock());
 
-                dmxInput.copyFrom (data, 0, inputChannelCount);
+                dmxInput.copyFrom (data, 0, dmxInputSize);
              
                 int listSize = inputEventList.size();
                 for (int n = 0; n < listSize; ++n)
