@@ -47,6 +47,7 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+    void updateThumb (int index, Slider* slider);
     //[/UserMethods]
 
     void paint (Graphics& g);
