@@ -48,8 +48,8 @@ OBJECTS := \
   $(OBJDIR)/UsbDevice_a591255b.o \
   $(OBJDIR)/TimeComponent_5ed54811.o \
   $(OBJDIR)/DmxOutComponent_f607555f.o \
-  $(OBJDIR)/TestTabsComponent_7ce90a8e.o \
   $(OBJDIR)/DmxInComponent_e1f85bd2.o \
+  $(OBJDIR)/TestTabsComponent_7ce90a8e.o \
   $(OBJDIR)/MainWindow_499ac812.o \
   $(OBJDIR)/Main_90ebc5c2.o \
   $(OBJDIR)/BinaryData_ce4232d4.o \
@@ -99,14 +99,14 @@ $(OBJDIR)/DmxOutComponent_f607555f.o: ../../Source/DmxOutComponent.cpp
 	@echo "Compiling DmxOutComponent.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/TestTabsComponent_7ce90a8e.o: ../../Source/TestTabsComponent.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling TestTabsComponent.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
 $(OBJDIR)/DmxInComponent_e1f85bd2.o: ../../Source/DmxInComponent.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling DmxInComponent.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/TestTabsComponent_7ce90a8e.o: ../../Source/TestTabsComponent.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling TestTabsComponent.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/MainWindow_499ac812.o: ../../Source/MainWindow.cpp

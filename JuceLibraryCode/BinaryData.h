@@ -7,6 +7,9 @@
 
 namespace BinaryData
 {
+    extern const char*   icon_png;
+    const int            icon_pngSize = 13780;
+
     extern const char*   minifirm_hex;
     const int            minifirm_hexSize = 5194;
 

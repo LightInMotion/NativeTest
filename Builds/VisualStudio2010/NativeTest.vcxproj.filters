@@ -5,8 +5,14 @@
     <Filter Include="NativeTest">
       <UniqueIdentifier>{DCA0DEE6-797D-6F0A-4D1D-7742D9E7D13D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\Firmware Files">
-      <UniqueIdentifier>{2B9BF997-72A3-7291-C969-33FD1AC9CFFA}</UniqueIdentifier>
+    <Filter Include="NativeTest\Binary Files">
+      <UniqueIdentifier>{F990020E-D8CA-95D5-AD46-F7BC8C6DB78C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NativeTest\Binary Files\Images">
+      <UniqueIdentifier>{CFFA16F0-15F8-3489-AF09-C9D4B308AEF9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NativeTest\Binary Files\Firmware Files">
+      <UniqueIdentifier>{A1A4FF79-2FE7-4250-558A-6DE8A5E7DBA2}</UniqueIdentifier>
     </Filter>
     <Filter Include="NativeTest\BlueLite">
       <UniqueIdentifier>{F7929AD9-57C8-4CCD-2036-AF7DDB4FEE4C}</UniqueIdentifier>
@@ -14,8 +20,11 @@
     <Filter Include="NativeTest\BlueLite\Native">
       <UniqueIdentifier>{CC085F5F-7FBC-602C-B4CE-2EE521EAE57F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\Source">
-      <UniqueIdentifier>{88810D31-6562-7151-225F-ECF5731C4999}</UniqueIdentifier>
+    <Filter Include="NativeTest\UI">
+      <UniqueIdentifier>{5CD4CE4A-3265-B1E4-784C-8481A364C962}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NativeTest\UI\Test Tabs">
+      <UniqueIdentifier>{5EAEF634-7A7C-1A9B-0578-496B235C81B4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Juce Modules">
       <UniqueIdentifier>{422C46B7-0467-2DB0-BF3C-16DFCAFD69AC}</UniqueIdentifier>
@@ -193,14 +202,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Images\icon.png">
+      <Filter>NativeTest\Binary Files\Images</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Firmware\minifirm.hex">
-      <Filter>NativeTest\Firmware Files</Filter>
+      <Filter>NativeTest\Binary Files\Firmware Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Firmware\X1FIRM.HEX">
-      <Filter>NativeTest\Firmware Files</Filter>
+      <Filter>NativeTest\Binary Files\Firmware Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Firmware\X1IDLE.HEX">
-      <Filter>NativeTest\Firmware Files</Filter>
+      <Filter>NativeTest\Binary Files\Firmware Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\BlueLiteUsbDevice.cpp">
       <Filter>NativeTest\BlueLite</Filter>
@@ -218,22 +230,22 @@
       <Filter>NativeTest\BlueLite\Native</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\TimeComponent.cpp">
-      <Filter>NativeTest\Source</Filter>
+      <Filter>NativeTest\UI\Test Tabs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\DmxOutComponent.cpp">
-      <Filter>NativeTest\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\TestTabsComponent.cpp">
-      <Filter>NativeTest\Source</Filter>
+      <Filter>NativeTest\UI\Test Tabs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\DmxInComponent.cpp">
-      <Filter>NativeTest\Source</Filter>
+      <Filter>NativeTest\UI\Test Tabs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\TestTabsComponent.cpp">
+      <Filter>NativeTest\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\MainWindow.cpp">
-      <Filter>NativeTest\Source</Filter>
+      <Filter>NativeTest\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Main.cpp">
-      <Filter>NativeTest\Source</Filter>
+      <Filter>NativeTest</Filter>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.cpp">
       <Filter>Juce Modules\juce_core\text</Filter>
@@ -1057,19 +1069,19 @@
       <Filter>NativeTest\BlueLite\Native</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\TimeComponent.h">
-      <Filter>NativeTest\Source</Filter>
+      <Filter>NativeTest\UI\Test Tabs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\DmxOutComponent.h">
-      <Filter>NativeTest\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\TestTabsComponent.h">
-      <Filter>NativeTest\Source</Filter>
+      <Filter>NativeTest\UI\Test Tabs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\DmxInComponent.h">
-      <Filter>NativeTest\Source</Filter>
+      <Filter>NativeTest\UI\Test Tabs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\TestTabsComponent.h">
+      <Filter>NativeTest\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\MainWindow.h">
-      <Filter>NativeTest\Source</Filter>
+      <Filter>NativeTest\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.h">
       <Filter>Juce Modules\juce_core\text</Filter>
@@ -1953,6 +1965,11 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
       <Filter>Juce Library Code</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".\icon.ico">
+      <Filter>Juce Library Code</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\resources.rc">

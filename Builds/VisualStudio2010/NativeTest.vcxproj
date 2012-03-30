@@ -137,8 +137,8 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\TimeComponent.cpp"/>
     <ClCompile Include="..\..\Source\DmxOutComponent.cpp"/>
-    <ClCompile Include="..\..\Source\TestTabsComponent.cpp"/>
     <ClCompile Include="..\..\Source\DmxInComponent.cpp"/>
+    <ClCompile Include="..\..\Source\TestTabsComponent.cpp"/>
     <ClCompile Include="..\..\Source\MainWindow.cpp"/>
     <ClCompile Include="..\..\Source\Main.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.cpp">
@@ -875,8 +875,8 @@
     <ClInclude Include="..\..\Source\Native\libusb.h"/>
     <ClInclude Include="..\..\Source\TimeComponent.h"/>
     <ClInclude Include="..\..\Source\DmxOutComponent.h"/>
-    <ClInclude Include="..\..\Source\TestTabsComponent.h"/>
     <ClInclude Include="..\..\Source\DmxInComponent.h"/>
+    <ClInclude Include="..\..\Source\TestTabsComponent.h"/>
     <ClInclude Include="..\..\Source\MainWindow.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharPointer_ASCII.h"/>
@@ -1172,6 +1172,9 @@
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\BinaryData.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".\icon.ico"/>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\resources.rc"/>

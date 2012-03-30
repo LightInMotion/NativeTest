@@ -4,7 +4,7 @@
               bundleIdentifier="co.limsc.NativeTest" jucerVersion="3.0.0">
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" objCExtraSuffix="c7R03f" juceFolder="../juce/modules"
-               extraLinkerFlags="-lusb-1.0-darwin">
+               extraLinkerFlags="-lusb-1.0-darwin" bigIcon="F2D0rs">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="NativeTest"
                        osxSDK="default" osxCompatibility="10.5 SDK" osxArchitecture="32BitUniversal"
@@ -14,7 +14,8 @@
                        libraryPath="../../Source/Native/"/>
       </CONFIGURATIONS>
     </XCODE_MAC>
-    <VS2010 targetFolder="Builds/VisualStudio2010" libraryType="1" juceFolder="../juce/modules">
+    <VS2010 targetFolder="Builds/VisualStudio2010" libraryType="1" juceFolder="../juce/modules"
+            bigIcon="F2D0rs">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
                        isDebug="1" optimisation="1" targetName="NativeTest"/>
@@ -22,7 +23,8 @@
                        isDebug="0" optimisation="2" targetName="NativeTest"/>
       </CONFIGURATIONS>
     </VS2010>
-    <LINUX_MAKE targetFolder="Builds/Linux" juceFolder="../juce/modules" extraLinkerFlags="-lusb-1.0">
+    <LINUX_MAKE targetFolder="Builds/Linux" juceFolder="../juce/modules" extraLinkerFlags="-lusb-1.0"
+                bigIcon="F2D0rs">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
                        targetName="NativeTest"/>
@@ -32,10 +34,15 @@
     </LINUX_MAKE>
   </EXPORTFORMATS>
   <MAINGROUP id="U3dy7s" name="NativeTest">
-    <GROUP id="{D5BDE6B8-839C-AD51-641E-0EB31E237593}" name="Firmware Files">
-      <FILE id="XysZCQ" name="minifirm.hex" compile="0" resource="1" file="Firmware/minifirm.hex"/>
-      <FILE id="IY16Gk" name="X1FIRM.HEX" compile="0" resource="1" file="Firmware/X1FIRM.HEX"/>
-      <FILE id="e5IJl8" name="X1IDLE.HEX" compile="0" resource="1" file="Firmware/X1IDLE.HEX"/>
+    <GROUP id="{D5BDE6B8-839C-AD51-641E-0EB31E237593}" name="Binary Files">
+      <GROUP id="{7A6C8045-0389-F669-639B-CCD25D86F98E}" name="Images">
+        <FILE id="F2D0rs" name="icon.png" compile="0" resource="1" file="Images/icon.png"/>
+      </GROUP>
+      <GROUP id="{DD75A8D1-4C12-BF17-1D61-64820DA51901}" name="Firmware Files">
+        <FILE id="XysZCQ" name="minifirm.hex" compile="0" resource="1" file="Firmware/minifirm.hex"/>
+        <FILE id="IY16Gk" name="X1FIRM.HEX" compile="0" resource="1" file="Firmware/X1FIRM.HEX"/>
+        <FILE id="e5IJl8" name="X1IDLE.HEX" compile="0" resource="1" file="Firmware/X1IDLE.HEX"/>
+      </GROUP>
     </GROUP>
     <GROUP id="{AC26B227-F2C9-67AD-58E2-EA77B4A29FA4}" name="BlueLite">
       <FILE id="dlXoCs" name="BlueLiteUsbDevices.h" compile="0" resource="0"
@@ -61,26 +68,28 @@
               file="Source/Native/UsbDevice_Unix.cpp"/>
       </GROUP>
     </GROUP>
-    <GROUP id="{DE0EFEC2-E357-A5DF-7171-6764ED593CB5}" name="Source">
-      <FILE id="KsCioW" name="TimeComponent.cpp" compile="1" resource="0"
-            file="Source/TimeComponent.cpp"/>
-      <FILE id="RBJskX" name="TimeComponent.h" compile="0" resource="0" file="Source/TimeComponent.h"/>
-      <FILE id="UolDUA" name="DmxOutComponent.cpp" compile="1" resource="0"
-            file="Source/DmxOutComponent.cpp"/>
-      <FILE id="HymECV" name="DmxOutComponent.h" compile="0" resource="0"
-            file="Source/DmxOutComponent.h"/>
+    <GROUP id="{DE0EFEC2-E357-A5DF-7171-6764ED593CB5}" name="UI">
+      <GROUP id="{46BAFC1C-3EA3-DD3E-DC8F-57DDA0F6C685}" name="Test Tabs">
+        <FILE id="KsCioW" name="TimeComponent.cpp" compile="1" resource="0"
+              file="Source/TimeComponent.cpp"/>
+        <FILE id="RBJskX" name="TimeComponent.h" compile="0" resource="0" file="Source/TimeComponent.h"/>
+        <FILE id="UolDUA" name="DmxOutComponent.cpp" compile="1" resource="0"
+              file="Source/DmxOutComponent.cpp"/>
+        <FILE id="HymECV" name="DmxOutComponent.h" compile="0" resource="0"
+              file="Source/DmxOutComponent.h"/>
+        <FILE id="FQCxG1" name="DmxInComponent.cpp" compile="1" resource="0"
+              file="Source/DmxInComponent.cpp"/>
+        <FILE id="jvQrhk" name="DmxInComponent.h" compile="0" resource="0"
+              file="Source/DmxInComponent.h"/>
+      </GROUP>
       <FILE id="uY2Dlw" name="TestTabsComponent.cpp" compile="1" resource="0"
             file="Source/TestTabsComponent.cpp"/>
       <FILE id="VB3zDJ" name="TestTabsComponent.h" compile="0" resource="0"
             file="Source/TestTabsComponent.h"/>
-      <FILE id="FQCxG1" name="DmxInComponent.cpp" compile="1" resource="0"
-            file="Source/DmxInComponent.cpp"/>
-      <FILE id="jvQrhk" name="DmxInComponent.h" compile="0" resource="0"
-            file="Source/DmxInComponent.h"/>
       <FILE id="Jr5qhK" name="MainWindow.cpp" compile="1" resource="0" file="Source/MainWindow.cpp"/>
       <FILE id="Du8UmD" name="MainWindow.h" compile="0" resource="0" file="Source/MainWindow.h"/>
-      <FILE id="L9pa6I" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
     </GROUP>
+    <FILE id="L9pa6I" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
   </MAINGROUP>
   <MODULES>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="1"/>
