@@ -65,7 +65,6 @@ private:
     BlueLiteEvent::Ptr inputEvent;
     
     Array<Label*> labels;
-    
     //[/UserVariables]
 
     //==============================================================================

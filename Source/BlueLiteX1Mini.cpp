@@ -14,7 +14,6 @@ namespace BlueLite
     const int MaxDevice = 8;
 
     const int MiniDmxDataSize = 512;
-    
     const int DmxInputSize = 48;
     
     const int DmxPageSize = 32;
@@ -106,7 +105,8 @@ BlueLiteX1Mini::BlueLiteX1Mini()
       dmxInputSize (BlueLite::DmxInputSize),
       usbDevice (0x4a9, 0x210c, 0, "BlueLite Mini"),
       dmxPacket (BlueLite::MiniDmxDataSize + sizeof(BlueLite::DataPacket)),
-      dmxInput (BlueLite::DmxInputSize)
+      dmxInput (BlueLite::DmxInputSize),
+      timeInput (10)
 {
     // Assume inputs are 0
     dmxInput.fillWith (0);
@@ -218,6 +218,24 @@ MemoryBlock BlueLiteX1Mini::readDmxInput()
 }
 
 //==============================================================================
+void BlueLiteX1Mini::addTimeEvent (BlueLiteEvent* event)
+{
+    timeEventList.addIfNotAlreadyThere (event);
+}
+
+void BlueLiteX1Mini::removeTimeEvent (BlueLiteEvent* event)
+{
+    timeEventList.removeObject (event);
+}
+
+//==============================================================================
+MemoryBlock BlueLiteX1Mini::readTimeInput()
+{
+    const ScopedLock lock (timeEventList.getLock());
+    return (MemoryBlock (timeInput));
+}
+
+//==============================================================================
 Result BlueLiteX1Mini::loadFirmware (const String& firmware)
 {
     uint8 b = 1;            
@@ -280,7 +298,7 @@ Result BlueLiteX1Mini::sendTime()
     time.type       = BlueLite::TimeType;
     time.stype      = BlueLite::Smpte30fps;
     time.command    = BlueLite::WriteCmd;
-    time.control    = BlueLite::FreezeControl | BlueLite::NoPhysControl;
+    time.control    = BlueLite::BlinkControl; //  BlueLite::FreezeControl | BlueLite::NoPhysControl;
     
     int transferred;
     return usbDevice.bulkTransfer (UsbDevice::EndOut2, (uint8*)&time, 
@@ -296,13 +314,19 @@ void BlueLiteX1Mini::bulkDataRead (UsbDevice::EndPoint endPoint,
         {
             if (size >= 10)
             {
-                ;
 //                Logger::outputDebugString(String::formatted ("%02x %02x %d%d:%d%d:%d%d:%d%d",
 //                                                             data[0], data[1], 
 //                                                             data[2], data[3], 
 //                                                             data[4], data[5],
 //                                                             data[6], data[7],
 //                                                             data[8], data[9]));
+                const ScopedLock lock (timeEventList.getLock());
+                
+                timeInput.copyFrom (data, 0, 10);
+                
+                int listSize = timeEventList.size();
+                for (int n = 0; n < listSize; ++n)
+                    timeEventList[n]->signal();
             }
         }
         else if (endPoint == UsbDevice::EndIn6)

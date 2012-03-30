@@ -57,6 +57,12 @@ public:
     MemoryBlock readDmxInput();
     
     //==============================================================================
+    void addTimeEvent (BlueLiteEvent* event);
+    void removeTimeEvent (BlueLiteEvent* event);
+    
+    MemoryBlock readTimeInput();
+    
+    //==============================================================================
     const int maxDevice;
     const int dmxDataSize;
     const int dmxInputSize;
@@ -79,6 +85,9 @@ private:
     
     ReferenceCountedArray<BlueLiteEvent, CriticalSection> inputEventList;
     MemoryBlock dmxInput;
+    
+    ReferenceCountedArray<BlueLiteEvent, CriticalSection> timeEventList;
+    MemoryBlock timeInput;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlueLiteX1Mini)
