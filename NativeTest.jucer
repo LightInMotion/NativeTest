@@ -47,17 +47,10 @@
       <FILE id="wpfokJ" name="BlueLiteUsb.h" compile="0" resource="0" file="Source/BlueLiteUsb.h"/>
       <FILE id="Da5hWi" name="BlueLiteDevice.h" compile="0" resource="0"
             file="Source/BlueLiteDevice.h"/>
-      <FILE id="HhlW9I" name="BlueLiteEvent.h" compile="0" resource="0" file="Source/BlueLiteEvent.h"/>
-      <FILE id="zEmhRB" name="BlueLiteX1.cpp" compile="0" resource="0" file="Source/BlueLiteX1.cpp"/>
-      <FILE id="RgoG6h" name="BlueLiteX1.h" compile="0" resource="0" file="Source/BlueLiteX1.h"/>
       <FILE id="o0El1T" name="IntelHexReader.cpp" compile="1" resource="0"
             file="Source/IntelHexReader.cpp"/>
       <FILE id="x9Iqng" name="IntelHexReader.h" compile="0" resource="0"
             file="Source/IntelHexReader.h"/>
-      <FILE id="M6tNjQ" name="BlueLiteX1Mini.cpp" compile="0" resource="0"
-            file="Source/BlueLiteX1Mini.cpp"/>
-      <FILE id="zc22lJ" name="BlueLiteX1Mini.h" compile="0" resource="0"
-            file="Source/BlueLiteX1Mini.h"/>
       <FILE id="sK6AhB" name="UsbDevice.cpp" compile="1" resource="0" file="Source/UsbDevice.cpp"/>
       <FILE id="MtOeTN" name="UsbDevice.h" compile="0" resource="0" file="Source/UsbDevice.h"/>
       <GROUP id="{B8C7406E-E38D-80EB-4916-495532CA3288}" name="Native">

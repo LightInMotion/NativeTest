@@ -205,13 +205,7 @@
     <ClCompile Include="..\..\Source\BlueLiteUsbDevice.cpp">
       <Filter>NativeTest\BlueLite</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\BlueLiteX1.cpp">
-      <Filter>NativeTest\BlueLite</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\IntelHexReader.cpp">
-      <Filter>NativeTest\BlueLite</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\BlueLiteX1Mini.cpp">
       <Filter>NativeTest\BlueLite</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\UsbDevice.cpp">
@@ -1053,16 +1047,7 @@
     <ClInclude Include="..\..\Source\BlueLiteDevice.h">
       <Filter>NativeTest\BlueLite</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\BlueLiteEvent.h">
-      <Filter>NativeTest\BlueLite</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\BlueLiteX1.h">
-      <Filter>NativeTest\BlueLite</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\IntelHexReader.h">
-      <Filter>NativeTest\BlueLite</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\BlueLiteX1Mini.h">
       <Filter>NativeTest\BlueLite</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\UsbDevice.h">

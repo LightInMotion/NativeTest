@@ -127,13 +127,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\BlueLiteUsbDevice.cpp"/>
-    <ClCompile Include="..\..\Source\BlueLiteX1.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\Source\IntelHexReader.cpp"/>
-    <ClCompile Include="..\..\Source\BlueLiteX1Mini.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\Source\UsbDevice.cpp"/>
     <ClCompile Include="..\..\Source\Native\UsbDevice_Win.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -876,10 +870,7 @@
     <ClInclude Include="..\..\Source\BlueLiteUsbDevice.h"/>
     <ClInclude Include="..\..\Source\BlueLiteUsb.h"/>
     <ClInclude Include="..\..\Source\BlueLiteDevice.h"/>
-    <ClInclude Include="..\..\Source\BlueLiteEvent.h"/>
-    <ClInclude Include="..\..\Source\BlueLiteX1.h"/>
     <ClInclude Include="..\..\Source\IntelHexReader.h"/>
-    <ClInclude Include="..\..\Source\BlueLiteX1Mini.h"/>
     <ClInclude Include="..\..\Source\UsbDevice.h"/>
     <ClInclude Include="..\..\Source\Native\libusb.h"/>
     <ClInclude Include="..\..\Source\TimeComponent.h"/>
