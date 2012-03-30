@@ -370,6 +370,13 @@ void DmxOutComponent::sliderValueChanged (Slider* sliderThatWasMoved)
         //[UserSliderCode_slider1] -- add your slider handling code here..
         dmxData[0] = (uint8)slider1->getValue();
         sendData();
+        
+        if (dmxData[0] == 0)
+            slider1->setColour (Slider::thumbColourId, Colour (0xff252525));
+        else if ((uint8)dmxData[0] == 255)
+            slider1->setColour (Slider::thumbColourId, Colour (0xffbFbFbF));
+        else
+            slider1->setColour (Slider::thumbColourId, Colour (0xff757575));            
         //[/UserSliderCode_slider1]
     }
     else if (sliderThatWasMoved == slider2)
