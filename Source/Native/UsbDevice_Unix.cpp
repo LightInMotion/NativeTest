@@ -433,33 +433,6 @@ Result UsbDevice::setInterfaceAlternateSetting (int alternateSetting)
 }
 
 //==============================================================================
-Result UsbDevice::resetDevice()
-{
-    const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
-    if (device == nullptr)
-        return Result::fail (getDeviceName() + " is not open.");
-
-    if (libusb_reset_device (*device) < 0)
-        return Result::fail ("Could not reset " + getDeviceName() + ".");
-    
-    return Result::ok();
-}
-
-//==============================================================================
-Result UsbDevice::clearHalt (EndPoint endPoint)
-{
-    const LibUsbDeviceHandle::Ptr device = UnixOSHandle::getDevice (osHandle);
-    if (device == nullptr)
-        return Result::fail (getDeviceName() + " is not open.");
-    
-    if (libusb_clear_halt (*device, endPoint) < 0)
-        return Result::fail ("Could no clear endpoint " + String(endPoint) +
-                             " on " + getDeviceName() + ".");
-    
-    return Result::ok();    
-}
-
-//==============================================================================
 Result UsbDevice::controlTransfer (RequestType requestType, 
                                    uint8 request, 
                                    uint16 value, uint16 index, 

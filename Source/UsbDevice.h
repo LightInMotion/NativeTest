@@ -51,7 +51,6 @@ public:
     
     //==============================================================================
     Result setInterfaceAlternateSetting (int alternateSetting);
-    Result resetDevice();
     
     //==============================================================================
     enum RequestType
@@ -103,8 +102,6 @@ public:
         EndOut15    = 0x0f,
         EndIn15     = 0x8f,        
     };
-    
-    Result clearHalt (EndPoint endPoint);
     
     Result bulkTransfer (EndPoint endPoint, uint8* data, int length,
                          int& transferred) const;
