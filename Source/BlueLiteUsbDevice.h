@@ -18,6 +18,7 @@ public:
     //==============================================================================
     BlueLiteUsbDevice(int vendorID, int productID,
                       int interface, const String& devName,
+                      int universeCount,
                       int dmxDataSize, int dmxInputSize,
                       int resetAddress, const String& fwName,
                       UsbDevice::EndPoint timeEndpoint,
@@ -54,6 +55,7 @@ public:
     
     //==============================================================================
     const int getMaxDevice()     { return maxDevice; }
+    const int getUniverseCount() { return universeCount; }
     const int getDmxDataSize()   { return dmxDataSize; }
     const int getDmxInputSize()  { return dmxInputSize; }
     
@@ -71,6 +73,7 @@ private:
 private:
     //==============================================================================
     const int maxDevice;
+    const int universeCount;
     const int dmxDataSize;
     const int dmxInputSize;
     

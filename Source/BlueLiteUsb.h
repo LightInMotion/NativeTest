@@ -18,8 +18,12 @@ namespace BlueLite
     const int DmxPageSize = 32;
     const int DmxAllPages = (DmxUniverseSize / DmxPageSize);
 
-    const int X1DmxDataSize = (4 * DmxUniverseSize);
-    const int MiniDmxDataSize = (1 * DmxUniverseSize);
+    const int X1UniverseCount = 4;
+    const int MiniUniverseCount = 1;
+    
+    const int X1DmxDataSize = (X1UniverseCount * DmxUniverseSize);
+    const int MiniDmxDataSize = (MiniUniverseCount * DmxUniverseSize);
+    
     const int DmxInputSize = 48;
     
     

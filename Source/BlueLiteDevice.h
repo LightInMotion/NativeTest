@@ -67,6 +67,8 @@ public:
     
     //==============================================================================
     virtual const int getMaxDevice() = 0;
+    virtual const int getUniverseCount() = 0;
+    
     virtual const int getDmxDataSize() = 0;
     virtual const int getDmxInputSize() = 0;
     

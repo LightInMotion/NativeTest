@@ -11,12 +11,14 @@
 //==============================================================================
 BlueLiteUsbDevice::BlueLiteUsbDevice (int vendorID, int productID,
                                       int interface, const String& devName,
+                                      int universeCount_,
                                       int dmxDataSize_, int dmxInputSize_,
                                       int resetAddress_, const String& fwName_,
                                       UsbDevice::EndPoint timeEndpoint_,
                                       UsbDevice::EndPoint dmxInEndpoint_,
                                       UsbDevice::EndPoint dmxOutEndpoint_)
     : maxDevice (BlueLite::MaxDevice),
+      universeCount (universeCount_),
       dmxDataSize (dmxDataSize_),
       dmxInputSize (dmxInputSize_),
       usbDevice (vendorID, productID, interface, devName),

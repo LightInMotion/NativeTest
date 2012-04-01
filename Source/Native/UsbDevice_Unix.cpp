@@ -54,7 +54,7 @@ class LibUsbDeviceList : public ReferenceCountedObject
 {
 public:
     //==============================================================================
-    LibUsbDeviceList(LibUsbContext::Ptr context_)
+    LibUsbDeviceList(const LibUsbContext::Ptr& context_)
         : context (context_)
     {
         if (libusb_get_device_list (*context, &devices) < 0)
@@ -94,7 +94,7 @@ class LibUsbDeviceHandle : public ReferenceCountedObject
 {
 public:
     //==============================================================================
-    LibUsbDeviceHandle (LibUsbContext::Ptr context_, libusb_device *device)
+    LibUsbDeviceHandle (const LibUsbContext::Ptr& context_, libusb_device *device)
         : context (context_)
     {
         if (libusb_open (device, &deviceHandle) < 0)
@@ -128,7 +128,7 @@ class LibUsbBulkTransfer
 {
 public:
     //==============================================================================
-    LibUsbBulkTransfer (UsbBulkReadListener* listener_, LibUsbDeviceHandle::Ptr device_, 
+    LibUsbBulkTransfer (UsbBulkReadListener* listener_, const LibUsbDeviceHandle::Ptr& device_, 
                         UsbDevice::EndPoint endPoint_, int size)
         : listener (listener_),
           device (device_),
@@ -217,7 +217,7 @@ class UnixOSHandle : public UsbOSHandle, Thread
 {
 public:
     //==============================================================================
-    UnixOSHandle (int interface_, LibUsbContext::Ptr context_, LibUsbDeviceHandle::Ptr device_)
+    UnixOSHandle (int interface_, LibUsbContext::Ptr& context_, const LibUsbDeviceHandle::Ptr& device_)
         : Thread ("Usb Thread"),
           interface (interface_),
           context (context_),
@@ -260,7 +260,7 @@ public:
     }
     
     //==============================================================================
-    bool addTransfer (UsbBulkReadListener* listener, LibUsbDeviceHandle::Ptr device,
+    bool addTransfer (UsbBulkReadListener* listener, const LibUsbDeviceHandle::Ptr& device,
                       UsbDevice::EndPoint endPoint, int size)
     {
         if (findTransferIndex(endPoint, nullptr))

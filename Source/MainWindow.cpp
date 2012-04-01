@@ -68,6 +68,18 @@ MainAppWindow::MainAppWindow()
         count = blueliteDevice->getCount();
     }
     
+    if (! count)
+    {
+        blueliteDevice = new BlueLitePCDJ();
+        count = blueliteDevice->getCount();
+    }
+    
+    if (! count)
+    {
+        blueliteDevice = new BlueLiteMiniGen1();
+        count = blueliteDevice->getCount();
+    }
+    
     Logger::outputDebugString (String(count) + " BlueLite Device(s) found");
 
     if (count)
