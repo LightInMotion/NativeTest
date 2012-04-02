@@ -16,11 +16,11 @@ class BlueLiteUsbDevice : public BlueLiteDevice,
 {
 public:
     //==============================================================================
-    BlueLiteUsbDevice(int vendorID, int productID,
+    BlueLiteUsbDevice(uint16 vendorID, uint16 productID,
                       int interface, const String& devName,
                       int universeCount,
                       int dmxDataSize, int dmxInputSize,
-                      int resetAddress, const String& fwName,
+                      uint16 resetAddress, const String& fwName,
                       UsbDevice::EndPoint timeEndpoint,
                       UsbDevice::EndPoint dmxInEndpoint,
                       UsbDevice::EndPoint dmxOutEndpoint);

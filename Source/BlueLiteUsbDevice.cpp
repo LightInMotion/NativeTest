@@ -9,11 +9,11 @@
 #include "BlueLiteUsbDevice.h"
 
 //==============================================================================
-BlueLiteUsbDevice::BlueLiteUsbDevice (int vendorID, int productID,
+BlueLiteUsbDevice::BlueLiteUsbDevice (uint16 vendorID, uint16 productID,
                                       int interface, const String& devName,
                                       int universeCount_,
                                       int dmxDataSize_, int dmxInputSize_,
-                                      int resetAddress_, const String& fwName_,
+                                      uint16 resetAddress_, const String& fwName_,
                                       UsbDevice::EndPoint timeEndpoint_,
                                       UsbDevice::EndPoint dmxInEndpoint_,
                                       UsbDevice::EndPoint dmxOutEndpoint_)
@@ -100,7 +100,7 @@ void BlueLiteUsbDevice::close()
 //==============================================================================
 Result BlueLiteUsbDevice::updateDmxData (uint16 offset, const MemoryBlock& newData)
 {
-    if ((offset + newData.getSize()) > dmxDataSize)
+    if (int (offset + newData.getSize()) > dmxDataSize)
         return Result::fail ("Data is larger than universe.");
     
     dmxPacket.copyFrom (newData.getData(), offset + sizeof(BlueLite::DataPacket), newData.getSize());
@@ -109,7 +109,7 @@ Result BlueLiteUsbDevice::updateDmxData (uint16 offset, const MemoryBlock& newDa
     Result r = usbDevice.bulkTransfer (dmxOutEndpoint, (uint8*) dmxPacket.getData(),
                                        dmxPacket.getSize(), transferred);
     
-    if (transferred != dmxPacket.getSize())
+    if (transferred != int (dmxPacket.getSize()))
         Logger::outputDebugString ("Undersized bulk transfer of dmx data");
     
     return r;
@@ -175,7 +175,7 @@ Result BlueLiteUsbDevice::loadFirmware (const String& firmware)
     while (hexReader.readLineAsBinary (block, address))
     {
         r = usbDevice.controlTransfer (UsbDevice::VendorOut, 0xa0, address, 0,
-                                       (uint8*)block.getData(), block.getSize());
+                                       (uint8*)block.getData(), (uint16) block.getSize());
         
         if (! r.wasOk())
             return r;

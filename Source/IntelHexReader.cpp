@@ -4,6 +4,11 @@
 
 #include "IntelHexReader.h"
 
+#if JUCE_WINDOWS
+  #pragma warning (push)
+  #pragma warning (disable: 4127)
+#endif
+
 //==============================================================================
 IntelHexReader::IntelHexReader (const String& resourceName)
     : dataStream (0)
@@ -80,7 +85,7 @@ bool IntelHexReader::readLineAsBinary (MemoryBlock& data, uint16& address)
     
     // Malformed?
     // Length
-    if (data.getSize() != data[0] + 5)
+    if (int (data.getSize()) != int (data[0] + 5))
         return false;
     
     // Checksum
@@ -110,4 +115,9 @@ bool IntelHexReader::readLineAsBinary (MemoryBlock& data, uint16& address)
         
     return true;
 }
+
+#if JUCE_WINDOWS
+  #pragma warning (pop)
+#endif
+
 

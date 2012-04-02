@@ -26,6 +26,10 @@
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
+#if JUCE_WINDOWS
+  #pragma warning (push)
+  #pragma warning (disable: 4127)
+#endif
 //[/MiscUserDefs]
 
 //==============================================================================
@@ -691,7 +695,7 @@ DmxInComponent::~DmxInComponent()
 }
 
 //==============================================================================
-void DmxInComponent::paint (Graphics& g)
+void DmxInComponent::paint (Graphics& /*g*/)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
@@ -800,6 +804,10 @@ void DmxInComponent::run()
         sleep(50);
     }
 }
+
+#if JUCE_WINDOWS
+  #pragma warning (pop)
+#endif
 //[/MiscUserCode]
 
 

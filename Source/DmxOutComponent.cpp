@@ -321,7 +321,7 @@ DmxOutComponent::~DmxOutComponent()
 }
 
 //==============================================================================
-void DmxOutComponent::paint (Graphics& g)
+void DmxOutComponent::paint (Graphics& /*g*/)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]

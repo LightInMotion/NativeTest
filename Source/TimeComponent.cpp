@@ -26,6 +26,10 @@
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
+#if JUCE_WINDOWS
+  #pragma warning (push)
+  #pragma warning (disable: 4127)
+#endif
 //[/MiscUserDefs]
 
 //==============================================================================
@@ -88,7 +92,7 @@ TimeComponent::~TimeComponent()
 }
 
 //==============================================================================
-void TimeComponent::paint (Graphics& g)
+void TimeComponent::paint (Graphics& /*g*/)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
@@ -120,8 +124,8 @@ void TimeComponent::run()
         uint8* data = (uint8*) lastTime.getData();
 
         String s;
-        s << data[2] << data[3] << ':' << data[4] << data[5] << ':';
-        s << data[6] << data[7] << ':' << data[8] << data[9];
+        s << int (data[2]) << int (data[3]) << ':' << int (data[4]) << int (data[5]) << ':';
+        s << int (data[6]) << int (data[7]) << ':' << int (data[8]) << int (data[9]);
 
         do
         {
@@ -137,6 +141,10 @@ void TimeComponent::run()
         sleep(50);
     }
 }
+
+#if JUCE_WINDOWS
+  #pragma warning (pop)
+#endif
 //[/MiscUserCode]
 
 
