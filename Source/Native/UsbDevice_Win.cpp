@@ -144,7 +144,6 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WinDevice)    
 };
 
-static const WinDevice::Ptr nullDevice = nullptr;
 
 //==============================================================================
 class WinSemaphore : public ReferenceCountedObject
@@ -300,10 +299,10 @@ public:
     }
 
     //==============================================================================
-    static const WinDevice::Ptr& getDevice (const ScopedPointer<UsbOSHandle>& handle)
+    static const WinDevice::Ptr getDevice (const ScopedPointer<UsbOSHandle>& handle)
     {
         if (handle == nullptr)
-            return nullDevice;
+            return nullptr;
         
         UsbOSHandle *os = handle.get();
         return ((WindowsOSHandle*)os)->deviceHandle;
