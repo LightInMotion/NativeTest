@@ -217,9 +217,9 @@ class UnixOSHandle : public UsbOSHandle, Thread
 {
 public:
     //==============================================================================
-    UnixOSHandle (int interface_, LibUsbContext::Ptr& context_, const LibUsbDeviceHandle::Ptr& device_)
+    UnixOSHandle (int usbInterface_, LibUsbContext::Ptr& context_, const LibUsbDeviceHandle::Ptr& device_)
         : Thread ("Usb Thread"),
-          interface (interface_),
+          usbInterface (usbInterface_),
           context (context_),
           device (device_)
     {
@@ -235,8 +235,8 @@ public:
             transfers.clear();
             stopThread (-1);        
             
-            if (interface >= 0)
-                libusb_release_interface (*device, interface);            
+            if (usbInterface >= 0)
+                libusb_release_interface (*device, usbInterface);            
         }
     }
     
@@ -283,7 +283,7 @@ public:
     
 private:
     //==============================================================================
-    int interface;
+    int usbInterface;
     LibUsbContext::Ptr context;
     LibUsbDeviceHandle::Ptr device;
     OwnedArray<LibUsbBulkTransfer> transfers;
@@ -402,10 +402,10 @@ Result UsbDevice::openDevice (int index)
                         return Result::fail (getDeviceName() + " could not be set to config 1.");
                 }
                 
-                if (libusb_claim_interface (*devH, interface) < 0)
-                    return Result::fail (getDeviceName() + " is already inuse.");
+                if (libusb_claim_interface (*devH, usbInterface) < 0)
+                    return Result::fail (getDeviceName() + " is already in use.");
                                                 
-                osHandle = new UnixOSHandle (interface, c, devH);
+                osHandle = new UnixOSHandle (usbInterface, c, devH);
                 return Result::ok();
             }
             
@@ -424,7 +424,7 @@ Result UsbDevice::setInterfaceAlternateSetting (int alternateSetting)
         return Result::fail (getDeviceName() + " is not open.");
     
     if (libusb_set_interface_alt_setting (*device, 
-                                          interface, 
+                                          usbInterface, 
                                           alternateSetting) < 0)
         return Result::fail ("Could not set alternate interface on " + 
                              getDeviceName() + String(deviceIndex) + ".");

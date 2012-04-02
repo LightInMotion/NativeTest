@@ -30,8 +30,8 @@ class UsbDevice
 {
 public:
     //==============================================================================
-    UsbDevice (uint16 vendorID_, uint16 productID_, int interface_, const String& deviceName_)
-        : vendorID (vendorID_), productID (productID_), interface (interface_), 
+    UsbDevice (uint16 vendorID_, uint16 productID_, int usbInterface_, const String& deviceName_)
+        : vendorID (vendorID_), productID (productID_), usbInterface (usbInterface_), 
           deviceIndex (0), osHandle (nullptr), deviceName (deviceName_) {}
 
     ~UsbDevice() {}
@@ -114,7 +114,7 @@ private:
     //==============================================================================
     uint16 vendorID;
     uint16 productID;
-    int interface;
+    int usbInterface;
     int deviceIndex;
 
     ScopedPointer<UsbOSHandle> osHandle;
