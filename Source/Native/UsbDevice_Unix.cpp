@@ -46,7 +46,7 @@ private:
     libusb_context* context;
 
     //==============================================================================
-    JUCE_LEAK_DETECTOR(LibUsbContext)    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LibUsbContext)    
 };
 
 //==============================================================================
@@ -87,7 +87,7 @@ private:
 	libusb_device **devices;
 
     //==============================================================================
-    JUCE_LEAK_DETECTOR(LibUsbDeviceList)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LibUsbDeviceList)
 };
 
 class LibUsbDeviceHandle : public ReferenceCountedObject
@@ -120,7 +120,7 @@ private:
     libusb_device_handle* deviceHandle;
     
     //==============================================================================
-    JUCE_LEAK_DETECTOR(LibUsbDeviceHandle)    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LibUsbDeviceHandle)    
 };
 
 //==============================================================================
@@ -319,7 +319,7 @@ private:
     
 private:
     //==============================================================================
-    JUCE_LEAK_DETECTOR(UnixOSHandle)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(UnixOSHandle)
 };
 
 
