@@ -90,7 +90,7 @@ bool IntelHexReader::readLineAsBinary (MemoryBlock& data, uint16& address)
     
     // Checksum
     uint8 csum = 0;
-    int csumsize = data.getSize() - 1;
+    int csumsize = int (data.getSize()) - 1;
     for (int n = 0; n < csumsize ; ++n)
         csum += data[n];
     

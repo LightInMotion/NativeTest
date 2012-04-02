@@ -32,6 +32,9 @@ private:
     uint32 id;
     String deviceName;
     String semaphoreName;
+
+    //==============================================================================
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SupportedDevice)    
 };
 
 //==============================================================================
@@ -92,6 +95,9 @@ public:
 private:
     //==============================================================================
     OwnedArray<SupportedDevice> supportedDevices;
+
+    //==============================================================================
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SupportedDevices)    
 };
 
 static const SupportedDevices supportedDevices;
@@ -135,7 +141,7 @@ private:
     HANDLE deviceHandle;
 
     //==============================================================================
-    JUCE_LEAK_DETECTOR(WinDevice)    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WinDevice)    
 };
 
 static const WinDevice::Ptr nullDevice = nullptr;
@@ -179,7 +185,71 @@ private:
     bool alreadyExists;
 
     //==============================================================================
-    JUCE_LEAK_DETECTOR(WinSemaphore)    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WinSemaphore)    
+};
+
+//==============================================================================
+class WinUsbBulkTransfer : Thread
+{
+public:
+    //==============================================================================
+    WinUsbBulkTransfer (UsbBulkReadListener* listener_, 
+                        const WinDevice::Ptr& mainDevice_, const WinDevice::Ptr& device_, 
+                        UsbDevice::EndPoint endPoint_, int pipe_, int size)
+        : listener (listener_),
+          mainDevice (mainDevice_),
+          device (device_),
+          endPoint (endPoint_),
+          pipe (pipe_),
+          data (size),
+          Thread ("Usb Bulk Thread")
+    {
+        setPriority (10);
+        startThread();
+    }
+    
+    ~WinUsbBulkTransfer () 
+    {
+        ULONG p = pipe;
+        DWORD bret;
+		DeviceIoControl(mainDevice->get(), IOCTL_Ezusb_ABORTPIPE, 
+				&p, sizeof(p), NULL, 0, &bret, NULL);
+
+        stopThread (-1);
+    }
+
+    //==============================================================================
+    UsbDevice::EndPoint getEndPoint() { return endPoint; }
+
+private:
+    //==============================================================================
+    void run()
+    {
+	    BULK_TRANSFER_CONTROL bc;
+        bc.pipeNum = pipe;
+
+        while (! threadShouldExit())
+        {
+            DWORD bret;
+
+            if (DeviceIoControl (device->get(), IOCTL_EZUSB_BULK_READ, 
+                        &bc, sizeof(bc), data.getData(), (DWORD) data.getSize(), &bret, NULL) != 0)
+                listener->bulkDataRead (endPoint, (uint8*) data.getData(), bret);
+            else
+                return;
+        }        
+    }
+    
+    //==============================================================================
+    UsbBulkReadListener* listener;
+    WinDevice::Ptr mainDevice;
+    WinDevice::Ptr device;
+    UsbDevice::EndPoint endPoint;
+    int pipe;
+    MemoryBlock data;
+    
+    //==============================================================================
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WinUsbBulkTransfer)    
 };
 
 //==============================================================================
@@ -189,20 +259,21 @@ class WindowsOSHandle : public UsbOSHandle
 {
 public:
     //==============================================================================
-    WindowsOSHandle (WinSemaphore::Ptr& semaphoreHandle_, WinDevice::Ptr& deviceHandle_)
-        : deviceHandle (deviceHandle_),
+    WindowsOSHandle (uint16 vendorID_, uint16 productID_, int deviceIndex_,
+                     WinSemaphore::Ptr& semaphoreHandle_, WinDevice::Ptr& deviceHandle_)
+        : vendorID (vendorID_),
+          productID (productID_),
+          deviceIndex (deviceIndex_),
+          deviceHandle (deviceHandle_),
           semaphoreHandle (semaphoreHandle_) 
     {
-        uint8 buffer[1000];
-        DWORD bret;
-        if (DeviceIoControl(deviceHandle->get(), IOCTL_Ezusb_GET_PIPE_INFO, NULL, 0, 
-            buffer, sizeof(buffer), &bret, NULL) != 0)
-
-        pipeInfo.setSize (bret);
-        pipeInfo.copyFrom (buffer, 0, bret);
+        readPipeInfo();
     }
     
-    ~WindowsOSHandle() {}
+    ~WindowsOSHandle() 
+    {
+        transfers.clear();
+    }
 
     //==============================================================================
     int findPipe (UsbDevice::EndPoint endPoint)
@@ -238,14 +309,80 @@ public:
         return ((WindowsOSHandle*)os)->deviceHandle;
     }
 
+    //==============================================================================
+    void readPipeInfo ()
+    {
+        pipeInfo.setSize (0);
+
+        uint8 buffer[1000];
+        DWORD bret;
+        if (DeviceIoControl(deviceHandle->get(), IOCTL_Ezusb_GET_PIPE_INFO, NULL, 0, 
+            buffer, sizeof(buffer), &bret, NULL) != 0)
+
+        pipeInfo.setSize (bret);
+        pipeInfo.copyFrom (buffer, 0, bret);
+    }
+
+    //==============================================================================
+    bool addTransfer (UsbBulkReadListener* listener,
+                      UsbDevice::EndPoint endPoint, int size)
+    {
+        if (findTransferIndex(endPoint, nullptr))
+            return false;
+        
+        int pipe = findPipe (endPoint);
+        if (pipe < 0)
+            return false;
+
+        String s = supportedDevices.getDeviceName (vendorID, productID, deviceIndex);
+        if (s.isEmpty())
+            return false;
+
+        WinDevice::Ptr device = new WinDevice (s);
+        if (device->isNotOpen())
+            return false;
+
+        transfers.add (new WinUsbBulkTransfer(listener, deviceHandle, device, endPoint, pipe, size));
+        return true;
+    }
+
+    //==============================================================================
+    bool removeTransfer (UsbDevice::EndPoint endPoint)
+    {
+        int index;
+        if (! findTransferIndex (endPoint, &index))
+            return false;
+        
+        transfers.remove (index);
+        return true;
+    }
+
 private:
     //==============================================================================
-    
+    bool findTransferIndex (UsbDevice::EndPoint endPoint, int* index)
+    {
+        for (int n = 0; n < transfers.size(); ++n)
+        {
+            if (transfers[n]->getEndPoint() == endPoint)
+            {
+                if (index != nullptr)
+                    *index = n;
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
 private:
     //==============================================================================
+    uint16 vendorID;
+    uint16 productID;
+    int deviceIndex;
     WinDevice::Ptr deviceHandle;
     WinSemaphore::Ptr semaphoreHandle;
     MemoryBlock pipeInfo;
+    OwnedArray<WinUsbBulkTransfer> transfers;
 
 private:
     //==============================================================================
@@ -299,7 +436,7 @@ Result UsbDevice::openDevice (int index)
     if (device->isNotOpen())
         return Result::fail ("Could not open " + getDeviceName() + ".");
 
-    osHandle = new WindowsOSHandle (semaphore, device);
+    osHandle = new WindowsOSHandle (vendorID, productID, deviceIndex, semaphore, device);
     return Result::ok();
 }
 
@@ -323,6 +460,9 @@ Result UsbDevice::setInterfaceAlternateSetting (int alternateSetting)
         DWORD err = GetLastError();
         return Result::fail ("Could not set alternate interface on " + getDeviceName() + " (" + String((int)err) + ").");
     }
+
+    WindowsOSHandle* windowsHandle = WindowsOSHandle::getSelf (osHandle);
+    windowsHandle->readPipeInfo();
 
     return Result::ok();
 }
@@ -349,7 +489,7 @@ Result UsbDevice::controlTransfer (RequestType requestType,
 
     DWORD bret;
 
-    if (DeviceIoControl(device->get(), IOCTL_EZUSB_VENDOR_OR_CLASS_REQUEST, &myRequest, sizeof(myRequest), 
+    if (DeviceIoControl (device->get(), IOCTL_EZUSB_VENDOR_OR_CLASS_REQUEST, &myRequest, sizeof(myRequest), 
         data, length, &bret, NULL) == 0)
     {
         DWORD err = GetLastError();
@@ -380,10 +520,10 @@ Result UsbDevice::bulkTransfer (EndPoint endPoint,
     DWORD bret;
 
     if (! (endPoint & 0x80))
-	    result = DeviceIoControl(device->get(), IOCTL_EZUSB_BULK_WRITE, 
+	    result = DeviceIoControl (device->get(), IOCTL_EZUSB_BULK_WRITE, 
                         &bc, sizeof(bc), data, length, &bret, NULL);
     else
-	    result = DeviceIoControl(device->get(), IOCTL_EZUSB_BULK_READ, 
+	    result = DeviceIoControl (device->get(), IOCTL_EZUSB_BULK_READ, 
                         &bc, sizeof(bc), data, length, &bret, NULL);
 
     transferred = (int)bret;
@@ -401,11 +541,27 @@ Result UsbDevice::bulkTransfer (EndPoint endPoint,
 Result UsbDevice::addBulkReadListener (UsbBulkReadListener* listener, 
                                        EndPoint endPoint, int size)
 {
-    return Result::fail (getDeviceName() + " is not open.");    
+    WindowsOSHandle* windowsHandle = WindowsOSHandle::getSelf (osHandle);
+    if (windowsHandle == nullptr)
+        return Result::fail (getDeviceName() + " is not open.");
+    
+    if (! windowsHandle->addTransfer (listener, endPoint, size))
+        return Result::fail ("Endpoint " + String(endPoint) + " already in use.");
+        
+    return Result::ok();
 }
 
 //==============================================================================
 Result UsbDevice::removeBulkReadListener (EndPoint endPoint)
 {
-    return Result::fail (getDeviceName() + " is not open.");
+    const WinDevice::Ptr device = WindowsOSHandle::getDevice (osHandle);
+    if (device == nullptr)
+        return Result::fail (getDeviceName() + " is not open.");
+    
+    WindowsOSHandle* windowsHandle = WindowsOSHandle::getSelf (osHandle);
+
+    if (! windowsHandle->removeTransfer (endPoint))
+        return Result::fail ("Endpoint " + String(endPoint) + " is not streaming.");
+    
+    return Result::ok();
 }

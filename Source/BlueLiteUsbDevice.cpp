@@ -107,7 +107,7 @@ Result BlueLiteUsbDevice::updateDmxData (uint16 offset, const MemoryBlock& newDa
     
     int transferred;
     Result r = usbDevice.bulkTransfer (dmxOutEndpoint, (uint8*) dmxPacket.getData(),
-                                       dmxPacket.getSize(), transferred);
+                                       (int) dmxPacket.getSize(), transferred);
     
     if (transferred != int (dmxPacket.getSize()))
         Logger::outputDebugString ("Undersized bulk transfer of dmx data");
