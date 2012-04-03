@@ -1820,9 +1820,6 @@
 /* Begin PBXProject section */
 		68385444C7E0DE0BC49DE485 /* Project object */ = {
 			isa = PBXProject;
-			attributes = {
-				LastUpgradeCheck = 0430;
-			};
 			buildConfigurationList = FD30A9E0A1C4AA6924A5EA71 /* Build configuration list for PBXProject "NativeTest" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -1890,7 +1887,7 @@
 					"JUCE_ObjCExtraSuffix=c7R03f",
 					"JUCER_XCODE_MAC_F6D2F4CF=1",
 				);
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = (
 					../../JuceLibraryCode,
 					"$(inherited)",
@@ -1963,7 +1960,7 @@
 					"JUCER_XCODE_MAC_F6D2F4CF=1",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = (
 					../../JuceLibraryCode,
 					"$(inherited)",

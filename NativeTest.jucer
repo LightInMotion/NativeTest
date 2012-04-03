@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="aB3KXd" name="NativeTest" projectType="guiapp" version="1.0.0"
+<JUCERPROJECT id="aB3KXd" name="NativeTest" projectType="guiapp" version="1.0.1"
               bundleIdentifier="co.limsc.NativeTest" jucerVersion="3.0.0">
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" objCExtraSuffix="c7R03f" juceFolder="../juce/modules"
