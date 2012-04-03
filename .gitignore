@@ -2,4 +2,4 @@
 Debug/
 Release/
 ipch/
-Builds/*.sdf
+Builds/VisualStudio2010/NativeTest.sdf
