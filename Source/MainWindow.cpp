@@ -85,16 +85,21 @@ MainAppWindow::MainAppWindow()
 
     if (! count)
     {
-        blueliteDevice = new DemoDevice();
-        count = blueliteDevice->getCount();        
+        if (AlertWindow::showOkCancelBox (AlertWindow::QuestionIcon,
+                                          "No BlueLite Hardware Found",
+                                          "Continue in Demo mode?",
+                                          "Yes", "No"))
+        {        
+            blueliteDevice = new DemoDevice();
+            count = blueliteDevice->getCount();
+        }
     }
     
     if (count)
     {
         Result r = blueliteDevice->open (0);
-        if (r.wasOk())
-            Logger::outputDebugString (blueliteDevice->getDeviceName() + " opened");
-        else
+        
+        if (r.failed())
         {
             AlertWindow::showMessageBox (AlertWindow::InfoIcon, 
                                          "Hardware Communication Error",
@@ -103,21 +108,18 @@ MainAppWindow::MainAppWindow()
 
             JUCEApplication::getInstance()->systemRequestedQuit();
         }
+        else
+        {
+            Logger::outputDebugString (blueliteDevice->getDeviceName() + " opened");
+            ContentComp* contentComp = new ContentComp (blueliteDevice);
+            setContentOwned(contentComp, false);
+        }
     }
     else
-    {
-        AlertWindow::showMessageBox (AlertWindow::InfoIcon, 
-                                     "No Compatible Hardware Found",
-                                     "You need to connect a BlueLite X1 or BlueLite X1 Mini to a USB port on your computer.",
-                                     "Ok");
-
         JUCEApplication::getInstance()->systemRequestedQuit();
-    }
 
 //    startTimer (33);
     
-    ContentComp* contentComp = new ContentComp (blueliteDevice);
-    setContentOwned(contentComp, false);    
 }
 
 MainAppWindow::~MainAppWindow()

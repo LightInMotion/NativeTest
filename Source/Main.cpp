@@ -54,7 +54,7 @@ public:
 
     bool moreThanOneInstanceAllowed()
     {
-        return true;
+        return false;
     }
 
     void anotherInstanceStarted (const String& /*commandLine*/)
