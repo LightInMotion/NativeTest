@@ -45,6 +45,8 @@
       </GROUP>
     </GROUP>
     <GROUP id="{AC26B227-F2C9-67AD-58E2-EA77B4A29FA4}" name="BlueLite">
+      <FILE id="hEVSqt" name="DemoDevice.cpp" compile="1" resource="0" file="Source/DemoDevice.cpp"/>
+      <FILE id="ZneOvV" name="DemoDevice.h" compile="0" resource="0" file="Source/DemoDevice.h"/>
       <FILE id="dlXoCs" name="BlueLiteUsbDevices.h" compile="0" resource="0"
             file="Source/BlueLiteUsbDevices.h"/>
       <FILE id="vmAIkC" name="BlueLiteUsbDevice.cpp" compile="1" resource="0"

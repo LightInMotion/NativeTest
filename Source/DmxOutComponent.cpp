@@ -537,7 +537,7 @@ else
 void DmxOutComponent::sendData()
 {
     Result r = blueliteDevice->updateDmxData (0, dmxData);
-    if (! r.wasOk())
+    if (r.failed())
         Logger::outputDebugString("DMX output error: " + r.getErrorMessage());
 }
 //[/MiscUserCode]

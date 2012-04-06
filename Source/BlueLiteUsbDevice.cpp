@@ -163,7 +163,7 @@ Result BlueLiteUsbDevice::loadFirmware (const String& firmware)
 {
     uint8 b = 1;            
     Result r = usbDevice.controlTransfer(UsbDevice::VendorOut, 0xa0, resetAddress, 0, &b, 1);
-    if (! r.wasOk())
+    if (r.failed())
         return r;
     
     IntelHexReader hexReader (firmware);
@@ -177,13 +177,13 @@ Result BlueLiteUsbDevice::loadFirmware (const String& firmware)
         r = usbDevice.controlTransfer (UsbDevice::VendorOut, 0xa0, address, 0,
                                        (uint8*)block.getData(), (uint16) block.getSize());
         
-        if (! r.wasOk())
+        if (r.failed())
             return r;
     }
     
     b = 0;
     r = usbDevice.controlTransfer(UsbDevice::VendorOut, 0xa0, resetAddress, 0, &b, 1);
-    if (! r.wasOk())
+    if (r.failed())
         return r;
     
     return Result::ok();
@@ -207,7 +207,7 @@ Result BlueLiteUsbDevice::sendConfig()
     Result r = usbDevice.bulkTransfer (dmxOutEndpoint, 
                                        (uint8*)(&conf), sizeof (conf), transferred);
     
-    if (! r.wasOk())
+    if (r.failed())
         return r;
     
     return Result::ok();

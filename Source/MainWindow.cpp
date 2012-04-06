@@ -7,6 +7,7 @@
 #include "MainWindow.h"
 #include "TestTabsComponent.h"
 #include "BlueLiteUsbDevices.h"
+#include "DemoDevice.h"
 
 //==============================================================================
 class ContentComp : public Component
@@ -82,6 +83,12 @@ MainAppWindow::MainAppWindow()
     
     Logger::outputDebugString (String(count) + " BlueLite Device(s) found");
 
+    if (! count)
+    {
+        blueliteDevice = new DemoDevice();
+        count = blueliteDevice->getCount();        
+    }
+    
     if (count)
     {
         Result r = blueliteDevice->open (0);
