@@ -1,29 +1,28 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
 
-MenuBarComponent::MenuBarComponent (MenuBarModel* model_)
+MenuBarComponent::MenuBarComponent (MenuBarModel* m)
     : model (nullptr),
       itemUnderMouse (-1),
       currentPopupIndex (-1),
@@ -33,7 +32,7 @@ MenuBarComponent::MenuBarComponent (MenuBarModel* model_)
     setWantsKeyboardFocus (false);
     setMouseClickGrabsKeyboardFocus (false);
 
-    setModel (model_);
+    setModel (m);
 }
 
 MenuBarComponent::~MenuBarComponent()
@@ -110,7 +109,7 @@ void MenuBarComponent::resized()
     }
 }
 
-int MenuBarComponent::getItemAt (const Point<int>& p)
+int MenuBarComponent::getItemAt (Point<int> p)
 {
     for (int i = 0; i < xPositions.size(); ++i)
         if (p.x >= xPositions[i] && p.x < xPositions[i + 1])
@@ -157,7 +156,7 @@ void MenuBarComponent::setOpenItem (int index)
     }
 }
 
-void MenuBarComponent::updateItemUnderMouse (const Point<int>& p)
+void MenuBarComponent::updateItemUnderMouse (Point<int> p)
 {
     setItemUnderMouse (getItemAt (p));
 }
@@ -285,22 +284,26 @@ void MenuBarComponent::mouseMove (const MouseEvent& e)
 
 bool MenuBarComponent::keyPressed (const KeyPress& key)
 {
-    bool used = false;
     const int numMenus = menuNames.size();
-    const int currentIndex = jlimit (0, menuNames.size() - 1, currentPopupIndex);
 
-    if (key.isKeyCode (KeyPress::leftKey))
+    if (numMenus > 0)
     {
-        showMenu ((currentIndex + numMenus - 1) % numMenus);
-        used = true;
-    }
-    else if (key.isKeyCode (KeyPress::rightKey))
-    {
-        showMenu ((currentIndex + 1) % numMenus);
-        used = true;
+        const int currentIndex = jlimit (0, numMenus - 1, currentPopupIndex);
+
+        if (key.isKeyCode (KeyPress::leftKey))
+        {
+            showMenu ((currentIndex + numMenus - 1) % numMenus);
+            return true;
+        }
+
+        if (key.isKeyCode (KeyPress::rightKey))
+        {
+            showMenu ((currentIndex + 1) % numMenus);
+            return true;
+        }
     }
 
-    return used;
+    return false;
 }
 
 void MenuBarComponent::menuBarItemsChanged (MenuBarModel* /*menuBarModel*/)

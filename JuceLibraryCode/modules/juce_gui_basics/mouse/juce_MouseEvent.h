@@ -1,34 +1,29 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
 
-#ifndef __JUCE_MOUSEEVENT_JUCEHEADER__
-#define __JUCE_MOUSEEVENT_JUCEHEADER__
-
-class Component;
-class MouseInputSource;
-#include "../keyboard/juce_ModifierKeys.h"
+#ifndef JUCE_MOUSEEVENT_H_INCLUDED
+#define JUCE_MOUSEEVENT_H_INCLUDED
 
 
 //==============================================================================
@@ -61,14 +56,14 @@ public:
         @param numberOfClicks   how many clicks, e.g. a double-click event will be 2, a triple-click will be 3, etc
         @param mouseWasDragged  whether the mouse has been dragged significantly since the previous mouse-down
     */
-    MouseEvent (MouseInputSource& source,
-                const Point<int>& position,
-                const ModifierKeys& modifiers,
+    MouseEvent (MouseInputSource source,
+                Point<float> position,
+                ModifierKeys modifiers,
                 Component* eventComponent,
                 Component* originator,
-                const Time& eventTime,
-                const Point<int> mouseDownPos,
-                const Time& mouseDownTime,
+                Time eventTime,
+                Point<float> mouseDownPos,
+                Time mouseDownTime,
                 int numberOfClicks,
                 bool mouseWasDragged) noexcept;
 
@@ -76,10 +71,22 @@ public:
     ~MouseEvent() noexcept;
 
     //==============================================================================
+    /** The position of the mouse when the event occurred.
+
+        This value is relative to the top-left of the component to which the
+        event applies (as indicated by the MouseEvent::eventComponent field).
+
+        This is a more accurate floating-point version of the position returned by
+        getPosition() and the integer x and y member variables.
+    */
+    const Point<float> position;
+
     /** The x-position of the mouse when the event occurred.
 
         This value is relative to the top-left of the component to which the
         event applies (as indicated by the MouseEvent::eventComponent field).
+
+        For a floating-point coordinate, see MouseEvent::position
     */
     const int x;
 
@@ -87,6 +94,8 @@ public:
 
         This value is relative to the top-left of the component to which the
         event applies (as indicated by the MouseEvent::eventComponent field).
+
+        For a floating-point coordinate, see MouseEvent::position
     */
     const int y;
 
@@ -127,30 +136,27 @@ public:
     /** The time that this mouse-event occurred. */
     const Time eventTime;
 
+    /** The time that the corresponding mouse-down event occurred. */
+    const Time mouseDownTime;
+
     /** The source device that generated this event. */
-    MouseInputSource& source;
+    MouseInputSource source;
 
     //==============================================================================
-    /** Returns the x co-ordinate of the last place that a mouse was pressed.
-
-        The co-ordinate is relative to the component specified in MouseEvent::component.
-
+    /** Returns the x coordinate of the last place that a mouse was pressed.
+        The coordinate is relative to the component specified in MouseEvent::component.
         @see getDistanceFromDragStart, getDistanceFromDragStartX, mouseWasClicked
     */
     int getMouseDownX() const noexcept;
 
-    /** Returns the y co-ordinate of the last place that a mouse was pressed.
-
-        The co-ordinate is relative to the component specified in MouseEvent::component.
-
+    /** Returns the y coordinate of the last place that a mouse was pressed.
+        The coordinate is relative to the component specified in MouseEvent::component.
         @see getDistanceFromDragStart, getDistanceFromDragStartX, mouseWasClicked
     */
     int getMouseDownY() const noexcept;
 
-    /** Returns the co-ordinates of the last place that a mouse was pressed.
-
-        The co-ordinates are relative to the component specified in MouseEvent::component.
-
+    /** Returns the coordinates of the last place that a mouse was pressed.
+        The coordinates are relative to the component specified in MouseEvent::component.
         @see getDistanceFromDragStart, getDistanceFromDragStartX, mouseWasClicked
     */
     Point<int> getMouseDownPosition() const noexcept;
@@ -223,53 +229,43 @@ public:
 
         This position is relative to the top-left of the component to which the
         event applies (as indicated by the MouseEvent::eventComponent field).
+
+        For a floating-point position, see MouseEvent::position
     */
     Point<int> getPosition() const noexcept;
 
-    /** Returns the mouse x position of this event, in global screen co-ordinates.
-
-        The co-ordinates are relative to the top-left of the main monitor.
-
+    /** Returns the mouse x position of this event, in global screen coordinates.
+        The coordinates are relative to the top-left of the main monitor.
         @see getScreenPosition
     */
     int getScreenX() const;
 
-    /** Returns the mouse y position of this event, in global screen co-ordinates.
-
-        The co-ordinates are relative to the top-left of the main monitor.
-
+    /** Returns the mouse y position of this event, in global screen coordinates.
+        The coordinates are relative to the top-left of the main monitor.
         @see getScreenPosition
     */
     int getScreenY() const;
 
-    /** Returns the mouse position of this event, in global screen co-ordinates.
-
-        The co-ordinates are relative to the top-left of the main monitor.
-
+    /** Returns the mouse position of this event, in global screen coordinates.
+        The coordinates are relative to the top-left of the main monitor.
         @see getMouseDownScreenPosition
     */
     Point<int> getScreenPosition() const;
 
-    /** Returns the x co-ordinate at which the mouse button was last pressed.
-
-        The co-ordinates are relative to the top-left of the main monitor.
-
+    /** Returns the x coordinate at which the mouse button was last pressed.
+        The coordinates are relative to the top-left of the main monitor.
         @see getMouseDownScreenPosition
     */
     int getMouseDownScreenX() const;
 
-    /** Returns the y co-ordinate at which the mouse button was last pressed.
-
-        The co-ordinates are relative to the top-left of the main monitor.
-
+    /** Returns the y coordinate at which the mouse button was last pressed.
+        The coordinates are relative to the top-left of the main monitor.
         @see getMouseDownScreenPosition
     */
     int getMouseDownScreenY() const;
 
-    /** Returns the co-ordinates at which the mouse button was last pressed.
-
-        The co-ordinates are relative to the top-left of the main monitor.
-
+    /** Returns the coordinates at which the mouse button was last pressed.
+        The coordinates are relative to the top-left of the main monitor.
         @see getScreenPosition
     */
     Point<int> getMouseDownScreenPosition() const;
@@ -287,7 +283,13 @@ public:
         All other members of the event object are the same, but the x and y are
         replaced with these new values.
     */
-    MouseEvent withNewPosition (const Point<int>& newPosition) const noexcept;
+    MouseEvent withNewPosition (Point<float> newPosition) const noexcept;
+
+    /** Creates a copy of this event with a different position.
+        All other members of the event object are the same, but the x and y are
+        replaced with these new values.
+    */
+    MouseEvent withNewPosition (Point<int> newPosition) const noexcept;
 
     //==============================================================================
     /** Changes the application-wide setting for the double-click time limit.
@@ -311,12 +313,48 @@ public:
 
 private:
     //==============================================================================
-    const Point<int> mouseDownPos;
-    const Time mouseDownTime;
+    const Point<float> mouseDownPos;
     const uint8 numberOfClicks, wasMovedSinceMouseDown;
 
     MouseEvent& operator= (const MouseEvent&);
 };
 
 
-#endif   // __JUCE_MOUSEEVENT_JUCEHEADER__
+//==============================================================================
+/**
+    Contains status information about a mouse wheel event.
+
+    @see MouseListener, MouseEvent
+*/
+struct MouseWheelDetails
+{
+    //==============================================================================
+    /** The amount that the wheel has been moved in the X axis.
+
+        If isReversed is true, then a negative deltaX means that the wheel has been
+        pushed physically to the left.
+        If isReversed is false, then a negative deltaX means that the wheel has been
+        pushed physically to the right.
+    */
+    float deltaX;
+
+    /** The amount that the wheel has been moved in the Y axis.
+
+        If isReversed is true, then a negative deltaY means that the wheel has been
+        pushed physically upwards.
+        If isReversed is false, then a negative deltaY means that the wheel has been
+        pushed physically downwards.
+    */
+    float deltaY;
+
+    /** Indicates whether the user has reversed the direction of the wheel.
+        See deltaX and deltaY for an explanation of the effects of this value.
+    */
+    bool isReversed;
+
+    /** If true, then the wheel has continuous, un-stepped motion. */
+    bool isSmooth;
+};
+
+
+#endif   // JUCE_MOUSEEVENT_H_INCLUDED

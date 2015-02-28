@@ -1,7 +1,6 @@
 /* ==================================== JUCER_BINARY_RESOURCE ====================================
 
-   This is an auto-generated file, created by The Introjucer 3.0.0
-   Do not edit anything in this file!
+   This is an auto-generated file: Any edits you make may be overwritten!
 
 */
 
@@ -9,7 +8,7 @@ namespace BinaryData
 {
 
 //================== icon.png ==================
-static const unsigned char temp_74111235[] =
+static const unsigned char temp_binary_data_0[] =
 { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,128,0,0,0,128,8,6,0,0,0,195,62,97,203,0,0,0,1,115,82,71,66,0,174,206,28,233,0,0,0,6,98,75,71,68,0,0,0,0,0,0,249,67,187,127,0,0,0,9,112,72,89,115,0,0,11,19,0,0,11,19,1,0,154,156,24,0,0,0,7,116,73,77,
 69,7,220,1,23,18,13,39,86,128,140,90,0,0,32,0,73,68,65,84,120,218,237,125,121,188,29,87,125,223,247,119,102,230,110,239,233,61,73,214,106,45,94,100,201,210,211,46,219,236,33,24,8,180,46,9,49,37,134,18,18,210,150,146,64,18,22,167,133,52,109,63,77,73,19,
 242,105,26,22,19,22,151,45,20,210,144,4,220,176,101,5,3,73,137,177,36,251,201,139,22,91,182,108,203,182,246,93,239,222,59,115,103,230,124,251,199,156,51,115,206,188,39,47,88,150,100,120,243,249,220,247,238,126,103,206,111,251,254,214,3,76,31,211,199,
@@ -206,10 +205,10 @@ static const unsigned char temp_74111235[] =
 155,149,179,255,11,167,148,48,223,158,57,45,68,79,70,80,86,152,168,254,94,169,83,249,9,152,164,52,159,50,229,251,119,29,251,157,231,220,102,97,211,199,244,49,125,76,31,211,199,244,49,125,156,221,227,255,3,205,139,8,166,254,177,43,163,0,0,0,0,73,69,78,
 68,174,66,96,130,0,0 };
 
-const char* icon_png = (const char*) temp_74111235;
+const char* icon_png = (const char*) temp_binary_data_0;
 
 //================== minifirm.hex ==================
-static const unsigned char temp_609c3a60[] =
+static const unsigned char temp_binary_data_1[] =
 ":0600000002020002085498\n"
 ":03000B0002066E7C\n"
 ":03002B0002067159\n"
@@ -283,10 +282,10 @@ static const unsigned char temp_609c3a60[] =
 ":090A6000202F02D2357565A62293\n"
 ":00000001FF\n";
 
-const char* minifirm_hex = (const char*) temp_609c3a60;
+const char* minifirm_hex = (const char*) temp_binary_data_1;
 
 //================== X1FIRM.HEX ==================
-static const unsigned char temp_e275ca42[] =
+static const unsigned char temp_binary_data_2[] =
 ":060000000202000209A249\n"
 ":03000B000207BC2D\n"
 ":03002B000207BF0A\n"
@@ -370,40 +369,45 @@ static const unsigned char temp_e275ca42[] =
 ":170BA00085534B85524A855149855048D231202F02D2357565A622C1\n"
 ":00000001FF\n";
 
-const char* X1FIRM_HEX = (const char*) temp_e275ca42;
+const char* X1FIRM_HEX = (const char*) temp_binary_data_2;
 
 //================== X1IDLE.HEX ==================
-static const unsigned char temp_6ec58d8[] =
+static const unsigned char temp_binary_data_3[] =
 ":20000000020003758107907FAB7418F09078497401F0D20FD20AC20BD2088521B175B68D7F\n"
 ":200020007520008520B075B503907FABE030E3030200417850A4A4A4A4D8FAC20F8521B164\n"
 ":08004000A4D20F8521B180E17B\n"
 ":00000001FF\n";
 
-const char* X1IDLE_HEX = (const char*) temp_6ec58d8;
+const char* X1IDLE_HEX = (const char*) temp_binary_data_3;
 
 
+const char* getNamedResource (const char*, int&) throw();
 const char* getNamedResource (const char* resourceNameUTF8, int& numBytes) throw()
 {
-    int hash = 0;
+    unsigned int hash = 0;
     if (resourceNameUTF8 != 0)
         while (*resourceNameUTF8 != 0)
-            hash = 31 * hash + *resourceNameUTF8++;
+            hash = 31 * hash + (unsigned int) *resourceNameUTF8++;
 
     switch (hash)
     {
-        case 0xd4093963:
-        case 0xda83f998:  numBytes = 13780; return icon_png;
-        case 0xfeec46f1:
-        case 0xfd39aed5:  numBytes = 5194; return minifirm_hex;
-        case 0x67e80753:
-        case 0xe1bf8658:  numBytes = 5982; return X1FIRM_HEX;
-        case 0x8c5e95e9:
-        case 0x0f9721dc:  numBytes = 192; return X1IDLE_HEX;
+        case 0xd4093963:  numBytes = 13780; return icon_png;
+        case 0xfeec46f1:  numBytes = 5194; return minifirm_hex;
+        case 0x67e80753:  numBytes = 5982; return X1FIRM_HEX;
+        case 0x8c5e95e9:  numBytes = 192; return X1IDLE_HEX;
         default: break;
     }
 
     numBytes = 0;
     return 0;
 }
+
+const char* namedResourceList[] =
+{
+    "icon_png",
+    "minifirm_hex",
+    "X1FIRM_HEX",
+    "X1IDLE_HEX"
+};
 
 }

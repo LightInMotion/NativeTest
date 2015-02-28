@@ -1,34 +1,34 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
 
-PathStrokeType::PathStrokeType (const float strokeThickness,
-                                const JointStyle jointStyle_,
-                                const EndCapStyle endStyle_) noexcept
-    : thickness (strokeThickness),
-      jointStyle (jointStyle_),
-      endStyle (endStyle_)
+PathStrokeType::PathStrokeType (float strokeThickness) noexcept
+    : thickness (strokeThickness), jointStyle (mitered), endStyle (butt)
+{
+}
+
+PathStrokeType::PathStrokeType (float strokeThickness, JointStyle joint, EndCapStyle end) noexcept
+    : thickness (strokeThickness), jointStyle (joint), endStyle (end)
 {
 }
 
@@ -66,13 +66,13 @@ bool PathStrokeType::operator!= (const PathStrokeType& other) const noexcept
 //==============================================================================
 namespace PathStrokeHelpers
 {
-    bool lineIntersection (const float x1, const float y1,
-                           const float x2, const float y2,
-                           const float x3, const float y3,
-                           const float x4, const float y4,
-                           float& intersectionX,
-                           float& intersectionY,
-                           float& distanceBeyondLine1EndSquared) noexcept
+    static bool lineIntersection (const float x1, const float y1,
+                                  const float x2, const float y2,
+                                  const float x3, const float y3,
+                                  const float x4, const float y4,
+                                  float& intersectionX,
+                                  float& intersectionY,
+                                  float& distanceBeyondLine1EndSquared) noexcept
     {
         if (x2 != x3 || y2 != y3)
         {
@@ -183,14 +183,14 @@ namespace PathStrokeHelpers
         return true;
     }
 
-    void addEdgeAndJoint (Path& destPath,
-                          const PathStrokeType::JointStyle style,
-                          const float maxMiterExtensionSquared, const float width,
-                          const float x1, const float y1,
-                          const float x2, const float y2,
-                          const float x3, const float y3,
-                          const float x4, const float y4,
-                          const float midX, const float midY)
+    static void addEdgeAndJoint (Path& destPath,
+                                 const PathStrokeType::JointStyle style,
+                                 const float maxMiterExtensionSquared, const float width,
+                                 const float x1, const float y1,
+                                 const float x2, const float y2,
+                                 const float x3, const float y3,
+                                 const float x4, const float y4,
+                                 const float midX, const float midY)
     {
         if (style == PathStrokeType::beveled
             || (x3 == x4 && y3 == y4)
@@ -278,11 +278,11 @@ namespace PathStrokeHelpers
         }
     }
 
-    void addLineEnd (Path& destPath,
-                     const PathStrokeType::EndCapStyle style,
-                     const float x1, const float y1,
-                     const float x2, const float y2,
-                     const float width)
+    static void addLineEnd (Path& destPath,
+                            const PathStrokeType::EndCapStyle style,
+                            const float x1, const float y1,
+                            const float x2, const float y2,
+                            const float width)
     {
         if (style == PathStrokeType::butt)
         {
@@ -343,12 +343,12 @@ namespace PathStrokeHelpers
         float endWidth, endLength;
     };
 
-    void addArrowhead (Path& destPath,
-                       const float x1, const float y1,
-                       const float x2, const float y2,
-                       const float tipX, const float tipY,
-                       const float width,
-                       const float arrowheadWidth)
+    static void addArrowhead (Path& destPath,
+                              const float x1, const float y1,
+                              const float x2, const float y2,
+                              const float tipX, const float tipY,
+                              const float width,
+                              const float arrowheadWidth)
     {
         Line<float> line (x1, y1, x2, y2);
         destPath.lineTo (line.getPointAlongLine (-(arrowheadWidth / 2.0f - width), 0));
@@ -364,7 +364,7 @@ namespace PathStrokeHelpers
         float rx1, ry1, rx2, ry2;  // the right-hand stroke
     };
 
-    void shortenSubPath (Array<LineSection>& subPath, float amountAtStart, float amountAtEnd)
+    static void shortenSubPath (Array<LineSection>& subPath, float amountAtStart, float amountAtEnd)
     {
         while (amountAtEnd > 0 && subPath.size() > 0)
         {
@@ -423,10 +423,10 @@ namespace PathStrokeHelpers
         }
     }
 
-    void addSubPath (Path& destPath, Array<LineSection>& subPath,
-                     const bool isClosed, const float width, const float maxMiterExtensionSquared,
-                     const PathStrokeType::JointStyle jointStyle, const PathStrokeType::EndCapStyle endStyle,
-                     const Arrowhead* const arrowhead)
+    static void addSubPath (Path& destPath, Array<LineSection>& subPath,
+                            const bool isClosed, const float width, const float maxMiterExtensionSquared,
+                            const PathStrokeType::JointStyle jointStyle, const PathStrokeType::EndCapStyle endStyle,
+                            const Arrowhead* const arrowhead)
     {
         jassert (subPath.size() > 0);
 
@@ -455,8 +455,7 @@ namespace PathStrokeHelpers
                 addLineEnd (destPath, endStyle, firstLine.rx2, firstLine.ry2, lastX1, lastY1, width);
         }
 
-        int i;
-        for (i = 1; i < subPath.size(); ++i)
+        for (int i = 1; i < subPath.size(); ++i)
         {
             const LineSection& l = subPath.getReference (i);
 
@@ -503,7 +502,7 @@ namespace PathStrokeHelpers
         lastX2 = lastLine.rx2;
         lastY2 = lastLine.ry2;
 
-        for (i = subPath.size() - 1; --i >= 0;)
+        for (int i = subPath.size() - 1; --i >= 0;)
         {
             const LineSection& l = subPath.getReference (i);
 
@@ -536,11 +535,11 @@ namespace PathStrokeHelpers
         destPath.closeSubPath();
     }
 
-    void createStroke (const float thickness, const PathStrokeType::JointStyle jointStyle,
-                       const PathStrokeType::EndCapStyle endStyle,
-                       Path& destPath, const Path& source,
-                       const AffineTransform& transform,
-                       const float extraAccuracy, const Arrowhead* const arrowhead)
+    static void createStroke (const float thickness, const PathStrokeType::JointStyle jointStyle,
+                              const PathStrokeType::EndCapStyle endStyle,
+                              Path& destPath, const Path& source,
+                              const AffineTransform& transform,
+                              const float extraAccuracy, const Arrowhead* const arrowhead)
     {
         jassert (extraAccuracy > 0);
 

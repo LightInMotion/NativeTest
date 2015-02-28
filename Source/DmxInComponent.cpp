@@ -793,7 +793,7 @@ void DmxInComponent::run()
                 if (last[n] != newest[n])
                 {
                     uint8 val = (uint8)newest[n];
-                    labels[n]->setText (String(val), false);
+                    labels[n]->setText (String(val), dontSendNotification);
                     last[n] = newest[n];
                 }
             }

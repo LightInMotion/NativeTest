@@ -1,37 +1,34 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
 
-#ifndef __JUCE_RELATIVERECTANGLE_JUCEHEADER__
-#define __JUCE_RELATIVERECTANGLE_JUCEHEADER__
+#ifndef JUCE_RELATIVERECTANGLE_H_INCLUDED
+#define JUCE_RELATIVERECTANGLE_H_INCLUDED
 
-#include "juce_RelativeCoordinate.h"
-class Component;
 
 //==============================================================================
 /**
-    An rectangle stored as a set of RelativeCoordinate values.
+    A rectangle stored as a set of RelativeCoordinate values.
 
     The rectangle's top, left, bottom and right edge positions are each stored as a RelativeCoordinate.
 
@@ -59,8 +56,8 @@ public:
     */
     explicit RelativeRectangle (const String& stringVersion);
 
-    bool operator== (const RelativeRectangle& other) const noexcept;
-    bool operator!= (const RelativeRectangle& other) const noexcept;
+    bool operator== (const RelativeRectangle&) const noexcept;
+    bool operator!= (const RelativeRectangle&) const noexcept;
 
     //==============================================================================
     /** Calculates the absolute position of this rectangle.
@@ -84,8 +81,9 @@ public:
     bool isDynamic() const;
 
     /** Returns a string which represents this point.
-        This returns a comma-separated list of coordinates, in the order left, top, right, bottom. For details of
-        the string syntax used by the coordinates, see the RelativeCoordinate constructor notes.
+        This returns a comma-separated list of coordinates, in the order left, top, right, bottom.
+        If you're using this to position a Component, then see the notes for
+        Component::setBounds (const RelativeRectangle&) for details of the syntax used.
         The string that is returned can be passed to the RelativeRectangle constructor to recreate the rectangle.
     */
     String toString() const;
@@ -106,4 +104,4 @@ public:
 };
 
 
-#endif   // __JUCE_RELATIVERECTANGLE_JUCEHEADER__
+#endif   // JUCE_RELATIVERECTANGLE_H_INCLUDED

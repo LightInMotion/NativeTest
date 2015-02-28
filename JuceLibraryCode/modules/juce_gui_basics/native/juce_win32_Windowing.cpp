@@ -1,24 +1,23 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
@@ -41,21 +40,15 @@
 #endif
 
 extern void juce_repeatLastProcessPriority();
-extern void juce_CheckCurrentlyFocusedTopLevelWindow();  // in juce_TopLevelWindow.cpp
-extern bool juce_IsRunningInWine();
+extern void juce_checkCurrentlyFocusedTopLevelWindow();  // in juce_TopLevelWindow.cpp
+extern bool juce_isRunningInWine();
 
 typedef bool (*CheckEventBlockedByModalComps) (const MSG&);
 extern CheckEventBlockedByModalComps isEventBlockedByModalComps;
 
 static bool shouldDeactivateTitleBar = true;
 
-void* getUser32Function (const char* functionName) // (NB: this function also used from other modules)
-{
-    HMODULE user32Mod = GetModuleHandleA ("user32.dll");
-    jassert (user32Mod != 0);
-
-    return static_cast <void*> (GetProcAddress (user32Mod, functionName));
-}
+extern void* getUser32Function (const char*);
 
 //==============================================================================
 typedef BOOL (WINAPI* UpdateLayeredWinFunc) (HWND, HDC, POINT*, SIZE*, HDC, POINT*, COLORREF, BLENDFUNCTION*, DWORD);
@@ -63,22 +56,24 @@ static UpdateLayeredWinFunc updateLayeredWindow = nullptr;
 
 bool Desktop::canUseSemiTransparentWindows() noexcept
 {
-    if (updateLayeredWindow == nullptr && ! juce_IsRunningInWine())
+    if (updateLayeredWindow == nullptr && ! juce_isRunningInWine())
         updateLayeredWindow = (UpdateLayeredWinFunc) getUser32Function ("UpdateLayeredWindow");
 
-    return updateLayeredWindow != 0;
+    return updateLayeredWindow != nullptr;
 }
 
 //==============================================================================
 #ifndef WM_TOUCH
  #define WM_TOUCH 0x0240
  #define TOUCH_COORD_TO_PIXEL(l)  ((l) / 100)
- #define TOUCHEVENTF_MOVE   0x0001
- #define TOUCHEVENTF_DOWN   0x0002
- #define TOUCHEVENTF_UP     0x0004
+ #define TOUCHEVENTF_MOVE    0x0001
+ #define TOUCHEVENTF_DOWN    0x0002
+ #define TOUCHEVENTF_UP      0x0004
+ #define TOUCHEVENTF_PRIMARY 0x0010
  DECLARE_HANDLE (HTOUCHINPUT);
+ DECLARE_HANDLE (HGESTUREINFO);
 
- typedef struct tagTOUCHINPUT
+ struct TOUCHINPUT
  {
     LONG x;
     LONG y;
@@ -90,16 +85,55 @@ bool Desktop::canUseSemiTransparentWindows() noexcept
     ULONG_PTR dwExtraInfo;
     DWORD cxContact;
     DWORD cyContact;
- } TOUCHINPUT, *PTOUCHINPUT;
+ };
+
+ struct GESTUREINFO
+ {
+    UINT cbSize;
+    DWORD dwFlags;
+    DWORD dwID;
+    HWND hwndTarget;
+    POINTS ptsLocation;
+    DWORD dwInstanceID;
+    DWORD dwSequenceID;
+    ULONGLONG ullArguments;
+    UINT cbExtraArgs;
+ };
+
+#endif
+
+#ifndef MONITOR_DPI_TYPE
+  enum Monitor_DPI_Type
+  {
+    MDT_Effective_DPI  = 0,
+    MDT_Angular_DPI    = 1,
+    MDT_Raw_DPI        = 2,
+    MDT_Default        = MDT_Effective_DPI
+  };
+
+  enum Process_DPI_Awareness
+  {
+    Process_DPI_Unaware            = 0,
+    Process_System_DPI_Aware       = 1,
+    Process_Per_Monitor_DPI_Aware  = 2
+  };
 #endif
 
 typedef BOOL (WINAPI* RegisterTouchWindowFunc) (HWND, ULONG);
-typedef BOOL (WINAPI* GetTouchInputInfoFunc) (HTOUCHINPUT, UINT, PTOUCHINPUT, int);
+typedef BOOL (WINAPI* GetTouchInputInfoFunc) (HTOUCHINPUT, UINT, TOUCHINPUT*, int);
 typedef BOOL (WINAPI* CloseTouchInputHandleFunc) (HTOUCHINPUT);
+typedef BOOL (WINAPI* GetGestureInfoFunc) (HGESTUREINFO, GESTUREINFO*);
+typedef BOOL (WINAPI* SetProcessDPIAwareFunc)();
+typedef BOOL (WINAPI* SetProcessDPIAwarenessFunc) (Process_DPI_Awareness);
+typedef HRESULT (WINAPI* GetDPIForMonitorFunc) (HMONITOR, Monitor_DPI_Type, UINT*, UINT*);
 
-static RegisterTouchWindowFunc   registerTouchWindow = nullptr;
-static GetTouchInputInfoFunc     getTouchInputInfo = nullptr;
-static CloseTouchInputHandleFunc closeTouchInputHandle = nullptr;
+static RegisterTouchWindowFunc    registerTouchWindow = nullptr;
+static GetTouchInputInfoFunc      getTouchInputInfo = nullptr;
+static CloseTouchInputHandleFunc  closeTouchInputHandle = nullptr;
+static GetGestureInfoFunc         getGestureInfo = nullptr;
+static SetProcessDPIAwareFunc     setProcessDPIAware = nullptr;
+static SetProcessDPIAwarenessFunc setProcessDPIAwareness = nullptr;
+static GetDPIForMonitorFunc       getDPIForMonitor = nullptr;
 
 static bool hasCheckedForMultiTouch = false;
 
@@ -112,14 +146,82 @@ static bool canUseMultiTouch()
         registerTouchWindow   = (RegisterTouchWindowFunc)   getUser32Function ("RegisterTouchWindow");
         getTouchInputInfo     = (GetTouchInputInfoFunc)     getUser32Function ("GetTouchInputInfo");
         closeTouchInputHandle = (CloseTouchInputHandleFunc) getUser32Function ("CloseTouchInputHandle");
+        getGestureInfo        = (GetGestureInfoFunc)        getUser32Function ("GetGestureInfo");
     }
 
     return registerTouchWindow != nullptr;
 }
 
-static inline Rectangle<int> rectangleFromRECT (const RECT& r) noexcept
+static Rectangle<int> rectangleFromRECT (const RECT& r) noexcept
 {
     return Rectangle<int>::leftTopRightBottom ((int) r.left, (int) r.top, (int) r.right, (int) r.bottom);
+}
+
+static void setWindowPos (HWND hwnd, Rectangle<int> bounds, UINT flags)
+{
+    SetWindowPos (hwnd, 0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), flags);
+}
+
+static RECT getWindowRect (HWND hwnd)
+{
+    RECT r;
+    GetWindowRect (hwnd, &r);
+    return r;
+}
+
+static void setWindowZOrder (HWND hwnd, HWND insertAfter)
+{
+    SetWindowPos (hwnd, insertAfter, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOSENDCHANGING);
+}
+
+//==============================================================================
+static void setDPIAwareness()
+{
+   #if ! JUCE_DISABLE_WIN32_DPI_AWARENESS
+    if (JUCEApplicationBase::isStandaloneApp())
+    {
+        if (setProcessDPIAwareness == nullptr)
+        {
+            HMODULE shcoreModule = GetModuleHandleA ("SHCore.dll");
+
+            if (shcoreModule != 0)
+            {
+                setProcessDPIAwareness = (SetProcessDPIAwarenessFunc) GetProcAddress (shcoreModule, "SetProcessDpiAwareness");
+                getDPIForMonitor = (GetDPIForMonitorFunc) GetProcAddress (shcoreModule, "GetDpiForMonitor");
+
+                if (setProcessDPIAwareness != nullptr && getDPIForMonitor != nullptr
+//                     && SUCCEEDED (setProcessDPIAwareness (Process_Per_Monitor_DPI_Aware)))
+                     && SUCCEEDED (setProcessDPIAwareness (Process_System_DPI_Aware))) // (keep using this mode temporarily..)
+                    return;
+            }
+
+            if (setProcessDPIAware == nullptr)
+            {
+                setProcessDPIAware = (SetProcessDPIAwareFunc) getUser32Function ("SetProcessDPIAware");
+
+                if (setProcessDPIAware != nullptr)
+                    setProcessDPIAware();
+            }
+        }
+    }
+   #endif
+}
+
+static double getGlobalDPI()
+{
+    setDPIAwareness();
+
+    HDC dc = GetDC (0);
+    const double dpi = (GetDeviceCaps (dc, LOGPIXELSX)
+                      + GetDeviceCaps (dc, LOGPIXELSY)) / 2.0;
+    ReleaseDC (0, dc);
+    return dpi;
+}
+
+double Desktop::getDefaultMasterScale()
+{
+    return JUCEApplicationBase::isStandaloneApp() ? getGlobalDPI() / 96.0
+                                                  : 1.0;
 }
 
 //==============================================================================
@@ -211,7 +313,9 @@ public:
     {
         jassert (format == Image::RGB || format == Image::ARGB);
 
-        pixelStride = (format == Image::RGB) ? 3 : 4;
+        static bool alwaysUse32Bits = isGraphicsCard32Bit(); // NB: for 32-bit cards, it's faster to use a 32-bit image.
+
+        pixelStride = (alwaysUse32Bits || format == Image::ARGB) ? 4 : 3;
         lineStride = -((w * pixelStride + 3) & ~3);
 
         zerostruct (bitmapInfo);
@@ -259,22 +363,26 @@ public:
         DeleteObject (hBitmap);
     }
 
-    ImageType* createType() const                       { return new NativeImageType(); }
+    ImageType* createType() const override                       { return new NativeImageType(); }
 
-    LowLevelGraphicsContext* createLowLevelContext()
+    LowLevelGraphicsContext* createLowLevelContext() override
     {
+        sendDataChangeMessage();
         return new LowLevelGraphicsSoftwareRenderer (Image (this));
     }
 
-    void initialiseBitmapData (Image::BitmapData& bitmap, int x, int y, Image::BitmapData::ReadWriteMode)
+    void initialiseBitmapData (Image::BitmapData& bitmap, int x, int y, Image::BitmapData::ReadWriteMode mode) override
     {
         bitmap.data = imageData + x * pixelStride + y * lineStride;
         bitmap.pixelFormat = pixelFormat;
         bitmap.lineStride = lineStride;
         bitmap.pixelStride = pixelStride;
+
+        if (mode != Image::BitmapData::readOnly)
+            sendDataChangeMessage();
     }
 
-    ImagePixelData* clone()
+    ImagePixelData* clone() override
     {
         WindowsBitmapImage* im = new WindowsBitmapImage (pixelFormat, width, height, false);
 
@@ -286,24 +394,13 @@ public:
 
     void blitToWindow (HWND hwnd, HDC dc, const bool transparent,
                        const int x, const int y,
-                       const RectangleList& maskedRegion,
                        const uint8 updateLayeredWindowAlpha) noexcept
     {
         SetMapMode (dc, MM_TEXT);
 
         if (transparent)
         {
-            if (! maskedRegion.isEmpty())
-            {
-                for (RectangleList::Iterator i (maskedRegion); i.next();)
-                {
-                    const Rectangle<int>& r = *i.getRectangle();
-                    ExcludeClipRect (hdc, r.getX(), r.getY(), r.getRight(), r.getBottom());
-                }
-            }
-
-            RECT windowBounds;
-            GetWindowRect (hwnd, &windowBounds);
+            RECT windowBounds = getWindowRect (hwnd);
 
             POINT p = { -x, -y };
             POINT pos = { windowBounds.left, windowBounds.top };
@@ -320,27 +417,11 @@ public:
         }
         else
         {
-            int savedDC = 0;
-
-            if (! maskedRegion.isEmpty())
-            {
-                savedDC = SaveDC (dc);
-
-                for (RectangleList::Iterator i (maskedRegion); i.next();)
-                {
-                    const Rectangle<int>& r = *i.getRectangle();
-                    ExcludeClipRect (dc, r.getX(), r.getY(), r.getRight(), r.getBottom());
-                }
-            }
-
             StretchDIBits (dc,
                            x, y, width, height,
                            0, 0, width, height,
                            bitmapData, (const BITMAPINFO*) &bitmapInfo,
                            DIB_RGB_COLORS, SRCCOPY);
-
-            if (! maskedRegion.isEmpty())
-                RestoreDC (dc, savedDC);
         }
     }
 
@@ -353,7 +434,15 @@ public:
     uint8* imageData;
 
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WindowsBitmapImage);
+    static bool isGraphicsCard32Bit()
+    {
+        HDC dc = GetDC (0);
+        const int bitsPerPixel = GetDeviceCaps (dc, BITSPIXEL);
+        ReleaseDC (0, dc);
+        return bitsPerPixel > 24;
+    }
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WindowsBitmapImage)
 };
 
 //==============================================================================
@@ -463,12 +552,13 @@ public:
     };
 
     //==============================================================================
-    HWNDComponentPeer (Component* const component,
-                       const int windowStyleFlags,
-                       HWND parentToAddTo_)
-        : ComponentPeer (component, windowStyleFlags),
-          dontRepaint (false),
+    HWNDComponentPeer (Component& comp, const int windowStyleFlags, HWND parent, bool nonRepainting)
+        : ComponentPeer (comp, windowStyleFlags),
+          dontRepaint (nonRepainting),
+          parentToAddTo (parent),
           currentRenderingEngine (softwareRenderingEngine),
+          lastPaintTime (0),
+          lastMagnifySize (0),
           fullScreen (false),
           isDragging (false),
           isMouseOver (false),
@@ -476,20 +566,20 @@ public:
           constrainerIsResizing (false),
           currentWindowIcon (0),
           dropTarget (nullptr),
-          parentToAddTo (parentToAddTo_),
           updateLayeredWindowAlpha (255)
     {
         callFunctionIfNotLocked (&createWindowCallback, this);
 
-        setTitle (component->getName());
+        setTitle (component.getName());
 
         if ((windowStyleFlags & windowHasDropShadow) != 0
-             && Desktop::canUseSemiTransparentWindows())
+             && Desktop::canUseSemiTransparentWindows()
+             && ((! hasTitleBar()) || SystemStats::getOperatingSystemType() < SystemStats::WinVista))
         {
-            shadower = component->getLookAndFeel().createDropShadowerForComponent (component);
+            shadower = component.getLookAndFeel().createDropShadowerForComponent (&component);
 
             if (shadower != nullptr)
-                shadower->setOwner (component);
+                shadower->setOwner (&component);
         }
     }
 
@@ -519,9 +609,9 @@ public:
     }
 
     //==============================================================================
-    void* getNativeHandle() const    { return hwnd; }
+    void* getNativeHandle() const override    { return hwnd; }
 
-    void setVisible (bool shouldBeVisible)
+    void setVisible (bool shouldBeVisible) override
     {
         ShowWindow (hwnd, shouldBeVisible ? SW_SHOWNA : SW_HIDE);
 
@@ -531,22 +621,12 @@ public:
             lastPaintTime = 0;
     }
 
-    void setTitle (const String& title)
+    void setTitle (const String& title) override
     {
         // Unfortunately some ancient bits of win32 mean you can only perform this operation from the message thread.
         jassert (MessageManager::getInstance()->isThisTheMessageThread());
 
         SetWindowText (hwnd, title.toWideCharPointer());
-    }
-
-    void setPosition (int x, int y)
-    {
-        offsetWithinParent (x, y);
-        SetWindowPos (hwnd, 0,
-                      x - windowBorder.getLeft(),
-                      y - windowBorder.getTop(),
-                      0, 0,
-                      SWP_NOACTIVATE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
     }
 
     void repaintNowIfTransparent()
@@ -561,12 +641,10 @@ public:
         info.cbSize = sizeof (info);
 
         if (GetWindowInfo (hwnd, &info))
-        {
             windowBorder = BorderSize<int> (info.rcClient.top - info.rcWindow.top,
                                             info.rcClient.left - info.rcWindow.left,
                                             info.rcWindow.bottom - info.rcClient.bottom,
                                             info.rcWindow.right - info.rcClient.right);
-        }
 
        #if JUCE_DIRECT2D
         if (direct2DContext != nullptr)
@@ -574,45 +652,46 @@ public:
        #endif
     }
 
-    void setSize (int w, int h)
-    {
-        SetWindowPos (hwnd, 0, 0, 0,
-                      w + windowBorder.getLeftAndRight(),
-                      h + windowBorder.getTopAndBottom(),
-                      SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
-
-        updateBorderSize();
-
-        repaintNowIfTransparent();
-    }
-
-    void setBounds (int x, int y, int w, int h, bool isNowFullScreen)
+    void setBounds (const Rectangle<int>& bounds, bool isNowFullScreen) override
     {
         fullScreen = isNowFullScreen;
-        offsetWithinParent (x, y);
 
-        SetWindowPos (hwnd, 0,
-                      x - windowBorder.getLeft(),
-                      y - windowBorder.getTop(),
-                      w + windowBorder.getLeftAndRight(),
-                      h + windowBorder.getTopAndBottom(),
-                      SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+        Rectangle<int> newBounds (windowBorder.addedTo (bounds));
 
-        updateBorderSize();
+        if (isUsingUpdateLayeredWindow())
+        {
+            if (HWND parentHwnd = GetParent (hwnd))
+            {
+                RECT parentRect = getWindowRect (parentHwnd);
+                newBounds.translate (parentRect.left, parentRect.top);
+            }
+        }
 
-        repaintNowIfTransparent();
+        const Rectangle<int> oldBounds (getBounds());
+        const bool hasMoved = (oldBounds.getPosition() != bounds.getPosition());
+        const bool hasResized = (oldBounds.getWidth() != bounds.getWidth()
+                                  || oldBounds.getHeight() != bounds.getHeight());
+
+        DWORD flags = SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOOWNERZORDER;
+        if (! hasMoved)    flags |= SWP_NOMOVE;
+        if (! hasResized)  flags |= SWP_NOSIZE;
+
+        setWindowPos (hwnd, newBounds, flags);
+
+        if (hasResized && isValidPeer (this))
+        {
+            updateBorderSize();
+            repaintNowIfTransparent();
+        }
     }
 
-    Rectangle<int> getBounds() const
+    Rectangle<int> getBounds() const override
     {
-        RECT r;
-        GetWindowRect (hwnd, &r);
-        Rectangle<int> bounds (rectangleFromRECT (r));
+        Rectangle<int> bounds (rectangleFromRECT (getWindowRect (hwnd)));
 
-        HWND parentH = GetParent (hwnd);
-        if (parentH != 0)
+        if (HWND parentH = GetParent (hwnd))
         {
-            GetWindowRect (parentH, &r);
+            RECT r = getWindowRect (parentH);
             bounds.translate (-r.left, -r.top);
         }
 
@@ -621,27 +700,20 @@ public:
 
     Point<int> getScreenPosition() const
     {
-        RECT r;
-        GetWindowRect (hwnd, &r);
+        RECT r = getWindowRect (hwnd);
+
         return Point<int> (r.left + windowBorder.getLeft(),
-                           r.top + windowBorder.getTop());
+                           r.top  + windowBorder.getTop());
     }
 
-    Point<int> localToGlobal (const Point<int>& relativePosition)
-    {
-        return relativePosition + getScreenPosition();
-    }
+    Point<float> localToGlobal (Point<float> relativePosition) override  { return relativePosition + getScreenPosition().toFloat(); }
+    Point<float> globalToLocal (Point<float> screenPosition) override    { return screenPosition   - getScreenPosition().toFloat(); }
 
-    Point<int> globalToLocal (const Point<int>& screenPosition)
-    {
-        return screenPosition - getScreenPosition();
-    }
-
-    void setAlpha (float newAlpha)
+    void setAlpha (float newAlpha) override
     {
         const uint8 intAlpha = (uint8) jlimit (0, 255, (int) (newAlpha * 255.0f));
 
-        if (component->isOpaque())
+        if (component.isOpaque())
         {
             if (newAlpha < 1.0f)
             {
@@ -657,17 +729,17 @@ public:
         else
         {
             updateLayeredWindowAlpha = intAlpha;
-            component->repaint();
+            component.repaint();
         }
     }
 
-    void setMinimised (bool shouldBeMinimised)
+    void setMinimised (bool shouldBeMinimised) override
     {
         if (shouldBeMinimised != isMinimised())
             ShowWindow (hwnd, shouldBeMinimised ? SW_MINIMIZE : SW_SHOWNORMAL);
     }
 
-    bool isMinimised() const
+    bool isMinimised() const override
     {
         WINDOWPLACEMENT wp;
         wp.length = sizeof (WINDOWPLACEMENT);
@@ -676,14 +748,14 @@ public:
         return wp.showCmd == SW_SHOWMINIMIZED;
     }
 
-    void setFullScreen (bool shouldBeFullScreen)
+    void setFullScreen (bool shouldBeFullScreen) override
     {
         setMinimised (false);
 
         if (isFullScreen() != shouldBeFullScreen)
         {
             fullScreen = shouldBeFullScreen;
-            const WeakReference<Component> deletionChecker (component);
+            const WeakReference<Component> deletionChecker (&component);
 
             if (! fullScreen)
             {
@@ -693,13 +765,7 @@ public:
                     ShowWindow (hwnd, SW_SHOWNORMAL);
 
                 if (! boundsCopy.isEmpty())
-                {
-                    setBounds (boundsCopy.getX(),
-                               boundsCopy.getY(),
-                               boundsCopy.getWidth(),
-                               boundsCopy.getHeight(),
-                               false);
-                }
+                    setBounds (ScalingHelpers::scaledScreenPosToUnscaled (component, boundsCopy), false);
             }
             else
             {
@@ -714,7 +780,7 @@ public:
         }
     }
 
-    bool isFullScreen() const
+    bool isFullScreen() const override
     {
         if (! hasTitleBar())
             return fullScreen;
@@ -726,45 +792,42 @@ public:
         return wp.showCmd == SW_SHOWMAXIMIZED;
     }
 
-    bool contains (const Point<int>& position, bool trueIfInAChildWindow) const
+    bool contains (Point<int> localPos, bool trueIfInAChildWindow) const override
     {
-        if (! (isPositiveAndBelow (position.x, component->getWidth())
-                && isPositiveAndBelow (position.y, component->getHeight())))
+        RECT r = getWindowRect (hwnd);
+
+        if (! (isPositiveAndBelow (localPos.x, (int) (r.right - r.left))
+                && isPositiveAndBelow (localPos.y, (int) (r.bottom - r.top))))
             return false;
 
-        RECT r;
-        GetWindowRect (hwnd, &r);
-
-        POINT p = { position.x + r.left + windowBorder.getLeft(),
-                    position.y + r.top  + windowBorder.getTop() };
+        POINT p = { localPos.x + r.left + windowBorder.getLeft(),
+                    localPos.y + r.top  + windowBorder.getTop() };
 
         HWND w = WindowFromPoint (p);
         return w == hwnd || (trueIfInAChildWindow && (IsChild (hwnd, w) != 0));
     }
 
-    BorderSize<int> getFrameSize() const
+    BorderSize<int> getFrameSize() const override
     {
         return windowBorder;
     }
 
-    bool setAlwaysOnTop (bool alwaysOnTop)
+    bool setAlwaysOnTop (bool alwaysOnTop) override
     {
         const bool oldDeactivate = shouldDeactivateTitleBar;
         shouldDeactivateTitleBar = ((styleFlags & windowIsTemporary) == 0);
 
-        SetWindowPos (hwnd, alwaysOnTop ? HWND_TOPMOST : HWND_NOTOPMOST,
-                      0, 0, 0, 0,
-                      SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOSENDCHANGING);
+        setWindowZOrder (hwnd, alwaysOnTop ? HWND_TOPMOST : HWND_NOTOPMOST);
 
         shouldDeactivateTitleBar = oldDeactivate;
 
         if (shadower != nullptr)
-            shadower->componentBroughtToFront (*component);
+            handleBroughtToFront();
 
         return true;
     }
 
-    void toFront (bool makeActive)
+    void toFront (bool makeActive) override
     {
         setMinimised (false);
 
@@ -782,33 +845,31 @@ public:
         }
     }
 
-    void toBehind (ComponentPeer* other)
+    void toBehind (ComponentPeer* other) override
     {
-        HWNDComponentPeer* const otherPeer = dynamic_cast <HWNDComponentPeer*> (other);
-
-        jassert (otherPeer != nullptr); // wrong type of window?
-
-        if (otherPeer != nullptr)
+        if (HWNDComponentPeer* const otherPeer = dynamic_cast<HWNDComponentPeer*> (other))
         {
             setMinimised (false);
 
             // Must be careful not to try to put a topmost window behind a normal one, or Windows
             // promotes the normal one to be topmost!
-            if (getComponent()->isAlwaysOnTop() == otherPeer->getComponent()->isAlwaysOnTop())
-                SetWindowPos (hwnd, otherPeer->hwnd, 0, 0, 0, 0,
-                              SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOSENDCHANGING);
-            else if (otherPeer->getComponent()->isAlwaysOnTop())
-                SetWindowPos (hwnd, HWND_TOP, 0, 0, 0, 0,
-                              SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOSENDCHANGING);
+            if (component.isAlwaysOnTop() == otherPeer->getComponent().isAlwaysOnTop())
+                setWindowZOrder (hwnd, otherPeer->hwnd);
+            else if (otherPeer->getComponent().isAlwaysOnTop())
+                setWindowZOrder (hwnd, HWND_TOP);
+        }
+        else
+        {
+            jassertfalse; // wrong type of window?
         }
     }
 
-    bool isFocused() const
+    bool isFocused() const override
     {
         return callFunctionIfNotLocked (&getFocusCallback, 0) == (void*) hwnd;
     }
 
-    void grabFocus()
+    void grabFocus() override
     {
         const bool oldDeactivate = shouldDeactivateTitleBar;
         shouldDeactivateTitleBar = ((styleFlags & windowIsTemporary) == 0);
@@ -818,7 +879,7 @@ public:
         shouldDeactivateTitleBar = oldDeactivate;
     }
 
-    void textInputRequired (const Point<int>&)
+    void textInputRequired (Point<int>, TextInputTarget&) override
     {
         if (! hasCreatedCaret)
         {
@@ -830,23 +891,28 @@ public:
         SetCaretPos (0, 0);
     }
 
-    void dismissPendingTextInput()
+    void dismissPendingTextInput() override
     {
         imeHandler.handleSetContext (hwnd, false);
     }
 
-    void repaint (const Rectangle<int>& area)
+    void repaint (const Rectangle<int>& area) override
     {
         const RECT r = { area.getX(), area.getY(), area.getRight(), area.getBottom() };
         InvalidateRect (hwnd, &r, FALSE);
     }
 
-    void performAnyPendingRepaintsNow()
+    void performAnyPendingRepaintsNow() override
     {
-        MSG m;
-        if (component->isVisible()
-             && (PeekMessage (&m, hwnd, WM_PAINT, WM_PAINT, PM_REMOVE) || isUsingUpdateLayeredWindow()))
-            handlePaintMessage();
+        if (component.isVisible())
+        {
+            WeakReference<Component> localRef (&component);
+            MSG m;
+
+            if (isUsingUpdateLayeredWindow() || PeekMessage (&m, hwnd, WM_PAINT, WM_PAINT, PM_REMOVE))
+                if (localRef != nullptr) // (the PeekMessage call can dispatch messages, which may delete this comp)
+                    handlePaintMessage();
+        }
     }
 
     //==============================================================================
@@ -896,10 +962,10 @@ public:
     static ModifierKeys modifiersAtLastCallback;
 
     //==============================================================================
-    class JuceDropTarget    : public ComBaseClassHelper <IDropTarget>
+    class JuceDropTarget    : public ComBaseClassHelper<IDropTarget>
     {
     public:
-        JuceDropTarget (HWNDComponentPeer& owner_)   : ownerInfo (new OwnerInfo (owner_)) {}
+        JuceDropTarget (HWNDComponentPeer& p)   : ownerInfo (new OwnerInfo (p)) {}
 
         void clear()
         {
@@ -920,7 +986,7 @@ public:
             if (ownerInfo == nullptr)
                 return S_FALSE;
 
-            ownerInfo->owner.handleFileDragExit (ownerInfo->files);
+            ownerInfo->owner.handleDragExit (ownerInfo->dragInfo);
             return S_OK;
         }
 
@@ -929,7 +995,8 @@ public:
             if (ownerInfo == nullptr)
                 return S_FALSE;
 
-            const bool wasWanted = ownerInfo->owner.handleFileDragMove (ownerInfo->files, ownerInfo->getMousePos (mousePos));
+            ownerInfo->dragInfo.position = ownerInfo->getMousePos (mousePos).roundToInt();
+            const bool wasWanted = ownerInfo->owner.handleDragMove (ownerInfo->dragInfo);
             *pdwEffect = wasWanted ? (DWORD) DROPEFFECT_COPY : (DWORD) DROPEFFECT_NONE;
             return S_OK;
         }
@@ -939,7 +1006,8 @@ public:
             HRESULT hr = updateFileList (pDataObject);
             if (SUCCEEDED (hr))
             {
-                const bool wasWanted = ownerInfo->owner.handleFileDragDrop (ownerInfo->files, ownerInfo->getMousePos (mousePos));
+                ownerInfo->dragInfo.position = ownerInfo->getMousePos (mousePos).roundToInt();
+                const bool wasWanted = ownerInfo->owner.handleDragDrop (ownerInfo->dragInfo);
                 *pdwEffect = wasWanted ? (DWORD) DROPEFFECT_COPY : (DWORD) DROPEFFECT_NONE;
                 hr = S_OK;
             }
@@ -950,11 +1018,12 @@ public:
     private:
         struct OwnerInfo
         {
-            OwnerInfo (HWNDComponentPeer& owner_) : owner (owner_) {}
+            OwnerInfo (HWNDComponentPeer& p) : owner (p) {}
 
-            Point<int> getMousePos (const POINTL& mousePos) const
+            Point<float> getMousePos (const POINTL& mousePos) const
             {
-                return owner.globalToLocal (Point<int> (mousePos.x, mousePos.y));
+                return owner.globalToLocal (Point<float> (static_cast<float> (mousePos.x),
+                                                          static_cast<float> (mousePos.y)));
             }
 
             template <typename CharType>
@@ -971,50 +1040,100 @@ public:
                     if (len == 0)
                         break;
 
-                    files.add (String (names + i, len));
+                    dragInfo.files.add (String (names + i, len));
                     i += len + 1;
                 }
             }
 
             HWNDComponentPeer& owner;
-            StringArray files;
+            ComponentPeer::DragInfo dragInfo;
 
-            JUCE_DECLARE_NON_COPYABLE (OwnerInfo);
+            JUCE_DECLARE_NON_COPYABLE (OwnerInfo)
         };
 
         ScopedPointer<OwnerInfo> ownerInfo;
 
-        HRESULT updateFileList (IDataObject* const pDataObject)
+        struct DroppedData
+        {
+            DroppedData (IDataObject* const dataObject, const CLIPFORMAT type)
+                : data (nullptr)
+            {
+                FORMATETC format = { type, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
+                STGMEDIUM resetMedium = { TYMED_HGLOBAL, { 0 }, 0 };
+                medium = resetMedium;
+
+                if (SUCCEEDED (error = dataObject->GetData (&format, &medium)))
+                {
+                    dataSize = GlobalSize (medium.hGlobal);
+                    data = GlobalLock (medium.hGlobal);
+                }
+            }
+
+            ~DroppedData()
+            {
+                if (data != nullptr)
+                    GlobalUnlock (medium.hGlobal);
+            }
+
+            HRESULT error;
+            STGMEDIUM medium;
+            void* data;
+            SIZE_T dataSize;
+        };
+
+        HRESULT updateFileList (IDataObject* const dataObject)
         {
             if (ownerInfo == nullptr)
                 return S_FALSE;
 
-            ownerInfo->files.clear();
+            ownerInfo->dragInfo.clear();
 
-            FORMATETC format = { CF_HDROP, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
-            STGMEDIUM medium = { TYMED_HGLOBAL, { 0 }, 0 };
+            DroppedData textData (dataObject, CF_UNICODETEXT);
 
-            HRESULT hr = pDataObject->GetData (&format, &medium);
-
-            if (SUCCEEDED (hr))
+            if (SUCCEEDED (textData.error))
             {
-                const SIZE_T totalLen = GlobalSize (medium.hGlobal);
-                const LPDROPFILES dropFiles = (const LPDROPFILES) GlobalLock (medium.hGlobal);
-                const void* const names = addBytesToPointer (dropFiles, sizeof (DROPFILES));
+                ownerInfo->dragInfo.text = String (CharPointer_UTF16 ((const WCHAR*) textData.data),
+                                                   CharPointer_UTF16 ((const WCHAR*) addBytesToPointer (textData.data, textData.dataSize)));
+            }
+            else
+            {
+                DroppedData fileData (dataObject, CF_HDROP);
 
-                if (dropFiles->fWide)
-                    ownerInfo->parseFileList (static_cast <const WCHAR*> (names), totalLen);
+                if (SUCCEEDED (fileData.error))
+                {
+                    const LPDROPFILES dropFiles = static_cast<const LPDROPFILES> (fileData.data);
+                    const void* const names = addBytesToPointer (dropFiles, sizeof (DROPFILES));
+
+                    if (dropFiles->fWide)
+                        ownerInfo->parseFileList (static_cast<const WCHAR*> (names), fileData.dataSize);
+                    else
+                        ownerInfo->parseFileList (static_cast<const char*>  (names), fileData.dataSize);
+                }
                 else
-                    ownerInfo->parseFileList (static_cast <const char*>  (names), totalLen);
-
-                GlobalUnlock (medium.hGlobal);
+                {
+                    return fileData.error;
+                }
             }
 
-            return hr;
+            return S_OK;
         }
 
-        JUCE_DECLARE_NON_COPYABLE (JuceDropTarget);
+        JUCE_DECLARE_NON_COPYABLE (JuceDropTarget)
     };
+
+   #if JUCE_MODULE_AVAILABLE_juce_audio_plugin_client
+    static bool offerKeyMessageToJUCEWindow (MSG& m)
+    {
+        if (m.message == WM_KEYDOWN || m.message == WM_KEYUP)
+            if (Component::getCurrentlyFocusedComponent() != nullptr)
+                if (HWNDComponentPeer* h = getOwnerOfWindow (m.hwnd))
+                    if (m.message == WM_KEYDOWN ? h->doKeyDown (m.wParam)
+                                                : h->doKeyUp (m.wParam))
+                        return true;
+
+        return false;
+    }
+   #endif
 
 private:
     HWND hwnd, parentToAddTo;
@@ -1023,6 +1142,8 @@ private:
    #if JUCE_DIRECT2D
     ScopedPointer<Direct2DLowLevelGraphicsContext> direct2DContext;
    #endif
+    uint32 lastPaintTime;
+    ULONGLONG lastMagnifySize;
     bool fullScreen, isDragging, isMouseOver, hasCreatedCaret, constrainerIsResizing;
     BorderSize<int> windowBorder;
     HICON currentWindowIcon;
@@ -1038,8 +1159,7 @@ private:
 
         Image& getImage (const bool transparent, const int w, const int h)
         {
-            static bool alwaysUseARGB = isGraphicsCard32Bit(); // NB: for 32-bit cards, it's faster to use a 32-bit image.
-            const Image::PixelFormat format = (transparent || alwaysUseARGB) ? Image::ARGB : Image::RGB;
+            const Image::PixelFormat format = transparent ? Image::ARGB : Image::RGB;
 
             if ((! image.isValid()) || image.getWidth() < w || image.getHeight() < h || image.getFormat() != format)
                 image = Image (new WindowsBitmapImage (format, (w + 31) & ~31, (h + 31) & ~31, false));
@@ -1048,7 +1168,7 @@ private:
             return image;
         }
 
-        void timerCallback()
+        void timerCallback() override
         {
             stopTimer();
             image = Image::null;
@@ -1057,21 +1177,13 @@ private:
     private:
         Image image;
 
-        static bool isGraphicsCard32Bit()
-        {
-            HDC dc = GetDC (0);
-            const int bitsPerPixel = GetDeviceCaps (dc, BITSPIXEL);
-            ReleaseDC (0, dc);
-            return bitsPerPixel > 24;
-        }
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TemporaryImage);
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TemporaryImage)
     };
 
     TemporaryImage offscreenImageGenerator;
 
     //==============================================================================
-    class WindowClassHolder    : public DeletedAtShutdown
+    class WindowClassHolder    : private DeletedAtShutdown
     {
     public:
         WindowClassHolder()
@@ -1114,7 +1226,7 @@ private:
 
         LPCTSTR getWindowClassName() const noexcept     { return (LPCTSTR) MAKELONG (atom, 0); }
 
-        juce_DeclareSingleton_SingleThreaded_Minimal (WindowClassHolder);
+        juce_DeclareSingleton_SingleThreaded_Minimal (WindowClassHolder)
 
     private:
         ATOM atom;
@@ -1122,14 +1234,10 @@ private:
         static bool isHWNDBlockedByModalComponents (HWND h)
         {
             for (int i = Desktop::getInstance().getNumComponents(); --i >= 0;)
-            {
-                Component* const c = Desktop::getInstance().getComponent (i);
-
-                if (c != nullptr
-                      && (! c->isCurrentlyBlockedByAnotherModalComponent())
-                      && IsChild ((HWND) c->getWindowHandle(), h))
-                    return false;
-            }
+                if (Component* const c = Desktop::getInstance().getComponent (i))
+                    if ((! c->isCurrentlyBlockedByAnotherModalComponent())
+                          && IsChild ((HWND) c->getWindowHandle(), h))
+                        return false;
 
             return true;
         }
@@ -1174,8 +1282,7 @@ private:
                 case WM_SYSKEYDOWN:
                     if (isHWNDBlockedByModalComponents (m.hwnd))
                     {
-                        Component* const modal = Component::getCurrentlyModalComponent (0);
-                        if (modal != nullptr)
+                        if (Component* const modal = Component::getCurrentlyModalComponent (0))
                             modal->inputAttemptWhenModal();
 
                         return true;
@@ -1189,19 +1296,19 @@ private:
             return false;
         }
 
-        JUCE_DECLARE_NON_COPYABLE (WindowClassHolder);
+        JUCE_DECLARE_NON_COPYABLE (WindowClassHolder)
     };
 
     //==============================================================================
     static void* createWindowCallback (void* userData)
     {
-        static_cast <HWNDComponentPeer*> (userData)->createWindow();
+        static_cast<HWNDComponentPeer*> (userData)->createWindow();
         return nullptr;
     }
 
     void createWindow()
     {
-        DWORD exstyle = WS_EX_ACCEPTFILES;
+        DWORD exstyle = 0;
         DWORD type = WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 
         if (hasTitleBar())
@@ -1246,10 +1353,6 @@ private:
                                L"", type, 0, 0, 0, 0, parentToAddTo, 0,
                                (HINSTANCE) Process::getCurrentModuleInstanceHandle(), 0);
 
-       #if JUCE_DIRECT2D
-        setCurrentRenderingEngine (1);
-       #endif
-
         if (hwnd != 0)
         {
             SetWindowLongPtr (hwnd, 0, 0);
@@ -1257,20 +1360,32 @@ private:
             JuceWindowIdentifier::setAsJUCEWindow (hwnd, true);
 
             if (dropTarget == nullptr)
-                dropTarget = new JuceDropTarget (*this);
+            {
+                HWNDComponentPeer* peer = nullptr;
+
+                if (dontRepaint)
+                    peer = getOwnerOfWindow (parentToAddTo);
+
+                if (peer == nullptr)
+                    peer = this;
+
+                dropTarget = new JuceDropTarget (*peer);
+            }
 
             RegisterDragDrop (hwnd, dropTarget);
 
             if (canUseMultiTouch())
                 registerTouchWindow (hwnd, 0);
 
+            setDPIAwareness();
+            setMessageFilter();
             updateBorderSize();
 
             // Calling this function here is (for some reason) necessary to make Windows
             // correctly enable the menu items that we specify in the wm_initmenu message.
             GetSystemMenu (hwnd, false);
 
-            const float alpha = component->getAlpha();
+            const float alpha = component.getAlpha();
             if (alpha < 1.0f)
                 setAlpha (alpha);
         }
@@ -1295,7 +1410,7 @@ private:
 
     static void* toFrontCallback2 (void* h)
     {
-        SetWindowPos ((HWND) h, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOSENDCHANGING);
+        setWindowZOrder ((HWND) h, HWND_TOP);
         return nullptr;
     }
 
@@ -1310,28 +1425,12 @@ private:
         return GetFocus();
     }
 
-    void offsetWithinParent (int& x, int& y) const
-    {
-        if (isUsingUpdateLayeredWindow())
-        {
-            HWND parentHwnd = GetParent (hwnd);
-
-            if (parentHwnd != 0)
-            {
-                RECT parentRect;
-                GetWindowRect (parentHwnd, &parentRect);
-                x += parentRect.left;
-                y += parentRect.top;
-            }
-        }
-    }
-
     bool isUsingUpdateLayeredWindow() const
     {
-        return ! component->isOpaque();
+        return ! component.isOpaque();
     }
 
-    inline bool hasTitleBar() const noexcept        { return (styleFlags & windowHasTitleBar) != 0; }
+    bool hasTitleBar() const noexcept        { return (styleFlags & windowHasTitleBar) != 0; }
 
 
     void setIcon (const Image& newIcon)
@@ -1348,6 +1447,58 @@ private:
 
             currentWindowIcon = hicon;
         }
+    }
+
+    void setMessageFilter()
+    {
+        typedef BOOL (WINAPI* ChangeWindowMessageFilterExFunc) (HWND, UINT, DWORD, PVOID);
+
+        if (ChangeWindowMessageFilterExFunc changeMessageFilter
+                = (ChangeWindowMessageFilterExFunc) getUser32Function ("ChangeWindowMessageFilterEx"))
+        {
+            changeMessageFilter (hwnd, WM_DROPFILES, 1 /*MSGFLT_ALLOW*/, nullptr);
+            changeMessageFilter (hwnd, WM_COPYDATA, 1 /*MSGFLT_ALLOW*/, nullptr);
+            changeMessageFilter (hwnd, 0x49, 1 /*MSGFLT_ALLOW*/, nullptr);
+        }
+    }
+
+    struct ChildWindowClippingInfo
+    {
+        HDC dc;
+        HWNDComponentPeer* peer;
+        RectangleList<int>* clip;
+        Point<int> origin;
+        int savedDC;
+    };
+
+    static BOOL CALLBACK clipChildWindowCallback (HWND hwnd, LPARAM context)
+    {
+        if (IsWindowVisible (hwnd))
+        {
+            ChildWindowClippingInfo& info = *(ChildWindowClippingInfo*) context;
+
+            HWND parent = GetParent (hwnd);
+
+            if (parent == info.peer->hwnd)
+            {
+                RECT r = getWindowRect (hwnd);
+                POINT pos = { r.left, r.top };
+                ScreenToClient (GetParent (hwnd), &pos);
+
+                Rectangle<int> clip (Rectangle<int> (pos.x, pos.y,
+                                                     r.right  - r.left,
+                                                     r.bottom - r.top));
+
+                info.clip->subtract (clip - info.origin);
+
+                if (info.savedDC == 0)
+                    info.savedDC = SaveDC (info.dc);
+
+                ExcludeClipRect (info.dc, clip.getX(), clip.getY(), clip.getRight(), clip.getBottom());
+            }
+        }
+
+        return TRUE;
     }
 
     //==============================================================================
@@ -1369,131 +1520,28 @@ private:
         else
        #endif
 
+        HRGN rgn = CreateRectRgn (0, 0, 0, 0);
+        const int regionType = GetUpdateRgn (hwnd, rgn, false);
+
+        PAINTSTRUCT paintStruct;
+        HDC dc = BeginPaint (hwnd, &paintStruct); // Note this can immediately generate a WM_NCPAINT
+                                                  // message and become re-entrant, but that's OK
+
+        // if something in a paint handler calls, e.g. a message box, this can become reentrant and
+        // corrupt the image it's using to paint into, so do a check here.
+        static bool reentrant = false;
+        if (! reentrant)
         {
-            HRGN rgn = CreateRectRgn (0, 0, 0, 0);
-            const int regionType = GetUpdateRgn (hwnd, rgn, false);
-
-            PAINTSTRUCT paintStruct;
-            HDC dc = BeginPaint (hwnd, &paintStruct); // Note this can immediately generate a WM_NCPAINT
-                                                      // message and become re-entrant, but that's OK
-
-            // if something in a paint handler calls, e.g. a message box, this can become reentrant and
-            // corrupt the image it's using to paint into, so do a check here.
-            static bool reentrant = false;
-            if (reentrant)
-            {
-                DeleteObject (rgn);
-                EndPaint (hwnd, &paintStruct);
-                return;
-            }
-
             const ScopedValueSetter<bool> setter (reentrant, true, false);
 
-            // this is the rectangle to update..
-            int x = paintStruct.rcPaint.left;
-            int y = paintStruct.rcPaint.top;
-            int w = paintStruct.rcPaint.right - x;
-            int h = paintStruct.rcPaint.bottom - y;
-
-            const bool transparent = isUsingUpdateLayeredWindow();
-
-            if (transparent)
-            {
-                // it's not possible to have a transparent window with a title bar at the moment!
-                jassert (! hasTitleBar());
-
-                RECT r;
-                GetWindowRect (hwnd, &r);
-                x = y = 0;
-                w = r.right - r.left;
-                h = r.bottom - r.top;
-            }
-
-            if (w > 0 && h > 0)
-            {
-                clearMaskedRegion();
-
-                Image& offscreenImage = offscreenImageGenerator.getImage (transparent, w, h);
-
-                RectangleList contextClip;
-                const Rectangle<int> clipBounds (w, h);
-
-                bool needToPaintAll = true;
-
-                if (regionType == COMPLEXREGION && ! transparent)
-                {
-                    HRGN clipRgn = CreateRectRgnIndirect (&paintStruct.rcPaint);
-                    CombineRgn (rgn, rgn, clipRgn, RGN_AND);
-                    DeleteObject (clipRgn);
-
-                    char rgnData [8192];
-                    const DWORD res = GetRegionData (rgn, sizeof (rgnData), (RGNDATA*) rgnData);
-
-                    if (res > 0 && res <= sizeof (rgnData))
-                    {
-                        const RGNDATAHEADER* const hdr = &(((const RGNDATA*) rgnData)->rdh);
-
-                        if (hdr->iType == RDH_RECTANGLES
-                             && hdr->rcBound.right - hdr->rcBound.left >= w
-                             && hdr->rcBound.bottom - hdr->rcBound.top >= h)
-                        {
-                            needToPaintAll = false;
-
-                            const RECT* rects = (const RECT*) (rgnData + sizeof (RGNDATAHEADER));
-
-                            for (int i = (int) ((RGNDATA*) rgnData)->rdh.nCount; --i >= 0;)
-                            {
-                                if (rects->right <= x + w && rects->bottom <= y + h)
-                                {
-                                    const int cx = jmax (x, (int) rects->left);
-                                    contextClip.addWithoutMerging (Rectangle<int> (cx - x, rects->top - y, rects->right - cx, rects->bottom - rects->top)
-                                                                       .getIntersection (clipBounds));
-                                }
-                                else
-                                {
-                                    needToPaintAll = true;
-                                    break;
-                                }
-
-                                ++rects;
-                            }
-                        }
-                    }
-                }
-
-                if (needToPaintAll)
-                {
-                    contextClip.clear();
-                    contextClip.addWithoutMerging (Rectangle<int> (w, h));
-                }
-
-                if (transparent)
-                {
-                    RectangleList::Iterator i (contextClip);
-
-                    while (i.next())
-                        offscreenImage.clear (*i.getRectangle());
-                }
-
-                // if the component's not opaque, this won't draw properly unless the platform can support this
-                jassert (Desktop::canUseSemiTransparentWindows() || component->isOpaque());
-
-                updateCurrentModifiers();
-
-                {
-                    ScopedPointer<LowLevelGraphicsContext> context (component->getLookAndFeel()
-                                                                        .createGraphicsContext (offscreenImage, Point<int> (-x, -y), contextClip));
-                    handlePaint (*context);
-                }
-
-                if (! dontRepaint)
-                    static_cast <WindowsBitmapImage*> (offscreenImage.getPixelData())
-                        ->blitToWindow (hwnd, dc, transparent, x, y, maskedRegion, updateLayeredWindowAlpha);
-            }
-
-            DeleteObject (rgn);
-            EndPaint (hwnd, &paintStruct);
+            if (dontRepaint)
+                component.handleCommandMessage (0); // (this triggers a repaint in the openGL context)
+            else
+                performPaint (dc, rgn, regionType, paintStruct);
         }
+
+        DeleteObject (rgn);
+        EndPaint (hwnd, &paintStruct);
 
        #ifndef JUCE_GCC
         _fpreset(); // because some graphics cards can unmask FP exceptions
@@ -1502,15 +1550,119 @@ private:
         lastPaintTime = Time::getMillisecondCounter();
     }
 
+    void performPaint (HDC dc, HRGN rgn, int regionType, PAINTSTRUCT& paintStruct)
+    {
+        int x = paintStruct.rcPaint.left;
+        int y = paintStruct.rcPaint.top;
+        int w = paintStruct.rcPaint.right - x;
+        int h = paintStruct.rcPaint.bottom - y;
+
+        const bool transparent = isUsingUpdateLayeredWindow();
+
+        if (transparent)
+        {
+            // it's not possible to have a transparent window with a title bar at the moment!
+            jassert (! hasTitleBar());
+
+            RECT r = getWindowRect (hwnd);
+            x = y = 0;
+            w = r.right - r.left;
+            h = r.bottom - r.top;
+        }
+
+        if (w > 0 && h > 0)
+        {
+            Image& offscreenImage = offscreenImageGenerator.getImage (transparent, w, h);
+
+            RectangleList<int> contextClip;
+            const Rectangle<int> clipBounds (w, h);
+
+            bool needToPaintAll = true;
+
+            if (regionType == COMPLEXREGION && ! transparent)
+            {
+                HRGN clipRgn = CreateRectRgnIndirect (&paintStruct.rcPaint);
+                CombineRgn (rgn, rgn, clipRgn, RGN_AND);
+                DeleteObject (clipRgn);
+
+                char rgnData [8192];
+                const DWORD res = GetRegionData (rgn, sizeof (rgnData), (RGNDATA*) rgnData);
+
+                if (res > 0 && res <= sizeof (rgnData))
+                {
+                    const RGNDATAHEADER* const hdr = &(((const RGNDATA*) rgnData)->rdh);
+
+                    if (hdr->iType == RDH_RECTANGLES
+                         && hdr->rcBound.right - hdr->rcBound.left >= w
+                         && hdr->rcBound.bottom - hdr->rcBound.top >= h)
+                    {
+                        needToPaintAll = false;
+
+                        const RECT* rects = (const RECT*) (rgnData + sizeof (RGNDATAHEADER));
+
+                        for (int i = (int) ((RGNDATA*) rgnData)->rdh.nCount; --i >= 0;)
+                        {
+                            if (rects->right <= x + w && rects->bottom <= y + h)
+                            {
+                                const int cx = jmax (x, (int) rects->left);
+                                contextClip.addWithoutMerging (Rectangle<int> (cx - x, rects->top - y,
+                                                                               rects->right - cx, rects->bottom - rects->top)
+                                                                   .getIntersection (clipBounds));
+                            }
+                            else
+                            {
+                                needToPaintAll = true;
+                                break;
+                            }
+
+                            ++rects;
+                        }
+                    }
+                }
+            }
+
+            if (needToPaintAll)
+            {
+                contextClip.clear();
+                contextClip.addWithoutMerging (Rectangle<int> (w, h));
+            }
+
+            ChildWindowClippingInfo childClipInfo = { dc, this, &contextClip, Point<int> (x, y), 0 };
+            EnumChildWindows (hwnd, clipChildWindowCallback, (LPARAM) &childClipInfo);
+
+            if (! contextClip.isEmpty())
+            {
+                if (transparent)
+                    for (const Rectangle<int>* i = contextClip.begin(), * const e = contextClip.end(); i != e; ++i)
+                        offscreenImage.clear (*i);
+
+                // if the component's not opaque, this won't draw properly unless the platform can support this
+                jassert (Desktop::canUseSemiTransparentWindows() || component.isOpaque());
+
+                {
+                    ScopedPointer<LowLevelGraphicsContext> context (component.getLookAndFeel()
+                                                                        .createGraphicsContext (offscreenImage, Point<int> (-x, -y), contextClip));
+                    handlePaint (*context);
+                }
+
+                static_cast<WindowsBitmapImage*> (offscreenImage.getPixelData())
+                    ->blitToWindow (hwnd, dc, transparent, x, y, updateLayeredWindowAlpha);
+            }
+
+            if (childClipInfo.savedDC != 0)
+                RestoreDC (dc, childClipInfo.savedDC);
+        }
+    }
+
     //==============================================================================
-    void doMouseEvent (const Point<int>& position)
+    void doMouseEvent (Point<float> position)
     {
         handleMouseEvent (0, position, currentModifiers, getMouseEventTime());
     }
 
-    StringArray getAvailableRenderingEngines()
+    StringArray getAvailableRenderingEngines() override
     {
-        StringArray s (ComponentPeer::getAvailableRenderingEngines());
+        StringArray s ("Software Renderer");
 
        #if JUCE_DIRECT2D
         if (SystemStats::getOperatingSystemType() >= SystemStats::Windows7)
@@ -1520,7 +1672,7 @@ private:
         return s;
     }
 
-    int getCurrentRenderingEngine() const    { return currentRenderingEngine; }
+    int getCurrentRenderingEngine() const override    { return currentRenderingEngine; }
 
    #if JUCE_DIRECT2D
     void updateDirect2DContext()
@@ -1532,7 +1684,7 @@ private:
     }
    #endif
 
-    void setCurrentRenderingEngine (int index)
+    void setCurrentRenderingEngine (int index) override
     {
         (void) index;
 
@@ -1541,7 +1693,7 @@ private:
         {
             currentRenderingEngine = index == 1 ? direct2DRenderingEngine : softwareRenderingEngine;
             updateDirect2DContext();
-            repaint (component->getLocalBounds());
+            repaint (component.getLocalBounds());
         }
        #endif
     }
@@ -1554,61 +1706,51 @@ private:
         return 1000 / 60;  // Throttling the incoming mouse-events seems to still be needed in XP..
     }
 
-    static bool isCurrentEventFromTouchScreen() noexcept
+    void doMouseMove (Point<float> position)
     {
-        const LPARAM flags = GetMessageExtraInfo();
-        return (flags & 0xffffff00 /* SIGNATURE_MASK */) == 0xff515700 /* MI_WP_SIGNATURE */
-                && (flags & 0x80) != 0; // (bit 7 = 0 for pen events, 1 for touch)
-    }
-
-    void doMouseMove (const Point<int>& position)
-    {
-        if (! isCurrentEventFromTouchScreen())
+        if (! isMouseOver)
         {
-            if (! isMouseOver)
-            {
-                isMouseOver = true;
-                ModifierKeys::getCurrentModifiersRealtime(); // (This avoids a rare stuck-button problem when focus is lost unexpectedly)
-                updateKeyModifiers();
+            isMouseOver = true;
+            ModifierKeys::getCurrentModifiersRealtime(); // (This avoids a rare stuck-button problem when focus is lost unexpectedly)
+            updateKeyModifiers();
 
-                TRACKMOUSEEVENT tme;
-                tme.cbSize = sizeof (tme);
-                tme.dwFlags = TME_LEAVE;
-                tme.hwndTrack = hwnd;
-                tme.dwHoverTime = 0;
+            TRACKMOUSEEVENT tme;
+            tme.cbSize = sizeof (tme);
+            tme.dwFlags = TME_LEAVE;
+            tme.hwndTrack = hwnd;
+            tme.dwHoverTime = 0;
 
-                if (! TrackMouseEvent (&tme))
-                    jassertfalse;
+            if (! TrackMouseEvent (&tme))
+                jassertfalse;
 
-                Desktop::getInstance().getMainMouseSource().forceMouseCursorUpdate();
-            }
-            else if (! isDragging)
-            {
-                if (! contains (position, false))
-                    return;
-            }
+            Desktop::getInstance().getMainMouseSource().forceMouseCursorUpdate();
+        }
+        else if (! isDragging)
+        {
+            if (! contains (position.roundToInt(), false))
+                return;
+        }
 
-            static uint32 lastMouseTime = 0;
-            static int minTimeBetweenMouses = getMinTimeBetweenMouseMoves();
-            const uint32 now = Time::getMillisecondCounter();
+        static uint32 lastMouseTime = 0;
+        static int minTimeBetweenMouses = getMinTimeBetweenMouseMoves();
+        const uint32 now = Time::getMillisecondCounter();
 
-            if (now >= lastMouseTime + minTimeBetweenMouses)
-            {
-                lastMouseTime = now;
-                doMouseEvent (position);
-            }
+        if (now >= lastMouseTime + minTimeBetweenMouses)
+        {
+            lastMouseTime = now;
+            doMouseEvent (position);
         }
     }
 
-    void doMouseDown (const Point<int>& position, const WPARAM wParam)
+    void doMouseDown (Point<float> position, const WPARAM wParam)
     {
-        if (! isCurrentEventFromTouchScreen())
+        if (GetCapture() != hwnd)
+            SetCapture (hwnd);
+
+        doMouseMove (position);
+
+        if (isValidPeer (this))
         {
-            if (GetCapture() != hwnd)
-                SetCapture (hwnd);
-
-            doMouseMove (position);
-
             updateModifiersFromWParam (wParam);
             isDragging = true;
 
@@ -1616,23 +1758,20 @@ private:
         }
     }
 
-    void doMouseUp (const Point<int>& position, const WPARAM wParam)
+    void doMouseUp (Point<float> position, const WPARAM wParam)
     {
-        if (! isCurrentEventFromTouchScreen())
-        {
-            updateModifiersFromWParam (wParam);
-            const bool wasDragging = isDragging;
-            isDragging = false;
+        updateModifiersFromWParam (wParam);
+        const bool wasDragging = isDragging;
+        isDragging = false;
 
-            // release the mouse capture if the user has released all buttons
-            if ((wParam & (MK_LBUTTON | MK_RBUTTON | MK_MBUTTON)) == 0 && hwnd == GetCapture())
-                ReleaseCapture();
+        // release the mouse capture if the user has released all buttons
+        if ((wParam & (MK_LBUTTON | MK_RBUTTON | MK_MBUTTON)) == 0 && hwnd == GetCapture())
+            ReleaseCapture();
 
-            // NB: under some circumstances (e.g. double-clicking a native title bar), a mouse-up can
-            // arrive without a mouse-down, so in that case we need to avoid sending a message.
-            if (wasDragging)
-                doMouseEvent (position);
-        }
+        // NB: under some circumstances (e.g. double-clicking a native title bar), a mouse-up can
+        // arrive without a mouse-down, so in that case we need to avoid sending a message.
+        if (wasDragging)
+            doMouseEvent (position);
     }
 
     void doCaptureChanged()
@@ -1655,10 +1794,9 @@ private:
         doMouseEvent (getCurrentMousePos());
     }
 
-    void doMouseWheel (const Point<int>& globalPos, const WPARAM wParam, const bool isVertical)
+    ComponentPeer* findPeerUnderMouse (Point<float>& localPos)
     {
-        updateKeyModifiers();
-        const float amount = jlimit (-1000.0f, 1000.0f, 0.75f * (short) HIWORD (wParam));
+        const Point<int> globalPos (getCurrentMousePosGlobal().roundToInt());
 
         // Because Windows stupidly sends all wheel events to the window with the keyboard
         // focus, we have to redirect them here according to the mouse pos..
@@ -1668,13 +1806,69 @@ private:
         if (peer == nullptr)
             peer = this;
 
-        peer->handleMouseWheel (0, peer->globalToLocal (globalPos), getMouseEventTime(),
-                                isVertical ? 0.0f : -amount,
-                                isVertical ? amount : 0.0f);
+        localPos = peer->globalToLocal (globalPos.toFloat());
+        return peer;
     }
 
-    void doTouchEvent (const int numInputs, HTOUCHINPUT eventHandle)
+    void doMouseWheel (const WPARAM wParam, const bool isVertical)
     {
+        updateKeyModifiers();
+        const float amount = jlimit (-1000.0f, 1000.0f, 0.5f * (short) HIWORD (wParam));
+
+        MouseWheelDetails wheel;
+        wheel.deltaX = isVertical ? 0.0f : amount / -256.0f;
+        wheel.deltaY = isVertical ? amount / 256.0f : 0.0f;
+        wheel.isReversed = false;
+        wheel.isSmooth = false;
+
+        Point<float> localPos;
+        if (ComponentPeer* const peer = findPeerUnderMouse (localPos))
+            peer->handleMouseWheel (0, localPos, getMouseEventTime(), wheel);
+    }
+
+    bool doGestureEvent (LPARAM lParam)
+    {
+        GESTUREINFO gi;
+        zerostruct (gi);
+        gi.cbSize = sizeof (gi);
+
+        if (getGestureInfo != nullptr && getGestureInfo ((HGESTUREINFO) lParam, &gi))
+        {
+            updateKeyModifiers();
+            Point<float> localPos;
+
+            if (ComponentPeer* const peer = findPeerUnderMouse (localPos))
+            {
+                switch (gi.dwID)
+                {
+                    case 3: /*GID_ZOOM*/
+                        if (gi.dwFlags != 1 /*GF_BEGIN*/ && lastMagnifySize > 0)
+                            peer->handleMagnifyGesture (0, localPos, getMouseEventTime(),
+                                                        (float) (gi.ullArguments / (double) lastMagnifySize));
+
+                        lastMagnifySize = gi.ullArguments;
+                        return true;
+
+                    case 4: /*GID_PAN*/
+                    case 5: /*GID_ROTATE*/
+                    case 6: /*GID_TWOFINGERTAP*/
+                    case 7: /*GID_PRESSANDTAP*/
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    LRESULT doTouchEvent (const int numInputs, HTOUCHINPUT eventHandle)
+    {
+        if ((styleFlags & windowIgnoresMouseClicks) != 0)
+            if (HWNDComponentPeer* const parent = getOwnerOfWindow (GetParent (hwnd)))
+                if (parent != this)
+                    return parent->doTouchEvent (numInputs, eventHandle);
+
         HeapBlock<TOUCHINPUT> inputInfo (numInputs);
 
         if (getTouchInputInfo (eventHandle, numInputs, inputInfo, sizeof (TOUCHINPUT)))
@@ -1684,24 +1878,23 @@ private:
                 const DWORD flags = inputInfo[i].dwFlags;
 
                 if ((flags & (TOUCHEVENTF_DOWN | TOUCHEVENTF_MOVE | TOUCHEVENTF_UP)) != 0)
-                {
-                    if (! handleTouchInput (inputInfo[i], (flags & TOUCHEVENTF_DOWN) != 0,
-                                                          (flags & TOUCHEVENTF_UP) != 0))
-                        return;  // abandon method if this window was deleted by the callback
-                }
+                    if (! handleTouchInput (inputInfo[i], (flags & TOUCHEVENTF_PRIMARY) != 0,
+                                            (flags & TOUCHEVENTF_DOWN) != 0, (flags & TOUCHEVENTF_UP) != 0))
+                        return 0;  // abandon method if this window was deleted by the callback
             }
         }
 
         closeTouchInputHandle (eventHandle);
+        return 0;
     }
 
-    bool handleTouchInput (const TOUCHINPUT& touch, const bool isDown, const bool isUp)
+    bool handleTouchInput (const TOUCHINPUT& touch, const bool isPrimary, const bool isDown, const bool isUp)
     {
         bool isCancel = false;
         const int touchIndex = currentTouches.getIndexOfTouch (touch.dwID);
         const int64 time = getMouseEventTime();
-        const Point<int> pos (globalToLocal (Point<int> ((int) TOUCH_COORD_TO_PIXEL (touch.x),
-                                                         (int) TOUCH_COORD_TO_PIXEL (touch.y))));
+        const Point<float> pos (globalToLocal (Point<float> (static_cast<float> (TOUCH_COORD_TO_PIXEL (touch.x)),
+                                                             static_cast<float> (TOUCH_COORD_TO_PIXEL (touch.y)))));
         ModifierKeys modsToSend (currentModifiers);
 
         if (isDown)
@@ -1709,10 +1902,13 @@ private:
             currentModifiers = currentModifiers.withoutMouseButtons().withFlags (ModifierKeys::leftButtonModifier);
             modsToSend = currentModifiers;
 
-            // this forces a mouse-enter/up event, in case for some reason we didn't get a mouse-up before.
-            handleMouseEvent (touchIndex + 1, pos, modsToSend.withoutMouseButtons(), time);
-            if (! isValidPeer (this)) // (in case this component was deleted by the event)
-                return false;
+            if (! isPrimary)
+            {
+                // this forces a mouse-enter/up event, in case for some reason we didn't get a mouse-up before.
+                handleMouseEvent (touchIndex, pos.toFloat(), modsToSend.withoutMouseButtons(), time);
+                if (! isValidPeer (this)) // (in case this component was deleted by the event)
+                    return false;
+            }
         }
         else if (isUp)
         {
@@ -1722,6 +1918,10 @@ private:
             if (! currentTouches.areAnyTouchesActive())
                 isCancel = true;
         }
+        else
+        {
+            modsToSend = currentModifiers.withoutMouseButtons().withFlags (ModifierKeys::leftButtonModifier);
+        }
 
         if (isCancel)
         {
@@ -1729,13 +1929,16 @@ private:
             currentModifiers = currentModifiers.withoutMouseButtons();
         }
 
-        handleMouseEvent (touchIndex + 1, pos, modsToSend, time);
-        if (! isValidPeer (this)) // (in case this component was deleted by the event)
-            return false;
-
-        if (isUp || isCancel)
+        if (! isPrimary)
         {
-            handleMouseEvent (touchIndex + 1, Point<int> (-1, -1), currentModifiers, time);
+            handleMouseEvent (touchIndex, pos.toFloat(), modsToSend, time);
+            if (! isValidPeer (this)) // (in case this component was deleted by the event)
+                return false;
+        }
+
+        if ((isUp || isCancel) && ! isPrimary)
+        {
+            handleMouseEvent (touchIndex, Point<float> (-10.0f, -10.0f), currentModifiers, time);
             if (! isValidPeer (this))
                 return false;
         }
@@ -1836,28 +2039,25 @@ private:
                 used = handleKeyPress (extendedKeyModifier | (int) key, 0) || used;
                 break;
 
-            case VK_ADD:
-            case VK_SUBTRACT:
-            case VK_MULTIPLY:
-            case VK_DIVIDE:
-            case VK_SEPARATOR:
-            case VK_DECIMAL:
-                used = handleKeyUpOrDown (true);
-                break;
-
             default:
                 used = handleKeyUpOrDown (true);
 
                 {
                     MSG msg;
-
                     if (! PeekMessage (&msg, hwnd, WM_CHAR, WM_DEADCHAR, PM_NOREMOVE))
                     {
                         // if there isn't a WM_CHAR or WM_DEADCHAR message pending, we need to
                         // manually generate the key-press event that matches this key-down.
+                        const UINT keyChar  = MapVirtualKey ((UINT) key, 2);
+                        const UINT scanCode = MapVirtualKey ((UINT) key, 0);
+                        BYTE keyState[256];
+                        GetKeyboardState (keyState);
 
-                        const UINT keyChar = MapVirtualKey ((UINT) key, 2);
-                        used = handleKeyPress ((int) LOWORD (keyChar), 0) || used;
+                        WCHAR text[16] = { 0 };
+                        if (ToUnicode ((UINT) key, scanCode, keyState, text, 8, 0) != 1)
+                            text[0] = 0;
+
+                        used = handleKeyPress ((int) LOWORD (keyChar), (juce_wchar) text[0]) || used;
                     }
                 }
 
@@ -1916,8 +2116,7 @@ private:
 
     void forwardMessageToParent (UINT message, WPARAM wParam, LPARAM lParam) const
     {
-        HWND parentH = GetParent (hwnd);
-        if (parentH != 0)
+        if (HWND parentH = GetParent (hwnd))
             PostMessage (parentH, message, wParam, lParam);
     }
 
@@ -1951,54 +2150,88 @@ private:
     bool isConstrainedNativeWindow() const
     {
         return constrainer != nullptr
-                && (styleFlags & (windowHasTitleBar | windowIsResizable)) == (windowHasTitleBar | windowIsResizable);
+                && (styleFlags & (windowHasTitleBar | windowIsResizable)) == (windowHasTitleBar | windowIsResizable)
+                && ! isKioskMode();
     }
 
-    LRESULT handleSizeConstraining (RECT* const r, const WPARAM wParam)
+    Rectangle<int> getCurrentScaledBounds (float scale) const
+    {
+        return ScalingHelpers::unscaledScreenPosToScaled (scale, windowBorder.addedTo (ScalingHelpers::scaledScreenPosToUnscaled (scale, component.getBounds())));
+    }
+
+    LRESULT handleSizeConstraining (RECT& r, const WPARAM wParam)
     {
         if (isConstrainedNativeWindow())
         {
-            Rectangle<int> pos (rectangleFromRECT (*r));
+            const float scale = getComponent().getDesktopScaleFactor();
+            Rectangle<int> pos (ScalingHelpers::unscaledScreenPosToScaled (scale, rectangleFromRECT (r)));
+            const Rectangle<int> current (getCurrentScaledBounds (scale));
 
-            constrainer->checkBounds (pos, windowBorder.addedTo (component->getBounds()),
-                                      Desktop::getInstance().getAllMonitorDisplayAreas().getBounds(),
+            constrainer->checkBounds (pos, current,
+                                      Desktop::getInstance().getDisplays().getTotalBounds (true),
                                       wParam == WMSZ_TOP    || wParam == WMSZ_TOPLEFT    || wParam == WMSZ_TOPRIGHT,
                                       wParam == WMSZ_LEFT   || wParam == WMSZ_TOPLEFT    || wParam == WMSZ_BOTTOMLEFT,
                                       wParam == WMSZ_BOTTOM || wParam == WMSZ_BOTTOMLEFT || wParam == WMSZ_BOTTOMRIGHT,
                                       wParam == WMSZ_RIGHT  || wParam == WMSZ_TOPRIGHT   || wParam == WMSZ_BOTTOMRIGHT);
-            r->left   = pos.getX();
-            r->top    = pos.getY();
-            r->right  = pos.getRight();
-            r->bottom = pos.getBottom();
+
+            pos = ScalingHelpers::scaledScreenPosToUnscaled (scale, pos);
+            r.left   = pos.getX();
+            r.top    = pos.getY();
+            r.right  = pos.getRight();
+            r.bottom = pos.getBottom();
         }
 
         return TRUE;
     }
 
-    LRESULT handlePositionChanging (WINDOWPOS* const wp)
+    LRESULT handlePositionChanging (WINDOWPOS& wp)
     {
         if (isConstrainedNativeWindow())
         {
-            if ((wp->flags & (SWP_NOMOVE | SWP_NOSIZE)) != (SWP_NOMOVE | SWP_NOSIZE)
+            if ((wp.flags & (SWP_NOMOVE | SWP_NOSIZE)) != (SWP_NOMOVE | SWP_NOSIZE)
                  && ! Component::isMouseButtonDownAnywhere())
             {
-                Rectangle<int> pos (wp->x, wp->y, wp->cx, wp->cy);
-                const Rectangle<int> current (windowBorder.addedTo (component->getBounds()));
+                const float scale = getComponent().getDesktopScaleFactor();
+                Rectangle<int> pos (ScalingHelpers::unscaledScreenPosToScaled (scale, Rectangle<int> (wp.x, wp.y, wp.cx, wp.cy)));
+                const Rectangle<int> current (getCurrentScaledBounds (scale));
 
                 constrainer->checkBounds (pos, current,
-                                          Desktop::getInstance().getAllMonitorDisplayAreas().getBounds(),
+                                          Desktop::getInstance().getDisplays().getTotalBounds (true),
                                           pos.getY() != current.getY() && pos.getBottom() == current.getBottom(),
-                                          pos.getX() != current.getX() && pos.getRight() == current.getRight(),
+                                          pos.getX() != current.getX() && pos.getRight()  == current.getRight(),
                                           pos.getY() == current.getY() && pos.getBottom() != current.getBottom(),
-                                          pos.getX() == current.getX() && pos.getRight() != current.getRight());
-                wp->x = pos.getX();
-                wp->y = pos.getY();
-                wp->cx = pos.getWidth();
-                wp->cy = pos.getHeight();
+                                          pos.getX() == current.getX() && pos.getRight()  != current.getRight());
+
+                pos = ScalingHelpers::scaledScreenPosToUnscaled (scale, pos);
+                wp.x = pos.getX();
+                wp.y = pos.getY();
+                wp.cx = pos.getWidth();
+                wp.cy = pos.getHeight();
             }
         }
 
+        if (((wp.flags & SWP_SHOWWINDOW) != 0 && ! component.isVisible()))
+            component.setVisible (true);
+        else if (((wp.flags & SWP_HIDEWINDOW) != 0 && component.isVisible()))
+            component.setVisible (false);
+
         return 0;
+    }
+
+    bool handlePositionChanged()
+    {
+        const Point<float> pos (getCurrentMousePos());
+
+        if (contains (pos.roundToInt(), false))
+        {
+            doMouseEvent (pos);
+
+            if (! isValidPeer (this))
+                return true;
+        }
+
+        handleMovedOrResized();
+        return ! dontRepaint; // to allow non-accelerated openGL windows to draw themselves correctly..
     }
 
     void handleAppActivation (const WPARAM wParam)
@@ -2008,17 +2241,17 @@ private:
 
         if (isMinimised())
         {
-            component->repaint();
+            component.repaint();
             handleMovedOrResized();
 
-            if (! ComponentPeer::isValidPeer (this))
+            if (! isValidPeer (this))
                 return;
         }
 
-        Component* underMouse = component->getComponentAt (component->getMouseXYRelative());
+        Component* underMouse = component.getComponentAt (component.getMouseXYRelative());
 
         if (underMouse == nullptr)
-            underMouse = component;
+            underMouse = &component;
 
         if (underMouse->isCurrentlyBlockedByAnotherModalComponent())
         {
@@ -2030,6 +2263,24 @@ private:
         else
         {
             handleBroughtToFront();
+        }
+    }
+
+    void handlePowerBroadcast (WPARAM wParam)
+    {
+        if (JUCEApplicationBase* const app = JUCEApplicationBase::getInstance())
+        {
+            switch (wParam)
+            {
+                case PBT_APMSUSPEND:                app->suspended(); break;
+
+                case PBT_APMQUERYSUSPENDFAILED:
+                case PBT_APMRESUMECRITICAL:
+                case PBT_APMRESUMESUSPEND:
+                case PBT_APMRESUMEAUTOMATIC:        app->resumed(); break;
+
+                default: break;
+            }
         }
     }
 
@@ -2067,8 +2318,8 @@ private:
         {
             if (isFullScreen())
             {
-                EnableMenuItem (menu, SC_RESTORE, MF_BYCOMMAND | MF_ENABLED);
-                EnableMenuItem (menu, SC_MOVE, MF_BYCOMMAND | MF_GRAYED);
+                EnableMenuItem (menu, SC_RESTORE,  MF_BYCOMMAND | MF_ENABLED);
+                EnableMenuItem (menu, SC_MOVE,     MF_BYCOMMAND | MF_GRAYED);
             }
             else if (! isMinimised())
             {
@@ -2079,24 +2330,29 @@ private:
 
     void doSettingChange()
     {
-        Desktop::getInstance().refreshMonitorSizes();
+        Desktop& desktop = Desktop::getInstance();
+
+        const_cast<Desktop::Displays&> (desktop.getDisplays()).refresh();
 
         if (fullScreen && ! isMinimised())
         {
-            const Rectangle<int> r (component->getParentMonitorArea());
+            const Desktop::Displays::Display& display
+                    = desktop.getDisplays().getDisplayContaining (component.getScreenBounds().getCentre());
 
-            SetWindowPos (hwnd, 0, r.getX(), r.getY(), r.getWidth(), r.getHeight(),
+            setWindowPos (hwnd, display.userArea * display.scale,
                           SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_NOZORDER | SWP_NOSENDCHANGING);
         }
+    }
+
+    void handleDPIChange() // happens when a window moves to a screen with a different DPI.
+    {
     }
 
     //==============================================================================
 public:
     static LRESULT CALLBACK windowProc (HWND h, UINT message, WPARAM wParam, LPARAM lParam)
     {
-        HWNDComponentPeer* const peer = getOwnerOfWindow (h);
-
-        if (peer != nullptr)
+        if (HWNDComponentPeer* const peer = getOwnerOfWindow (h))
         {
             jassert (isValidPeer (peer));
             return peer->peerWindowProc (h, message, wParam, lParam);
@@ -2110,23 +2366,22 @@ private:
     {
         if (MessageManager::getInstance()->currentThreadHasLockedMessageManager())
             return callback (userData);
-        else
-            return MessageManager::getInstance()->callFunctionOnMessageThread (callback, userData);
+
+        return MessageManager::getInstance()->callFunctionOnMessageThread (callback, userData);
     }
 
-    static Point<int> getPointFromLParam (LPARAM lParam) noexcept
+    static Point<float> getPointFromLParam (LPARAM lParam) noexcept
     {
-        return Point<int> (GET_X_LPARAM (lParam), GET_Y_LPARAM (lParam));
+        return Point<float> (static_cast<float> (GET_X_LPARAM (lParam)),
+                             static_cast<float> (GET_Y_LPARAM (lParam)));
     }
 
-    static Point<int> getCurrentMousePosGlobal() noexcept
+    static Point<float> getCurrentMousePosGlobal() noexcept
     {
-        const DWORD mp = GetMessagePos();
-        return Point<int> (GET_X_LPARAM (mp),
-                           GET_Y_LPARAM (mp));
+        return getPointFromLParam (GetMessagePos());
     }
 
-    Point<int> getCurrentMousePos() noexcept
+    Point<float> getCurrentMousePos() noexcept
     {
         return globalToLocal (getCurrentMousePosGlobal());
     }
@@ -2139,7 +2394,8 @@ private:
             case WM_NCHITTEST:
                 if ((styleFlags & windowIgnoresMouseClicks) != 0)
                     return HTTRANSPARENT;
-                else if (! hasTitleBar())
+
+                if (! hasTitleBar())
                     return HTCLIENT;
 
                 break;
@@ -2177,6 +2433,9 @@ private:
             case WM_MBUTTONUP:
             case WM_RBUTTONUP:          doMouseUp (getPointFromLParam (lParam), wParam); return 0;
 
+            case 0x020A: /* WM_MOUSEWHEEL */   doMouseWheel (wParam, true);  return 0;
+            case 0x020E: /* WM_MOUSEHWHEEL */  doMouseWheel (wParam, false); return 0;
+
             case WM_CAPTURECHANGED:     doCaptureChanged(); return 0;
 
             case WM_NCMOUSEMOVE:
@@ -2185,35 +2444,27 @@ private:
 
                 return 0;
 
-            case 0x020A: /* WM_MOUSEWHEEL */
-            case 0x020E: /* WM_MOUSEHWHEEL */
-                doMouseWheel (getCurrentMousePosGlobal(), wParam, message == 0x020A);
-                return 0;
-
             case WM_TOUCH:
-                if (getTouchInputInfo == nullptr)
-                    break;
+                if (getTouchInputInfo != nullptr)
+                    return doTouchEvent ((int) wParam, (HTOUCHINPUT) lParam);
 
-                doTouchEvent ((int) wParam, (HTOUCHINPUT) lParam);
-                return 0;
+                break;
+
+            case 0x119: /* WM_GESTURE */
+                if (doGestureEvent (lParam))
+                    return 0;
+
+                break;
 
             //==============================================================================
-            case WM_SIZING:                return handleSizeConstraining ((RECT*) lParam, wParam);
-            case WM_WINDOWPOSCHANGING:     return handlePositionChanging ((WINDOWPOS*) lParam);
+            case WM_SIZING:                return handleSizeConstraining (*(RECT*) lParam, wParam);
+            case WM_WINDOWPOSCHANGING:     return handlePositionChanging (*(WINDOWPOS*) lParam);
 
             case WM_WINDOWPOSCHANGED:
-                {
-                    const Point<int> pos (getCurrentMousePos());
-                    if (contains (pos, false))
-                        doMouseEvent (pos);
-                }
+                if (handlePositionChanged())
+                    return 0;
 
-                handleMovedOrResized();
-
-                if (dontRepaint)
-                    break;  // needed for non-accelerated openGL windows to draw themselves correctly..
-
-                return 0;
+                break;
 
             //==============================================================================
             case WM_KEYDOWN:
@@ -2245,6 +2496,9 @@ private:
 
                 break;
 
+            case WM_MENUCHAR: // triggered when alt+something is pressed
+                return MNC_CLOSE << 16; // (avoids making the default system beep)
+
             //==============================================================================
             case WM_SETFOCUS:
                 updateKeyModifiers();
@@ -2269,7 +2523,7 @@ private:
                 else
                     Desktop::getInstance().setKioskModeComponent (nullptr); // turn kiosk mode off if we lose focus
 
-                juce_CheckCurrentlyFocusedTopLevelWindow();
+                juce_checkCurrentlyFocusedTopLevelWindow();
                 modifiersAtLastCallback = -1;
                 return 0;
 
@@ -2291,30 +2545,37 @@ private:
                 break;
 
             case WM_MOUSEACTIVATE:
-                if (! component->getMouseClickGrabsKeyboardFocus())
+                if (! component.getMouseClickGrabsKeyboardFocus())
                     return MA_NOACTIVATE;
 
                 break;
 
             case WM_SHOWWINDOW:
                 if (wParam != 0)
+                {
+                    component.setVisible (true);
                     handleBroughtToFront();
+                }
 
                 break;
 
             case WM_CLOSE:
-                if (! component->isCurrentlyBlockedByAnotherModalComponent())
+                if (! component.isCurrentlyBlockedByAnotherModalComponent())
                     handleUserClosingWindow();
 
                 return 0;
 
             case WM_QUERYENDSESSION:
-                if (JUCEApplication::getInstance() != nullptr)
+                if (JUCEApplicationBase* const app = JUCEApplicationBase::getInstance())
                 {
-                    JUCEApplication::getInstance()->systemRequestedQuit();
+                    app->systemRequestedQuit();
                     return MessageManager::getInstance()->hasStopMessageBeenSent();
                 }
                 return TRUE;
+
+            case WM_POWERBROADCAST:
+                handlePowerBroadcast (wParam);
+                break;
 
             case WM_SYNCPAINT:
                 return 0;
@@ -2324,6 +2585,10 @@ private:
                 // intentional fall-through...
             case WM_SETTINGCHANGE:  // note the fall-through in the previous case!
                 doSettingChange();
+                break;
+
+            case 0x2e0: // WM_DPICHANGED
+                handleDPIChange();
                 break;
 
             case WM_INITMENU:
@@ -2425,11 +2690,9 @@ private:
 
     bool sendInputAttemptWhenModalMessage()
     {
-        if (component->isCurrentlyBlockedByAnotherModalComponent())
+        if (component.isCurrentlyBlockedByAnotherModalComponent())
         {
-            Component* const current = Component::getCurrentlyModalComponent();
-
-            if (current != nullptr)
+            if (Component* const current = Component::getCurrentlyModalComponent())
                 current->inputAttemptWhenModal();
 
             return true;
@@ -2453,8 +2716,7 @@ private:
             {
                 compositionInProgress = false;
 
-                HIMC hImc = ImmGetContext (hWnd);
-                if (hImc != 0)
+                if (HIMC hImc = ImmGetContext (hWnd))
                 {
                     ImmNotifyIME (hImc, NI_COMPOSITIONSTR, CPS_COMPLETE, 0);
                     ImmReleaseContext (hWnd, hImc);
@@ -2465,9 +2727,8 @@ private:
         void handleStartComposition (ComponentPeer& owner)
         {
             reset();
-            TextInputTarget* const target = owner.findCurrentTextInputTarget();
 
-            if (target != nullptr)
+            if (TextInputTarget* const target = owner.findCurrentTextInputTarget())
                 target->insertTextAtCaret (String::empty);
         }
 
@@ -2476,9 +2737,7 @@ private:
             if (compositionInProgress)
             {
                 // If this occurs, the user has cancelled the composition, so clear their changes..
-                TextInputTarget* const target = owner.findCurrentTextInputTarget();
-
-                if (target != nullptr)
+                if (TextInputTarget* const target = owner.findCurrentTextInputTarget())
                 {
                     target->setHighlightedRegion (compositionRange);
                     target->insertTextAtCaret (String::empty);
@@ -2488,9 +2747,7 @@ private:
                     target->setTemporaryUnderlining (Array<Range<int> >());
                 }
 
-                HIMC hImc = ImmGetContext (hWnd);
-
-                if (hImc != 0)
+                if (HIMC hImc = ImmGetContext (hWnd))
                 {
                     ImmNotifyIME (hImc, NI_CLOSECANDIDATE, 0, 0);
                     ImmReleaseContext (hWnd, hImc);
@@ -2649,44 +2906,40 @@ private:
 
         void moveCandidateWindowToLeftAlignWithSelection (HIMC hImc, ComponentPeer& peer, TextInputTarget* target) const
         {
-            Component* const targetComp = dynamic_cast <Component*> (target);
-
-            if (targetComp != nullptr)
+            if (Component* const targetComp = dynamic_cast<Component*> (target))
             {
-                const Rectangle<int> area (peer.getComponent()
-                                              ->getLocalArea (targetComp, target->getCaretRectangle()));
+                const Rectangle<int> area (peer.getComponent().getLocalArea (targetComp, target->getCaretRectangle()));
 
                 CANDIDATEFORM pos = { 0, CFS_CANDIDATEPOS, { area.getX(), area.getBottom() }, { 0, 0, 0, 0 } };
                 ImmSetCandidateWindow (hImc, &pos);
             }
         }
 
-        JUCE_DECLARE_NON_COPYABLE (IMEHandler);
+        JUCE_DECLARE_NON_COPYABLE (IMEHandler)
     };
 
     IMEHandler imeHandler;
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HWNDComponentPeer);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HWNDComponentPeer)
 };
 
 ModifierKeys HWNDComponentPeer::currentModifiers;
 ModifierKeys HWNDComponentPeer::modifiersAtLastCallback;
 
-ComponentPeer* Component::createNewPeer (int styleFlags, void* nativeWindowToAttachTo)
+ComponentPeer* Component::createNewPeer (int styleFlags, void* parentHWND)
 {
-    return new HWNDComponentPeer (this, styleFlags, (HWND) nativeWindowToAttachTo);
+    return new HWNDComponentPeer (*this, styleFlags, (HWND) parentHWND, false);
 }
 
-ComponentPeer* createNonRepaintingEmbeddedWindowsPeer (Component* component, void* parent)
+ComponentPeer* createNonRepaintingEmbeddedWindowsPeer (Component& component, void* parentHWND)
 {
-    HWNDComponentPeer* const p = new HWNDComponentPeer (component, ComponentPeer::windowIgnoresMouseClicks, (HWND) parent);
-    p->dontRepaint = true;
-    return p;
+    return new HWNDComponentPeer (component, ComponentPeer::windowIgnoresMouseClicks,
+                                  (HWND) parentHWND, true);
 }
 
 
-juce_ImplementSingleton_SingleThreaded (HWNDComponentPeer::WindowClassHolder);
+juce_ImplementSingleton_SingleThreaded (HWNDComponentPeer::WindowClassHolder)
 
 
 //==============================================================================
@@ -2737,8 +2990,12 @@ bool KeyPress::isKeyCurrentlyDown (const int keyCode)
     return HWNDComponentPeer::isKeyDown (k);
 }
 
+#if JUCE_MODULE_AVAILABLE_juce_audio_plugin_client
+bool offerKeyMessageToJUCEWindow (MSG& m)   { return HWNDComponentPeer::offerKeyMessageToJUCEWindow (m); }
+#endif
+
 //==============================================================================
-bool Process::isForegroundProcess()
+bool JUCE_CALLTYPE Process::isForegroundProcess()
 {
     HWND fg = GetForegroundWindow();
 
@@ -2751,14 +3008,46 @@ bool Process::isForegroundProcess()
     fg = GetAncestor (fg, GA_ROOT);
 
     for (int i = ComponentPeer::getNumPeers(); --i >= 0;)
-    {
-        HWNDComponentPeer* const wp = dynamic_cast <HWNDComponentPeer*> (ComponentPeer::getPeer (i));
-
-        if (wp != nullptr && wp->isInside (fg))
-            return true;
-    }
+        if (HWNDComponentPeer* const wp = dynamic_cast<HWNDComponentPeer*> (ComponentPeer::getPeer (i)))
+            if (wp->isInside (fg))
+                return true;
 
     return false;
+}
+
+// N/A on Windows as far as I know.
+void JUCE_CALLTYPE Process::makeForegroundProcess() {}
+void JUCE_CALLTYPE Process::hide() {}
+
+//==============================================================================
+static BOOL CALLBACK enumAlwaysOnTopWindows (HWND hwnd, LPARAM lParam)
+{
+    if (IsWindowVisible (hwnd))
+    {
+        DWORD processID = 0;
+        GetWindowThreadProcessId (hwnd, &processID);
+
+        if (processID == GetCurrentProcessId())
+        {
+            WINDOWINFO info;
+
+            if (GetWindowInfo (hwnd, &info)
+                 && (info.dwExStyle & WS_EX_TOPMOST) != 0)
+            {
+                *reinterpret_cast<bool*> (lParam) = true;
+                return FALSE;
+            }
+        }
+    }
+
+    return TRUE;
+}
+
+bool juce_areThereAnyAlwaysOnTopWindows()
+{
+    bool anyAlwaysOnTopFound = false;
+    EnumWindows (&enumAlwaysOnTopWindows, (LPARAM) &anyAlwaysOnTopFound);
+    return anyAlwaysOnTopFound;
 }
 
 //==============================================================================
@@ -2766,14 +3055,12 @@ class WindowsMessageBox  : public AsyncUpdater
 {
 public:
     WindowsMessageBox (AlertWindow::AlertIconType iconType,
-                       const String& title_, const String& message_,
-                       Component* associatedComponent,
-                       UINT extraFlags,
-                       ModalComponentManager::Callback* callback_,
-                       const bool runAsync)
+                       const String& boxTitle, const String& m,
+                       Component* associatedComponent, UINT extraFlags,
+                       ModalComponentManager::Callback* cb, const bool runAsync)
         : flags (extraFlags | getMessageBoxFlags (iconType)),
           owner (getWindowForMessageBox (associatedComponent)),
-          title (title_), message (message_), callback (callback_)
+          title (boxTitle), message (m), callback (cb)
     {
         if (runAsync)
             triggerAsyncUpdate();
@@ -2785,7 +3072,7 @@ public:
         return (r == IDYES || r == IDOK) ? 1 : (r == IDNO ? 2 : 0);
     }
 
-    void handleAsyncUpdate()
+    void handleAsyncUpdate() override
     {
         const int result = getResult();
 
@@ -2799,7 +3086,7 @@ private:
     UINT flags;
     HWND owner;
     String title, message;
-    ModalComponentManager::Callback* callback;
+    ScopedPointer<ModalComponentManager::Callback> callback;
 
     static UINT getMessageBoxFlags (AlertWindow::AlertIconType iconType) noexcept
     {
@@ -2822,6 +3109,7 @@ private:
     }
 };
 
+#if JUCE_MODAL_LOOPS_PERMITTED
 void JUCE_CALLTYPE NativeMessageBox::showMessageBox (AlertWindow::AlertIconType iconType,
                                                      const String& title, const String& message,
                                                      Component* associatedComponent)
@@ -2829,12 +3117,14 @@ void JUCE_CALLTYPE NativeMessageBox::showMessageBox (AlertWindow::AlertIconType 
     WindowsMessageBox box (iconType, title, message, associatedComponent, MB_OK, 0, false);
     (void) box.getResult();
 }
+#endif
 
 void JUCE_CALLTYPE NativeMessageBox::showMessageBoxAsync (AlertWindow::AlertIconType iconType,
                                                           const String& title, const String& message,
-                                                          Component* associatedComponent)
+                                                          Component* associatedComponent,
+                                                          ModalComponentManager::Callback* callback)
 {
-    new WindowsMessageBox (iconType, title, message, associatedComponent, MB_OK, 0, true);
+    new WindowsMessageBox (iconType, title, message, associatedComponent, MB_OK, callback, true);
 }
 
 bool JUCE_CALLTYPE NativeMessageBox::showOkCancelBox (AlertWindow::AlertIconType iconType,
@@ -2866,31 +3156,30 @@ int JUCE_CALLTYPE NativeMessageBox::showYesNoCancelBox (AlertWindow::AlertIconTy
 }
 
 //==============================================================================
-void Desktop::createMouseInputSources()
+bool MouseInputSource::SourceList::addSource()
 {
-    mouseSources.add (new MouseInputSource (0, true));
+    const int numSources = sources.size();
 
-    if (canUseMultiTouch())
-        for (int i = 1; i <= 10; ++i)
-            mouseSources.add (new MouseInputSource (i, false));
+    if (numSources == 0 || canUseMultiTouch())
+    {
+        addSource (numSources, numSources == 0);
+        return true;
+    }
+
+    return false;
 }
 
-Point<int> MouseInputSource::getCurrentMousePosition()
+Point<float> MouseInputSource::getCurrentRawMousePosition()
 {
     POINT mousePos;
     GetCursorPos (&mousePos);
-    return Point<int> (mousePos.x, mousePos.y);
+    return Point<float> ((float) mousePos.x, (float) mousePos.y);
 }
 
-void Desktop::setMousePosition (const Point<int>& newPosition)
+void MouseInputSource::setRawMousePosition (Point<float> newPosition)
 {
-    SetCursorPos (newPosition.x, newPosition.y);
-}
-
-//==============================================================================
-ImagePixelData* NativeImageType::create (Image::PixelFormat format, int width, int height, bool clearImage) const
-{
-    return SoftwareImageType().create (format, width, height, clearImage);
+    SetCursorPos (roundToInt (newPosition.x),
+                  roundToInt (newPosition.y));
 }
 
 //==============================================================================
@@ -2903,23 +3192,15 @@ public:
         timerCallback();
     }
 
-    void timerCallback()
+    void timerCallback() override
     {
         if (Process::isForegroundProcess())
         {
-            // simulate a shift key getting pressed..
-            INPUT input[2];
-            input[0].type = INPUT_KEYBOARD;
-            input[0].ki.wVk = VK_SHIFT;
-            input[0].ki.dwFlags = 0;
-            input[0].ki.dwExtraInfo = 0;
+            INPUT input = { 0 };
+            input.type = INPUT_MOUSE;
+            input.mi.mouseData = MOUSEEVENTF_MOVE;
 
-            input[1].type = INPUT_KEYBOARD;
-            input[1].ki.wVk = VK_SHIFT;
-            input[1].ki.dwFlags = KEYEVENTF_KEYUP;
-            input[1].ki.dwExtraInfo = 0;
-
-            SendInput (2, input, sizeof (INPUT));
+            SendInput (1, &input, sizeof (INPUT));
         }
     }
 };
@@ -2939,24 +3220,6 @@ bool Desktop::isScreenSaverEnabled()
     return screenSaverDefeater == nullptr;
 }
 
-/* (The code below is the "correct" way to disable the screen saver, but it
-    completely fails on winXP when the saver is password-protected...)
-
-static bool juce_screenSaverEnabled = true;
-
-void Desktop::setScreenSaverEnabled (const bool isEnabled) noexcept
-{
-    juce_screenSaverEnabled = isEnabled;
-    SetThreadExecutionState (isEnabled ? ES_CONTINUOUS
-                                       : (ES_DISPLAY_REQUIRED | ES_CONTINUOUS));
-}
-
-bool Desktop::isScreenSaverEnabled() noexcept
-{
-    return juce_screenSaverEnabled;
-}
-*/
-
 //==============================================================================
 void LookAndFeel::playAlertSound()
 {
@@ -2974,15 +3237,11 @@ void SystemClipboard::copyTextToClipboard (const String& text)
 
             if (bytesNeeded > 0)
             {
-                HGLOBAL bufH = GlobalAlloc (GMEM_MOVEABLE | GMEM_DDESHARE | GMEM_ZEROINIT, bytesNeeded + sizeof (WCHAR));
-
-                if (bufH != 0)
+                if (HGLOBAL bufH = GlobalAlloc (GMEM_MOVEABLE | GMEM_DDESHARE | GMEM_ZEROINIT, bytesNeeded + sizeof (WCHAR)))
                 {
-                    WCHAR* const data = static_cast <WCHAR*> (GlobalLock (bufH));
-
-                    if (data != nullptr)
+                    if (WCHAR* const data = static_cast<WCHAR*> (GlobalLock (bufH)))
                     {
-                        text.copyToUTF16 (data, (int) bytesNeeded);
+                        text.copyToUTF16 (data, bytesNeeded);
                         GlobalUnlock (bufH);
 
                         SetClipboardData (CF_UNICODETEXT, bufH);
@@ -3001,13 +3260,9 @@ String SystemClipboard::getTextFromClipboard()
 
     if (OpenClipboard (0) != 0)
     {
-        HANDLE bufH = GetClipboardData (CF_UNICODETEXT);
-
-        if (bufH != 0)
+        if (HANDLE bufH = GetClipboardData (CF_UNICODETEXT))
         {
-            const WCHAR* const data = (const WCHAR*) GlobalLock (bufH);
-
-            if (data != nullptr)
+            if (const WCHAR* const data = (const WCHAR*) GlobalLock (bufH))
             {
                 result = String (data, (size_t) (GlobalSize (bufH) / sizeof (WCHAR)));
                 GlobalUnlock (bufH);
@@ -3023,42 +3278,86 @@ String SystemClipboard::getTextFromClipboard()
 //==============================================================================
 void Desktop::setKioskComponent (Component* kioskModeComponent, bool enableOrDisable, bool /*allowMenusAndBars*/)
 {
+    if (TopLevelWindow* tlw = dynamic_cast<TopLevelWindow*> (kioskModeComponent))
+        tlw->setUsingNativeTitleBar (! enableOrDisable);
+
     if (enableOrDisable)
-        kioskModeComponent->setBounds (Desktop::getInstance().getMainMonitorArea (false));
+        kioskModeComponent->setBounds (getDisplays().getMainDisplay().totalArea);
 }
 
 //==============================================================================
-static BOOL CALLBACK enumMonitorsProc (HMONITOR, HDC, LPRECT r, LPARAM userInfo)
+struct MonitorInfo
 {
-    Array <Rectangle<int> >* const monitorCoords = (Array <Rectangle<int> >*) userInfo;
-    monitorCoords->add (rectangleFromRECT (*r));
+    MonitorInfo (Rectangle<int> rect, bool main, double d) noexcept
+        : bounds (rect), dpi (d), isMain (main) {}
+
+    Rectangle<int> bounds;
+    double dpi;
+    bool isMain;
+};
+
+static BOOL CALLBACK enumMonitorsProc (HMONITOR hm, HDC, LPRECT r, LPARAM userInfo)
+{
+    MONITORINFO info = { 0 };
+    info.cbSize = sizeof (info);
+    GetMonitorInfo (hm, &info);
+    const bool isMain = (info.dwFlags & 1 /* MONITORINFOF_PRIMARY */) != 0;
+    double dpi = 0;
+
+    if (getDPIForMonitor != nullptr)
+    {
+        UINT dpiX = 0, dpiY = 0;
+
+        if (SUCCEEDED (getDPIForMonitor (hm, MDT_Default, &dpiX, &dpiY)))
+            dpi = (dpiX + dpiY) / 2.0;
+    }
+
+    ((Array<MonitorInfo>*) userInfo)->add (MonitorInfo (rectangleFromRECT (*r), isMain, dpi));
+
     return TRUE;
 }
 
-void Desktop::getCurrentMonitorPositions (Array <Rectangle<int> >& monitorCoords, const bool clipToWorkArea)
+void Desktop::Displays::findDisplays (float masterScale)
 {
-    EnumDisplayMonitors (0, 0, &enumMonitorsProc, (LPARAM) &monitorCoords);
+    setDPIAwareness();
+
+    Array<MonitorInfo> monitors;
+    EnumDisplayMonitors (0, 0, &enumMonitorsProc, (LPARAM) &monitors);
+
+    const double globalDPI = getGlobalDPI();
+
+    if (monitors.size() == 0)
+        monitors.add (MonitorInfo (rectangleFromRECT (getWindowRect (GetDesktopWindow())), true, globalDPI));
 
     // make sure the first in the list is the main monitor
-    for (int i = 1; i < monitorCoords.size(); ++i)
-        if (monitorCoords[i].getX() == 0 && monitorCoords[i].getY() == 0)
-            monitorCoords.swap (i, 0);
+    for (int i = 1; i < monitors.size(); ++i)
+        if (monitors.getReference(i).isMain)
+            monitors.swap (i, 0);
 
-    if (monitorCoords.size() == 0)
+    RECT workArea;
+    SystemParametersInfo (SPI_GETWORKAREA, 0, &workArea, 0);
+
+    for (int i = 0; i < monitors.size(); ++i)
     {
-        RECT r;
-        GetWindowRect (GetDesktopWindow(), &r);
-        monitorCoords.add (rectangleFromRECT (r));
-    }
+        Display d;
+        d.userArea  = d.totalArea = monitors.getReference(i).bounds / masterScale;
+        d.isMain    = monitors.getReference(i).isMain;
+        d.dpi       = monitors.getReference(i).dpi;
 
-    if (clipToWorkArea)
-    {
-        // clip the main monitor to the active non-taskbar area
-        RECT r;
-        SystemParametersInfo (SPI_GETWORKAREA, 0, &r, 0);
+        if (d.dpi == 0)
+        {
+            d.scale = masterScale;
+            d.dpi = globalDPI;
+        }
+        else
+        {
+            d.scale = d.dpi / 96.0;
+        }
 
-        Rectangle<int>& screen = monitorCoords.getReference (0);
-        screen = screen.getIntersection (rectangleFromRECT (r));
+        if (d.isMain)
+            d.userArea = d.userArea.getIntersection (rectangleFromRECT (workArea) / masterScale);
+
+        displays.add (d);
     }
 }
 
@@ -3076,9 +3375,7 @@ static HICON extractFileHICON (const File& file)
 Image juce_createIconForFile (const File& file)
 {
     Image image;
-    HICON icon = extractFileHICON (file);
-
-    if (icon != 0)
+    if (HICON icon = extractFileHICON (file))
     {
         image = IconConverters::createImageFromHICON (icon);
         DestroyIcon (icon);
@@ -3088,12 +3385,14 @@ Image juce_createIconForFile (const File& file)
 }
 
 //==============================================================================
-void* MouseCursor::createMouseCursorFromImage (const Image& image, int hotspotX, int hotspotY)
+void* CustomMouseCursorInfo::create() const
 {
     const int maxW = GetSystemMetrics (SM_CXCURSOR);
     const int maxH = GetSystemMetrics (SM_CYCURSOR);
 
     Image im (image);
+    int hotspotX = hotspot.x;
+    int hotspotY = hotspot.y;
 
     if (im.getWidth() > maxW || im.getHeight() > maxH)
     {
@@ -3123,7 +3422,8 @@ void* MouseCursor::createStandardMouseCursor (const MouseCursor::StandardCursorT
 
     switch (type)
     {
-        case NormalCursor:                  break;
+        case NormalCursor:
+        case ParentCursor:                  break;
         case NoCursor:                      return (void*) hiddenMouseCursorHandle;
         case WaitCursor:                    cursorName = IDC_WAIT; break;
         case IBeamCursor:                   cursorName = IDC_IBEAM; break;
@@ -3158,7 +3458,7 @@ void* MouseCursor::createStandardMouseCursor (const MouseCursor::StandardCursorT
                       16,0,0,2,52,148,47,0,200,185,16,130,90,12,74,139,107,84,123,39,132,117,151,116,132,146,248,60,209,138,
                       98,22,203,114,34,236,37,52,77,217,247,154,191,119,110,240,193,128,193,95,163,56,60,234,98,135,2,0,59 };
 
-                dragHandCursor = createMouseCursorFromImage (ImageFileFormat::loadFrom (dragHandData, sizeof (dragHandData)), 8, 7);
+                dragHandCursor = CustomMouseCursorInfo (ImageFileFormat::loadFrom (dragHandData, sizeof (dragHandData)), 8, 7).create();
             }
 
             return dragHandCursor;

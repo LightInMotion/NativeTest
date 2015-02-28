@@ -133,7 +133,7 @@ void TimeComponent::run()
             if (! mml.lockWasGained())
                 return;
 
-            timeLabel->setText (s, false);
+            timeLabel->setText (s, dontSendNotification);
 
         } while (0);
 

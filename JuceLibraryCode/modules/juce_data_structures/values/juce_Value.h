@@ -1,30 +1,29 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
 
-#ifndef __JUCE_VALUE_JUCEHEADER__
-#define __JUCE_VALUE_JUCEHEADER__
+#ifndef JUCE_VALUE_H_INCLUDED
+#define JUCE_VALUE_H_INCLUDED
 
 
 //==============================================================================
@@ -76,8 +75,7 @@ public:
     operator var() const;
 
     /** Returns the value as a string.
-
-        This is alternative to writing things like "myValue.getValue().toString()".
+        This is a shortcut for "myValue.getValue().toString()".
     */
     String toString() const;
 
@@ -149,9 +147,9 @@ public:
         The listener is added to this specific Value object, and not to the shared
         object that it refers to. When this object is deleted, all the listeners will
         be lost, even if other references to the same Value still exist. So when you're
-        adding a listener, make sure that you add it to a ValueTree instance that will last
+        adding a listener, make sure that you add it to a Value instance that will last
         for as long as you need the listener. In general, you'd never want to add a listener
-        to a local stack-based ValueTree, but more likely to one that's a member variable.
+        to a local stack-based Value, but more likely to one that's a member variable.
 
         @see removeListener
     */
@@ -169,8 +167,8 @@ public:
         of a ValueSource object. If you're feeling adventurous, you can create your own custom
         ValueSource classes to allow Value objects to represent your own custom data items.
     */
-    class JUCE_API  ValueSource   : public SingleThreadedReferenceCountedObject,
-                                    public AsyncUpdater
+    class JUCE_API  ValueSource   : public ReferenceCountedObject,
+                                    private AsyncUpdater
     {
     public:
         ValueSource();
@@ -195,11 +193,12 @@ public:
     protected:
         //==============================================================================
         friend class Value;
-        SortedSet <Value*> valuesWithListeners;
+        SortedSet<Value*> valuesWithListeners;
 
-        void handleAsyncUpdate();
+    private:
+        void handleAsyncUpdate() override;
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValueSource);
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValueSource)
     };
 
 
@@ -214,14 +213,19 @@ public:
 private:
     //==============================================================================
     friend class ValueSource;
-    ReferenceCountedObjectPtr <ValueSource> value;
-    ListenerList <Listener> listeners;
+    ReferenceCountedObjectPtr<ValueSource> value;
+    ListenerList<Listener> listeners;
 
     void callListeners();
+    void removeFromListenerList();
 
     // This is disallowed to avoid confusion about whether it should
     // do a by-value or by-reference copy.
-    Value& operator= (const Value&);
+    Value& operator= (const Value&) JUCE_DELETED_FUNCTION;
+
+    // This declaration prevents accidental construction from an integer of 0,
+    // which is possible in some compilers via an implicit cast to a pointer.
+    explicit Value (void*) JUCE_DELETED_FUNCTION;
 };
 
 /** Writes a Value to an OutputStream as a UTF8 string. */
@@ -230,4 +234,4 @@ OutputStream& JUCE_CALLTYPE operator<< (OutputStream&, const Value&);
 /** This typedef is just for compatibility with old code - newer code should use the Value::Listener class directly. */
 typedef Value::Listener ValueListener;
 
-#endif   // __JUCE_VALUE_JUCEHEADER__
+#endif   // JUCE_VALUE_H_INCLUDED
