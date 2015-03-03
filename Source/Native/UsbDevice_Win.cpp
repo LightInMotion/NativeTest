@@ -260,12 +260,25 @@ public:
     //==============================================================================
     WindowsOSHandle (uint16 vendorID_, uint16 productID_, int deviceIndex_,
                      WinSemaphore::Ptr& semaphoreHandle_, WinDevice::Ptr& deviceHandle_)
-        : vendorID (vendorID_),
+        :
+		  #if defined (_WIN32)
+		    isWin64 (false),
+		  #endif
+		  vendorID (vendorID_),
           productID (productID_),
           deviceIndex (deviceIndex_),
           deviceHandle (deviceHandle_),
           semaphoreHandle (semaphoreHandle_) 
     {
+		#if defined (_WIN32)
+			BOOL f64;
+			IsWow64Process (GetCurrentProcess(), &f64);
+			if (f64)
+				isWin64 = true;
+			else
+				isWin64 = false;
+		#endif
+
         readPipeInfo();
     }
     
@@ -277,13 +290,39 @@ public:
     //==============================================================================
     int findPipe (UsbDevice::EndPoint endPoint)
     {
-        PUSBD_INTERFACE_INFORMATION info = (PUSBD_INTERFACE_INFORMATION) pipeInfo.getData();
+		// This is ugly, but we might be running Win32 app on a Win64 machine, in which
+		// case the driver structure we retrieved earlier has the wrong size pointers
+		#if defined (_WIN32)
 
-        for (ULONG n = 0; n < info->NumberOfPipes; ++n)
-        {
-            if (info->Pipes[n].EndpointAddress == endPoint)
-                return n;
-        }
+			if (! isWin64)
+			{
+				PUSBD_INTERFACE_INFORMATION info = (PUSBD_INTERFACE_INFORMATION) pipeInfo.getData();
+
+				for (ULONG n = 0; n < info->NumberOfPipes; ++n)
+				{
+					if (info->Pipes[n].EndpointAddress == endPoint)
+						return n;
+				}
+			}
+			else
+			{
+				PUSBD_INTERFACE_INFORMATION64 info = (PUSBD_INTERFACE_INFORMATION64) pipeInfo.getData();
+
+				for (ULONG n = 0; n < info->NumberOfPipes; ++n)
+				{
+					if (info->Pipes[n].EndpointAddress == endPoint)
+						return n;
+				}
+			}
+		#else
+			PUSBD_INTERFACE_INFORMATION info = (PUSBD_INTERFACE_INFORMATION) pipeInfo.getData();
+
+			for (ULONG n = 0; n < info->NumberOfPipes; ++n)
+			{
+				if (info->Pipes[n].EndpointAddress == endPoint)
+					return n;
+			}
+		#endif
 
         return -1;
     }
@@ -375,6 +414,9 @@ private:
 
 private:
     //==============================================================================
+#if defined (_WIN32)
+	bool isWin64;
+#endif
     uint16 vendorID;
     uint16 productID;
     int deviceIndex;

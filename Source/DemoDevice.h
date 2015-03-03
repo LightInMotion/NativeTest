@@ -28,7 +28,7 @@ public:
     //==============================================================================
     const int getCount() { return 1; }
     
-    Result open (int index) { startThread(); return Result::ok(); }
+    Result open (int) { startThread(); return Result::ok(); }
     bool isOpen() { return isThreadRunning(); }
     void close() { stopThread (-1); }
     
@@ -45,8 +45,8 @@ public:
     MemoryBlock readDmxData() { return MemoryBlock (dmxData); }
     
     //==============================================================================
-    void addInputEvent (BlueLiteEvent* event) {}
-    void removeInputEvent (BlueLiteEvent* event) {}
+    void addInputEvent (BlueLiteEvent*) {}
+    void removeInputEvent (BlueLiteEvent*) {}
     
     MemoryBlock readDmxInput() { return MemoryBlock (0); }
     
