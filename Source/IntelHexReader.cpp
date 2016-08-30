@@ -11,7 +11,7 @@
 
 //==============================================================================
 IntelHexReader::IntelHexReader (const String& resourceName)
-    : dataStream (0)
+    : dataStream (nullptr)
 {
     int size;
     const char* data = BinaryData::getNamedResource (resourceName.toUTF8(), size);
@@ -22,7 +22,7 @@ IntelHexReader::IntelHexReader (const String& resourceName)
 
 
 IntelHexReader::IntelHexReader (const char* data, int size)
-    : dataStream (0)
+    : dataStream (nullptr)
 {
     if (data != nullptr)
         dataStream = new MemoryInputStream (data, size, false);    

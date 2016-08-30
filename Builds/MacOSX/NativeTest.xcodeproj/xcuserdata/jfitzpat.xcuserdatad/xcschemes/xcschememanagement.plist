@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>NativeTest.xcscheme</key>
+		<key>NativeTest (App).xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,7 +12,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>5C4DEA7F579A3F1EB4C94096</key>
+		<key>88461A5DD12686D28BADF3D2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
