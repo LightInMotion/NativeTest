@@ -29,7 +29,10 @@ public:
     
     bool ReadBytes (uint8* outbuf, uint32 readsize, uint32& bytesread);
     bool ReadDword (uint32& dw);
+    bool ReadInt (int32& i);
+    bool ReadBool (bool& b);
     bool ReadString (String& outstring);
+    bool ReadGuid (Uuid& uuid);
     
 private:
     String filename;

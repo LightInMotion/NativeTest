@@ -33,6 +33,7 @@
 
 // Defines ...................................................................
 
+#if 0
 // forward declarations
 class Console;
 class EventManager;
@@ -48,9 +49,10 @@ const int MAIN_AUX_SUBMASTER_COUNT = 4;
 const int MAIN_EVENTLIST_COUNT = 4;
 const int MAIN_CHASER_COUNT = 0; // ?
 const int MAIN_PRESET_COUNT = 24;
+#endif
 
 // DMX channel constants
-const int MAIN_DMX_UNIVERSE_COUNT = 16;
+const int MAIN_DMX_UNIVERSE_COUNT = 64;
 const int MAIN_DMX_CHANNELS_PER_UNIVERSE = 512;
 
 const int MAIN_DMX_CHANNEL_BUFFER_COUNT = MAIN_DMX_UNIVERSE_COUNT 
@@ -62,6 +64,7 @@ const int MAIN_DMX_CHANNEL_BUFFER_COUNT = MAIN_DMX_UNIVERSE_COUNT
 
 // Public Functions ..........................................................
 
+#if 0
 // base functions
 HINSTANCE MainGetHInstance();
 ATOM MainRegisterWindow( UINT resourceIDClassName,
@@ -93,7 +96,7 @@ int MainShowMessageBox( HWND hParent, UINT resourceID, UINT type );
 
 void MainSetActiveWindow( HWND hActiveWindow );
 HWND MainGetActiveWindow();
-
+#endif
 
 #endif // _MAIN_H_
 

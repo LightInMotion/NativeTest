@@ -25,6 +25,7 @@
 // Includes ..................................................................
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "ShowFile.h"
 
 class Control;
 class Template;
@@ -81,11 +82,11 @@ class Device
 /*
       bool DeviceSerialize( IStorage* pStorage, 
                             const DeviceManager* pDeviceManager ) const;
-
-      bool DeviceLoad( IStorage* pStorage, 
-                       DWORD version,
-                       const std::vector<DeviceGroup*>& groupList );
 */
+      bool DeviceLoad( ShowFile& show,
+                       uint32 version,
+                       const OwnedArray<DeviceGroup>* groupList );
+
       // find for saving
       bool DeviceFindPositionControl( const Control* pControl, 
                                       int& controlIndex ) const;
@@ -99,16 +100,16 @@ class Device
                           const DeviceManager* pDeviceManager ) const;
       
       bool SerializeControls(IStorage* pStorage ) const;
-
-      bool LoadInfo( IStorage* pStorage, 
-                     const std::vector<DeviceGroup*>& groupList,
-                     DWORD& controlCount );
-      
-      bool LoadControls( IStorage* pStorage, 
-                         DWORD version, 
-                         DWORD controlCount );
-
 */
+      bool LoadInfo( ShowFile& show,
+                     const OwnedArray<DeviceGroup>* groupList,
+                     uint32& controlCount );
+      
+      bool LoadControls( ShowFile& show,
+                         uint32 version,
+                         uint32 controlCount );
+
+
       // Private Members .....................................................
 
       // each device has a GUID which is identical to the GUID from the 

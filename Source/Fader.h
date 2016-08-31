@@ -22,6 +22,8 @@
 
 // Includes ..................................................................
 
+#include "../JuceLibraryCode/JuceHeader.h"
+
 class Cue;
 
 
@@ -58,9 +60,9 @@ class Fader
       void FaderClearCue( int cueNumber, Cue* pDummyCue );
       
       // Update
-      void FaderUpdateBuffer( BYTE* pOutputBuffer, int GMLevel );
+      void FaderUpdateBuffer( uint8* pOutputBuffer, int GMLevel );
 		void FaderCalculateEffects();
-      void FaderUpdateEffects( BYTE* pOutputBuffer );
+      void FaderUpdateEffects( uint8* pOutputBuffer );
       void FaderAdvanceEffectPosition( unsigned int updateID );
 
 

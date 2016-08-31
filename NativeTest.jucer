@@ -90,6 +90,13 @@
       </GROUP>
     </GROUP>
     <GROUP id="{5DD81CC4-9BBD-5500-8824-9A456E656543}" name="DMX Engine">
+      <FILE id="z6lNra" name="Device.cpp" compile="1" resource="0" file="Source/Device.cpp"/>
+      <FILE id="nz3UZF" name="Device.h" compile="0" resource="0" file="Source/Device.h"/>
+      <FILE id="Y4ZSDA" name="Fader.h" compile="0" resource="0" file="Source/Fader.h"/>
+      <FILE id="fUA2Pl" name="Main.h" compile="0" resource="0" file="Source/Main.h"/>
+      <FILE id="swMnkc" name="FaderControl.cpp" compile="1" resource="0"
+            file="Source/FaderControl.cpp"/>
+      <FILE id="pPLG5x" name="FaderControl.h" compile="0" resource="0" file="Source/FaderControl.h"/>
       <FILE id="BkOAhP" name="Control.cpp" compile="1" resource="0" file="Source/Control.cpp"/>
       <FILE id="b51hJg" name="Control.h" compile="0" resource="0" file="Source/Control.h"/>
       <FILE id="ar0uYX" name="ShowFile.cpp" compile="1" resource="0" file="Source/ShowFile.cpp"/>

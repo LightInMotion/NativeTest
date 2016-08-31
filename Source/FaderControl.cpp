@@ -21,7 +21,7 @@
 #include "main.h"
 #include "FaderControl.h"
 #include "Fader.h"
-#include "FileHelper.h"
+//#include "FileHelper.h"
 
 
 // Local Defines .............................................................
@@ -59,8 +59,8 @@ FaderControl::FaderControl()
    Returns: no return value
 ----------------------------------------------------------------------------*/
 FaderControl::FaderControl( bool use2Channels,
-                            UINT highChannelOffset,
-                            UINT lowChannelOffset,
+                            uint32 highChannelOffset,
+                            uint32 lowChannelOffset,
                             int minValue,
                             int maxValue,
                             bool reverse,
@@ -149,17 +149,17 @@ FaderControl::ControlGetType() const
 
 void 
 FaderControl::ControlGetUsedChannels(
-   std::vector<int>& channels,   // in/out: add number of used DMX 
+   Array<int>& channels,   // in/out: add number of used DMX
                                  // channels to the vector
    bool getSubcontrols ) const   // only used for mode control
 {
    // add the low channel to the vector
-   channels.push_back( m_LowChannelOffset + m_DeviceBaseAddress );
+   channels.add( m_LowChannelOffset + m_DeviceBaseAddress );
 
    // if we are using two channels then we also need to add the high channel
    // offset
    if( m_2Channels )
-      channels.push_back( m_HighChannelOffset + m_DeviceBaseAddress );
+      channels.add( m_HighChannelOffset + m_DeviceBaseAddress );
 }
 
 
@@ -173,8 +173,8 @@ FaderControl::ControlGetUsedChannels(
 
 void 
 FaderControl::ControlUpdateBuffer( 
-   const BYTE* pCueBuffer, // input cue buffer
-   BYTE* pOutputBuffer,    // in/out: output buffer to modify
+   const uint8* pCueBuffer, // input cue buffer
+   uint8* pOutputBuffer,    // in/out: output buffer to modify
    int faderLevel,         // fader level
    int GMAdjustedLevel )   // grand master adjusted fader level, used for 
                            // grand master controlled controls.
@@ -213,7 +213,7 @@ FaderControl::ControlUpdateBuffer(
    if( m_IsReverseFader )
    {
       // Get our state flag.  0 = first pass, 1 = work subtractively
-      BYTE *pFlag = pOutputBuffer + m_DeviceBaseAddress 
+      uint8 *pFlag = pOutputBuffer + m_DeviceBaseAddress
                   + m_LowChannelOffset + MAIN_DMX_CHANNEL_BUFFER_COUNT;
 
       // Turn into a range
@@ -261,12 +261,12 @@ FaderControl::ControlUpdateBuffer(
    {
       // move the high byte back to the output buffer
       *(pOutputBuffer + m_DeviceBaseAddress + m_HighChannelOffset ) =
-         (BYTE)( outputValue >> 8 );
+         (uint8)( outputValue >> 8 );
    }
 
    // move the low byte back to the output buffer
    *(pOutputBuffer + m_DeviceBaseAddress + m_LowChannelOffset ) =
-      (BYTE)outputValue;
+      (uint8)outputValue;
 }
 
 
@@ -281,8 +281,8 @@ FaderControl::ControlUpdateBuffer(
 
 void 
 FaderControl::FadConGetValues( bool& is2Channel, 
-                               UINT& highChannelOffset,
-                               UINT& lowChannelOffset,
+                               uint32& highChannelOffset,
+                               uint32& lowChannelOffset,
                                int& minValue,
                                int& maxValue,
                                bool& reverse,
@@ -311,7 +311,7 @@ FaderControl::FadConGetValues( bool& is2Channel,
       
    Returns: true or false
 ----------------------------------------------------------------------------*/
-
+#if 0
 bool 
 FaderControl::ControlSerialize( IStream* pStream ) const
 {
@@ -350,6 +350,7 @@ FaderControl::ControlSerialize( IStream* pStream ) const
    return true;
 }
 
+#endif
 
 /*----------------------------------------------------------------------------
    FaderControl::ControlLoad
@@ -360,39 +361,39 @@ FaderControl::ControlSerialize( IStream* pStream ) const
 ----------------------------------------------------------------------------*/
 
 bool 
-FaderControl::ControlLoad( IStream* pStream,
-                           DWORD version )
+FaderControl::ControlLoad( ShowFile& show,
+                           uint32 version )
 {
    // first load the base control data
-   if( ! Control::ControlLoad( pStream, version ))
+   if (! Control::ControlLoad (show, version))
       return false;
 
    // read is-2 channel flag
-   if( ! FileHelpReadBool( pStream, m_2Channels ))
+   if (! show.ReadBool (m_2Channels))
       return false;
 
    // load high offset
-   if( ! FileHelpReadUINT( pStream, m_HighChannelOffset ))
+   if (! show.ReadDword (m_HighChannelOffset))
       return false;
 
    // load low offset
-   if( ! FileHelpReadUINT( pStream, m_LowChannelOffset ))
+   if (! show.ReadDword (m_LowChannelOffset))
       return false;
 
    // load max value
-   if( ! FileHelpReadInt( pStream, m_MaxValue))
+   if (! show.ReadInt (m_MaxValue))
       return false;
 
    // load min value
-   if( ! FileHelpReadInt( pStream, m_MinValue ))
+   if (! show.ReadInt (m_MinValue))
       return false;
 
    // load reverse value
-   if( ! FileHelpReadBool( pStream, m_IsReverseFader ))
+   if (! show.ReadBool (m_IsReverseFader))
       return false;
 
    // load grand master controlled flag
-   if( ! FileHelpReadBool( pStream, m_GMControlled ))
+   if (! show.ReadBool (m_GMControlled))
       return false;
 
    return true;
@@ -411,7 +412,7 @@ FaderControl::ControlLoad( IStream* pStream,
 
 void 
 FaderControl::ControlCorrectSnapshotValues(
-   BYTE* pCueBuffer ) const   // cue buffer for which we need to adjust the
+   uint8* pCueBuffer ) const   // cue buffer for which we need to adjust the
                               // values
 {
    // if we are a reversed fader then we need to replace the cue buffer value
@@ -444,12 +445,12 @@ FaderControl::ControlCorrectSnapshotValues(
       {
          // move the high byte back to the cue buffer
          *(pCueBuffer + m_DeviceBaseAddress + m_HighChannelOffset ) =
-            (BYTE)( cueValue >> 8 );
+            (uint8)( cueValue >> 8 );
       }
 
       // move the low byte back to the cue buffer
       *(pCueBuffer + m_DeviceBaseAddress + m_LowChannelOffset ) =
-         (BYTE)cueValue;
+         (uint8)cueValue;
    }
 }
 

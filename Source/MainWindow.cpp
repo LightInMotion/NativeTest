@@ -10,6 +10,7 @@
 #include "DemoDevice.h"
 #include "pole.h"
 #include "ShowFile.h"
+#include "Device.h"
 
 void visit( int indent, POLE::Storage* storage, String path )
 {
@@ -91,11 +92,34 @@ MainAppWindow::MainAppWindow()
     ShowFile show("/Users/jfitzpat/X1Test.x1");
     if (show.Open())
     {
-        show.SetPath ("/Devices/");
+        show.SetPath ("/Devices/0/Info");
         Logger::outputDebugString(show.GetPath());
-        StringArray dir = show.GetDirectory();
-        for (int i = 0; i < dir.size(); ++i)
-            Logger::outputDebugString (dir[i]);
+        
+        Uuid uid;
+        show.ReadGuid (uid);
+        Logger::outputDebugString (uid.toDashedString());
+        
+        uint32 groupindex;
+        show.ReadDword (groupindex);
+        
+        uint32 baseaddr;
+        show.ReadDword (baseaddr);
+        
+        uint32 numcontrols;
+        show.ReadDword (numcontrols);
+        
+        String s;
+        show.ReadString (s);
+        Logger::outputDebugString (s);
+        
+        show.SetPath ("/Devices/0/Controls");
+        uint8 outbuf[60];
+        uint32 bytesread;
+        show.ReadBytes (outbuf, sizeof (outbuf), bytesread);
+        
+        show.SetPath ("/Devices/1/");
+        Device d;
+        d.DeviceLoad(show, 0, nullptr);
     }
     
     blueliteDevice = new BlueLiteX1();

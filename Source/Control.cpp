@@ -210,6 +210,7 @@ Control::ControlSerialize( IStream* pStream ) const
    return true;
 }
 
+#endif
 
 /*----------------------------------------------------------------------------
    Control::ControlLoad
@@ -221,18 +222,18 @@ Control::ControlSerialize( IStream* pStream ) const
 ----------------------------------------------------------------------------*/
 
 bool 
-Control::ControlLoad( IStream* pStream,
-                      DWORD version )
+Control::ControlLoad( ShowFile& show,
+                      uint32 version )
 {
    // We don't save/load the control type here, that is done in 
    // DeviceSerialize()/DeviceLoad() so that the device can create the 
    // correct control object.
 
-   ULONG bytesRead = 0;
-   int rectSize = sizeof(RECT);
+   uint32 bytesRead = 0;
+   int rectSize = sizeof(Position);
 
    // load position
-   if( pStream->Read( &m_Position, rectSize, &bytesRead ) != S_OK )
+   if(! show.ReadBytes ((uint8 *)(&m_Position), rectSize, bytesRead))
       return false;
 
    // check read bytes
@@ -240,13 +241,12 @@ Control::ControlLoad( IStream* pStream,
       return false;
 
    // load control name
-   if( ! FileHelpReadString( pStream, m_Name ))
+    if (! show.ReadString (m_Name))
       return false;
 
    return true;
 }
 
-#endif
 
 // Protected Functions .......................................................
 

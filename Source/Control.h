@@ -15,6 +15,7 @@
 
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "ShowFile.h"
 // #include "Effect.h"
 
 
@@ -49,7 +50,7 @@ class Control
 
       // Public Interface ....................................................
     
-      typedef Rectangle<int> Position;
+      typedef Rectangle<int32> Position;
 
       Position ControlGetPosition() const;
       void ControlSetPosition (const Position& position);
@@ -74,7 +75,7 @@ class Control
 
       // save/load
 //      virtual bool ControlSerialize( IStream* pStream ) const;
-//      virtual bool ControlLoad( IStream* pStream, DWORD version );
+      virtual bool ControlLoad (ShowFile& show, uint32 version);
 
       // effects (only used from position control)
 /*

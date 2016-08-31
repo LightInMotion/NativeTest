@@ -22,7 +22,7 @@
 
 #include "Device.h"
 #include "Control.h"
-#include "Template.h"
+//#include "Template.h"
 //#include "FileHelper.h"
 //#include "resource.h"
 //#include "DeviceManager.h"
@@ -321,6 +321,7 @@ Device::DeviceUpdateBuffer(
    Returns: true or false
 ----------------------------------------------------------------------------*/
 
+#if 0
 bool 
 Device::DeviceCloneControls( const Template* pTemplate )
 {
@@ -344,7 +345,7 @@ Device::DeviceCloneControls( const Template* pTemplate )
 
    return true;
 }
-
+#endif
 
 // device group access
 /*
@@ -402,7 +403,7 @@ Device::DeviceSetGroup( DeviceGroup* pDeviceGroup )
 bool 
 Device::operator==( const Device& device ) const
 {
-   if( IsEqualGUID( m_GUID, device.m_GUID ))
+   if ( m_GUID == device.m_GUID )
       return true;
 
    return false;
@@ -440,6 +441,7 @@ Device::operator!=( const Device& device ) const
    Returns: true or false
 ----------------------------------------------------------------------------*/
 
+#if 0
 bool 
 Device::DeviceSerialize( 
    IStorage* pStorage,                       // storage object for device data
@@ -456,7 +458,7 @@ Device::DeviceSerialize(
 
    return true;
 }
-
+#endif
 
 /*----------------------------------------------------------------------------
    Device::DeviceLoad
@@ -470,20 +472,20 @@ Device::DeviceSerialize(
 
 bool 
 Device::DeviceLoad( 
-   IStorage* pStorage,  // storage containing the device data
-   DWORD version,       // file version to load
-   const std::vector<DeviceGroup*>& groupList )// device group vector to 
+   ShowFile& show,  // storage containing the device data
+   uint32 version,       // file version to load
+   const OwnedArray<DeviceGroup>* groupList )// device group vector to
                                                // look up device group pointer
                                                // from the given device group
                                                // index
 {
    // load basic device info from the "Info" stream
-   DWORD controlCount = 0;
-   if( ! LoadInfo( pStorage, groupList, controlCount ))
+   uint32 controlCount = 0;
+   if( ! LoadInfo( show, groupList, controlCount ))
       return false;
 
    // load all controls from the "Controls" stream
-   if( ! LoadControls( pStorage, version, controlCount ))
+   if( ! LoadControls( show, version, controlCount ))
       return false;
 
    // We set the loaded base address to ourself, this will also update the
@@ -547,6 +549,7 @@ Device::DeviceFindPositionControl(
    for all control data.
 */
 
+#if 0
 /*----------------------------------------------------------------------------
    Device::SerializeInfo
 
@@ -662,6 +665,7 @@ Device::SerializeControls(IStorage* pStorage ) const
    return result;
 }
 
+#endif
 
 /*----------------------------------------------------------------------------
    Device::LoadInfo
@@ -673,32 +677,35 @@ Device::SerializeControls(IStorage* pStorage ) const
 
 bool 
 Device::LoadInfo( 
-   IStorage* pStorage,                        // storage for device data
+   ShowFile& show,                        // storage for device data
 
-   const std::vector<DeviceGroup*>& groupList,// group vector to look up
+   const OwnedArray<DeviceGroup>* groupList,// group vector to look up
                                               // group pointer based on saved
                                               // group index
 
-   DWORD& controlCount )                      // returned control count,
+   uint32& controlCount )                      // returned control count,
                                               // invalid if function fails
 {
    bool result = true;
 
    // open stream "Info"
-   IStream* pStreamInfo = FileHelpOpenStream(pStorage, IDS_FILE_DEVICE_INFO);
-   if( pStreamInfo )
+   String oldpath = show.GetPath();
+   
+   if (show.SetPath (oldpath + "Info"))
    {
-      // load the GUID
-      ULONG bytesRead = 0;
-      if(( pStreamInfo->Read( &m_GUID, sizeof(GUID), &bytesRead ) != S_OK ) ||
-         ( bytesRead != sizeof(GUID)))
-      {
-         result = false;
-      }
-
+      // Load the GUID
+      if (! show.ReadGuid(m_GUID))
+          result = false;
+ 
       // load the device group index
       int groupIndex = 0;
-      if( FileHelpReadInt( pStreamInfo, groupIndex ))
+
+      if (! show.ReadInt (groupIndex))
+          return false;
+       
+       m_pDeviceGroup = nullptr;
+#if 0
+       if( FileHelpReadInt( pStreamInfo, groupIndex ))
       {
          // check if the group index is a valid index
          if(( groupIndex >= 0 ) && ( groupIndex < (int)groupList.size()))
@@ -712,25 +719,24 @@ Device::LoadInfo(
       }
       else
          result = false;
-
+#endif
+       
       // load base address
-      if( ! FileHelpReadUINT( pStreamInfo, m_BaseAddress ))
+      if (! show.ReadDword (m_BaseAddress))
          result = false;
 
       // load number of controls
-      if( ! FileHelpReadDWORD( pStreamInfo, controlCount ))
+      if (! show.ReadDword (controlCount))
          result = false;
 
       // load device name
-      if( ! FileHelpReadString( pStreamInfo, m_Name ))
-         result = false;
-
-      // close stream "Info"
-      pStreamInfo->Release();
+      if (! show.ReadString (m_Name))
+          result = false;
    }
    else
       result = false;
 
+   show.SetPath (oldpath);
    return result;
 }
 
@@ -745,36 +751,36 @@ Device::LoadInfo(
 
 bool 
 Device::LoadControls( 
-   IStorage* pStorage,  // storage object for device data
-   DWORD version,       // file version to load
-   DWORD controlCount ) // control count read from the "Info" stream
+   ShowFile& show,  // storage object for device data
+   uint32 version,       // file version to load
+   uint32 controlCount ) // control count read from the "Info" stream
 {
    bool result = true;
 
    // open stream "Controls"
-   IStream* pStreamControls = FileHelpOpenStream( pStorage, 
-                                                  IDS_FILE_DEVICE_CONTROLS );
-   if( pStreamControls )
+   String oldpath = show.GetPath();
+    
+   if (show.SetPath (oldpath + "Controls"))
    {
       // for all controls
-      for( DWORD controlIndex = 0;controlIndex < controlCount; controlIndex++ )
+      for (uint32 controlIndex = 0; controlIndex < controlCount; controlIndex++)
       {
          // The first element for each control is always the control
          // type. We have to read the type first so that we can create
          // the correct control object.
 
-         Control* pControl = NULL;
+         Control* pControl = nullptr;
 
          // read control type
-         DWORD controlType = 0;
-         if( FileHelpReadDWORD( pStreamControls, controlType ))
+         uint32 controlType = 0;
+         if (show.ReadDword (controlType))
          {
             // check the control type
             switch( controlType )
             {
                case CT_SELECT:
                   // create select control, check result below
-                  pControl = new SelectControl;
+//                  pControl = new SelectControl;
                   break;
 
                case CT_FADER:    
@@ -784,7 +790,7 @@ Device::LoadControls(
 
                case CT_MODE:     
                   // create mode control, check result below
-                  pControl = new ModeControl;
+//                  pControl = new ModeControl;
                   break;
 
                case CT_SWITCH:   
@@ -794,7 +800,7 @@ Device::LoadControls(
 
                case CT_POSITION: 
                   // create position control, check result below
-                  pControl = new PositionControl;
+//                  pControl = new PositionControl;
                   break;
 
                case CT_LABEL:    
@@ -812,12 +818,12 @@ Device::LoadControls(
             result = false;
 
          // did we successful create a control
-         if( result && pControl )
+         if (result && pControl)
          {
             // load the control data from the stream
-            if( pControl->ControlLoad( pStreamControls, version ))
+            if (pControl->ControlLoad(show, version ))
                // add the control to the control vector
-               m_ControlList.push_back( pControl );
+               m_ControlList.add (pControl);
             else
             {
                // set error flag and delete control
@@ -832,13 +838,11 @@ Device::LoadControls(
             break;
          }
       }
-
-      // close stream "Controls"
-      pStreamControls->Release();
    }
    else
       result = false;
 
+   show.SetPath (oldpath);
    return result;
 }
 

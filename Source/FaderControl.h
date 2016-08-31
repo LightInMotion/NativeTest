@@ -37,8 +37,8 @@ class FaderControl : public Control
 
       FaderControl();
       FaderControl( bool use2Channels,
-                    UINT highChannelOffset,
-                    UINT lowChannelOffset,
+                    uint32 highChannelOffset,
+                    uint32 lowChannelOffset,
                     int minValue,
                     int maxValue,
                     bool reverse,
@@ -50,27 +50,27 @@ class FaderControl : public Control
 
       virtual Control* ControlClone() const;
       virtual ControlType ControlGetType() const;
-      virtual void ControlGetUsedChannels( std::vector<int>& channels,
+      virtual void ControlGetUsedChannels( Array<int>& channels,
                                            bool getSubcontrols ) const;
 
-      virtual void ControlUpdateBuffer( const BYTE* pCueBuffer,
-                                        BYTE* pOutputBuffer,
+      virtual void ControlUpdateBuffer( const uint8* pCueBuffer,
+                                        uint8* pOutputBuffer,
                                         int faderLevel,
                                         int GMAdjustedLevel );
 
       void FadConGetValues( bool& is2Channel, 
-                            UINT& highChannelOffset,
-                            UINT& lowChannelOffset,
+                            uint32& highChannelOffset,
+                            uint32& lowChannelOffset,
                             int& minValue,
                             int& maxValue,
                             bool& reverse,
                             bool& GMControlled ) const;
 
       // save/load
-      virtual bool ControlSerialize( IStream* pStream ) const;
-      virtual bool ControlLoad( IStream* pStream, DWORD version );
+//      virtual bool ControlSerialize( IStream* pStream ) const;
+      virtual bool ControlLoad( ShowFile& show, uint32 version );
 
-      virtual void ControlCorrectSnapshotValues( BYTE* pCueBuffer ) const;
+      virtual void ControlCorrectSnapshotValues( uint8* pCueBuffer ) const;
 
 
    private:
@@ -86,8 +86,8 @@ class FaderControl : public Control
       // the channel offset gets added to the device base address to get the
       // absolute channel of the fader control. The high channel offset is
       // only valid if the m_2Channels flag is set to true.
-      UINT m_HighChannelOffset;
-      UINT m_LowChannelOffset;
+      uint32 m_HighChannelOffset;
+      uint32 m_LowChannelOffset;
 
       // minimum and maximum value.
       int m_MinValue;
