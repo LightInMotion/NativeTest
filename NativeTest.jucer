@@ -89,6 +89,14 @@
               file="Source/Native/UsbDevice_Unix.cpp"/>
       </GROUP>
     </GROUP>
+    <GROUP id="{5DD81CC4-9BBD-5500-8824-9A456E656543}" name="DMX Engine">
+      <FILE id="BkOAhP" name="Control.cpp" compile="1" resource="0" file="Source/Control.cpp"/>
+      <FILE id="b51hJg" name="Control.h" compile="0" resource="0" file="Source/Control.h"/>
+      <FILE id="ar0uYX" name="ShowFile.cpp" compile="1" resource="0" file="Source/ShowFile.cpp"/>
+      <FILE id="qW0ZLN" name="ShowFile.h" compile="0" resource="0" file="Source/ShowFile.h"/>
+      <FILE id="M1tN7M" name="pole.cpp" compile="1" resource="0" file="Source/pole.cpp"/>
+      <FILE id="X1zaLj" name="pole.h" compile="0" resource="0" file="Source/pole.h"/>
+    </GROUP>
     <GROUP id="{DE0EFEC2-E357-A5DF-7171-6764ED593CB5}" name="UI">
       <GROUP id="{46BAFC1C-3EA3-DD3E-DC8F-57DDA0F6C685}" name="Test Tabs">
         <FILE id="KsCioW" name="TimeComponent.cpp" compile="1" resource="0"

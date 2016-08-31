@@ -20,6 +20,9 @@
     <Filter Include="NativeTest\BlueLite\Native">
       <UniqueIdentifier>{CC085F5F-7FBC-602C-B4CE-2EE521EAE57F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NativeTest\DMX Engine">
+      <UniqueIdentifier>{0C3613DF-FB94-02E8-940A-BCD36413A849}</UniqueIdentifier>
+    </Filter>
     <Filter Include="NativeTest\UI">
       <UniqueIdentifier>{5CD4CE4A-3265-B1E4-784C-8481A364C962}</UniqueIdentifier>
     </Filter>
@@ -228,6 +231,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Native\UsbDevice_Unix.cpp">
       <Filter>NativeTest\BlueLite\Native</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Control.cpp">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ShowFile.cpp">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\pole.cpp">
+      <Filter>NativeTest\DMX Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\TimeComponent.cpp">
       <Filter>NativeTest\UI\Test Tabs</Filter>
@@ -1349,6 +1361,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Native\libusb.h">
       <Filter>NativeTest\BlueLite\Native</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Control.h">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ShowFile.h">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pole.h">
+      <Filter>NativeTest\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\TimeComponent.h">
       <Filter>NativeTest\UI\Test Tabs</Filter>

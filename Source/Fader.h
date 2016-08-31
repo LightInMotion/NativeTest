@@ -1,0 +1,83 @@
+/*
+   File Info:
+
+      $Workfile:   Fader.h  $
+      $Author:   JOE  $
+      $Revision:   1.0  $
+      $Modtime:   25 Aug 2004 14:58:02  $
+
+   Module Description:
+
+      Faders are included in the console. They can be either submasters,
+      x/y faders or chasers. They have two main elements, one is the fader
+      level and one is a cue pointer.
+
+      The update functions get called from the console and get redirected
+      to the associated cue.
+*/
+
+
+#ifndef _FADER_H_
+#define _FADER_H_
+
+// Includes ..................................................................
+
+class Cue;
+
+
+// Defines ...................................................................
+
+// we use those defines when we sum the channels. The maximum level has can't 
+// be larger than 16bit and has to be a 2-increment so that we can shift it.
+const int FADER_MAX_LEVEL = 8192;
+const int FADER_BIT_SHIFT = 13;
+
+
+// Data Types ................................................................
+
+// Class Definition ..........................................................
+
+class Fader
+{
+   public:
+
+      Fader();
+      ~Fader();
+
+      // Public Interface ....................................................
+
+      // initialize
+      bool FaderInitialize();
+
+      // Level/Cue Access
+      inline int FaderGetLevel() const { return m_Level; };
+      inline void FaderSetLevel( int level ) { m_Level = level; };
+
+      int FaderGetCueNumber() const;
+      bool FaderSetCue( int cueNumber );
+      void FaderClearCue( int cueNumber, Cue* pDummyCue );
+      
+      // Update
+      void FaderUpdateBuffer( BYTE* pOutputBuffer, int GMLevel );
+		void FaderCalculateEffects();
+      void FaderUpdateEffects( BYTE* pOutputBuffer );
+      void FaderAdvanceEffectPosition( unsigned int updateID );
+
+
+   private:
+
+      // Private Functions ...................................................
+
+      // Private Members .....................................................
+
+      // fader level
+      int m_Level;
+      
+      // the cue pointer is always valid. If no 'real' cue is assigned we
+      // assign a dummy cue.
+      Cue* m_pCue;
+};
+
+
+#endif // _FADER_H_
+

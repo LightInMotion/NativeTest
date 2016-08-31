@@ -53,6 +53,9 @@ OBJECTS := \
   $(OBJDIR)/BlueLiteUsbDevice_3ad0d213.o \
   $(OBJDIR)/IntelHexReader_5ed5ab11.o \
   $(OBJDIR)/UsbDevice_a591255b.o \
+  $(OBJDIR)/Control_9e19bf3e.o \
+  $(OBJDIR)/ShowFile_29e40422.o \
+  $(OBJDIR)/pole_adebdc21.o \
   $(OBJDIR)/TimeComponent_5ed54811.o \
   $(OBJDIR)/DmxOutComponent_f607555f.o \
   $(OBJDIR)/DmxInComponent_e1f85bd2.o \
@@ -101,6 +104,21 @@ $(OBJDIR)/IntelHexReader_5ed5ab11.o: ../../Source/IntelHexReader.cpp
 $(OBJDIR)/UsbDevice_a591255b.o: ../../Source/UsbDevice.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling UsbDevice.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Control_9e19bf3e.o: ../../Source/Control.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Control.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/ShowFile_29e40422.o: ../../Source/ShowFile.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling ShowFile.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/pole_adebdc21.o: ../../Source/pole.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling pole.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/TimeComponent_5ed54811.o: ../../Source/TimeComponent.cpp

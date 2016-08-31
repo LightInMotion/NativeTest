@@ -8,6 +8,29 @@
 #include "TestTabsComponent.h"
 #include "BlueLiteUsbDevices.h"
 #include "DemoDevice.h"
+#include "pole.h"
+#include "ShowFile.h"
+
+void visit( int indent, POLE::Storage* storage, String path )
+{
+    StringArray entries;
+    entries = storage->entries( path );
+    
+    for (int it = 0; it < entries.size(); ++it)
+    {
+        String name = entries[it];
+        String fullname = path + name;
+        for( int j = 0; j < indent; j++ ) std::cout << "    ";
+        ScopedPointer<POLE::Stream> ss = new POLE::Stream( storage, fullname );
+        std::cout << name;
+        if( ss ) if( !ss->fail() )std::cout << "  (" << ss->size() << ")";
+        std::cout << std::endl;
+        
+        if( storage->isDirectory( fullname ) )
+            visit( indent+1, storage, fullname + "/" );
+    }
+}
+
 
 //==============================================================================
 class ContentComp : public Component
@@ -60,6 +83,21 @@ MainAppWindow::MainAppWindow()
     setUsingNativeTitleBar (true);
     setVisible (true);
 
+    ScopedPointer<POLE::Storage> storage = new POLE::Storage( "/Users/jfitzpat/X1Test.x1" );
+    storage->open();
+    if( storage->result() == POLE::Storage::Ok )
+        visit( 0, storage, "/" );
+    
+    ShowFile show("/Users/jfitzpat/X1Test.x1");
+    if (show.Open())
+    {
+        show.SetPath ("/Devices/");
+        Logger::outputDebugString(show.GetPath());
+        StringArray dir = show.GetDirectory();
+        for (int i = 0; i < dir.size(); ++i)
+            Logger::outputDebugString (dir[i]);
+    }
+    
     blueliteDevice = new BlueLiteX1();
     int count = blueliteDevice->getCount();
     
