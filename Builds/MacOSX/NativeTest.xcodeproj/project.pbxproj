@@ -17,6 +17,7 @@
 		D5D82151164EDE8A5A8EB79B = {isa = PBXBuildFile; fileRef = DFFBF47D4FD2B8E9E1714ADC; };
 		1AEEA16D6F813E141EB2CA2B = {isa = PBXBuildFile; fileRef = 0C5A4157EFB5512BE9CA26D4; };
 		ABD7DCE4B1C084514C5C57C2 = {isa = PBXBuildFile; fileRef = 45AF26B69D4BDC7D1CC4CED5; };
+		2E18E7EB3A8CC4C608B2461A = {isa = PBXBuildFile; fileRef = 25D91ADD261FCC5546DEE3EE; };
 		56F6E95FD6F6E753773F5E8A = {isa = PBXBuildFile; fileRef = EA6FFE6992CE6186FB63C4F0; };
 		F2EC278F6C22693F04255363 = {isa = PBXBuildFile; fileRef = E251A4E1A66F762FA7D1C7AA; };
 		4B183176F0A8E538CCF8F6AE = {isa = PBXBuildFile; fileRef = DCDF1027ABEF045388D49ED3; };
@@ -168,6 +169,7 @@
 		2513C3338E9F68BE1DF705CA = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_Line.h"; path = "../../JuceLibraryCode/modules/juce_graphics/geometry/juce_Line.h"; sourceTree = "SOURCE_ROOT"; };
 		2514F8F1B57EDAE8B99BA036 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_Colours.cpp"; path = "../../JuceLibraryCode/modules/juce_graphics/colour/juce_Colours.cpp"; sourceTree = "SOURCE_ROOT"; };
 		25642019B2FFD7419B875F12 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_win32_SystemStats.cpp"; path = "../../JuceLibraryCode/modules/juce_core/native/juce_win32_SystemStats.cpp"; sourceTree = "SOURCE_ROOT"; };
+		25D91ADD261FCC5546DEE3EE = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Fader.cpp; path = ../../Source/Fader.cpp; sourceTree = "SOURCE_ROOT"; };
 		25FA0C313854C75302243504 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_ComponentListener.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/components/juce_ComponentListener.h"; sourceTree = "SOURCE_ROOT"; };
 		2615F590A1678A87EFCEC47B = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_MenuBarComponent.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/menus/juce_MenuBarComponent.h"; sourceTree = "SOURCE_ROOT"; };
 		26B8EA68D7E95AF0D14F80A8 = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -827,16 +829,17 @@
 					3ADC6636C3ABD9A664215834,
 					7AA8A3EF28A9D268FA7FD90C, ); name = BlueLite; sourceTree = "<group>"; };
 		6803EBCF3C828959210E66F1 = {isa = PBXGroup; children = (
+					25D91ADD261FCC5546DEE3EE,
+					8E44DB6EBD34C258B029A15E,
 					EA6FFE6992CE6186FB63C4F0,
 					30595E0ECFC3AAB6E980E968,
 					E251A4E1A66F762FA7D1C7AA,
 					623360F3FCCC6169C69F1F47,
-					8E44DB6EBD34C258B029A15E,
-					78957F2E3977916AE1B9EC5A,
 					DCDF1027ABEF045388D49ED3,
 					66987AF31A0DD6AFA81F33F1,
-					E7B0075599E584158A065A6F,
 					6845F7EACC31980D8BEC09C9,
+					E7B0075599E584158A065A6F,
+					78957F2E3977916AE1B9EC5A,
 					79B391D4A24AA5010A104085,
 					885CCFE53B2F7F3DE3F8DB50,
 					AC7DAE205F9C996CFDBF0270,
@@ -1809,6 +1812,7 @@
 					D5D82151164EDE8A5A8EB79B,
 					1AEEA16D6F813E141EB2CA2B,
 					ABD7DCE4B1C084514C5C57C2,
+					2E18E7EB3A8CC4C608B2461A,
 					56F6E95FD6F6E753773F5E8A,
 					F2EC278F6C22693F04255363,
 					4B183176F0A8E538CCF8F6AE,

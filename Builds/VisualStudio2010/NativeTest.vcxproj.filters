@@ -232,6 +232,9 @@
     <ClCompile Include="..\..\Source\Native\UsbDevice_Unix.cpp">
       <Filter>NativeTest\BlueLite\Native</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Fader.cpp">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Cue.cpp">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClCompile>
@@ -1371,22 +1374,22 @@
     <ClInclude Include="..\..\Source\Native\libusb.h">
       <Filter>NativeTest\BlueLite\Native</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Fader.h">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\Cue.h">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Device.h">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Fader.h">
-      <Filter>NativeTest\DMX Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Main.h">
-      <Filter>NativeTest\DMX Engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\FaderControl.h">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Control.h">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Main.h">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\ShowFile.h">

@@ -1,11 +1,4 @@
 /*
-   File Info:
-
-      $Workfile:   Fader.h  $
-      $Author:   JOE  $
-      $Revision:   1.0  $
-      $Modtime:   25 Aug 2004 14:58:02  $
-
    Module Description:
 
       Faders are included in the console. They can be either submasters,
@@ -48,16 +41,13 @@ class Fader
 
       // Public Interface ....................................................
 
-      // initialize
-      bool FaderInitialize();
-
       // Level/Cue Access
       inline int FaderGetLevel() const { return m_Level; };
       inline void FaderSetLevel( int level ) { m_Level = level; };
 
       int FaderGetCueNumber() const;
-      bool FaderSetCue( int cueNumber );
-      void FaderClearCue( int cueNumber, Cue* pDummyCue );
+      bool FaderSetCue( Cue* cue );
+      void FaderClearCue( int cueNumber );
       
       // Update
       void FaderUpdateBuffer( uint8* pOutputBuffer, int GMLevel );

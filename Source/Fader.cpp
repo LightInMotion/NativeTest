@@ -1,11 +1,4 @@
 /*
-   File Info:
-
-      $Workfile:   Fader.cpp  $
-      $Author:   JOE  $
-      $Revision:   1.0  $
-      $Modtime:   25 Aug 2004 14:58:22  $
-
    Module Description:
 
       Faders are included in the console. They can be either submasters,
@@ -20,7 +13,6 @@
 
 #include "Fader.h"
 #include "Cue.h"
-#include "CueManager.h"
 
 
 // Local Defines .............................................................
@@ -39,7 +31,7 @@
 
 Fader::Fader()
    :  m_Level(0),
-      m_pCue(NULL)
+      m_pCue(&Cue::dummy)
 {
 }
 
@@ -54,31 +46,6 @@ Fader::Fader()
 
 Fader::~Fader()
 {
-}
-
-
-// Initialize ..............................................................//
-
-/*
-   Initialize function, has to be called before calling any other functions
-   get called. No cleanup function has to be called. Cleanup is done in 
-   the desctructor.
-*/
-
-/*----------------------------------------------------------------------------
-   Fader::FaderInitialize
-
-   Initialize the fader. Assigns a dummy cue to the cue pointer.
-
-   Returns: true or false
-----------------------------------------------------------------------------*/
-
-bool 
-Fader::FaderInitialize()
-{
-   // assign the dummy cue to the cue pointer
-   m_pCue = MainGetCueManager()->CueManGetDummyCue();
-   return true;
 }
 
 
@@ -113,11 +80,11 @@ Fader::FaderGetCueNumber() const
 ----------------------------------------------------------------------------*/
 
 bool 
-Fader::FaderSetCue( int cueNumber )
+Fader::FaderSetCue( Cue* cue )
 {
    // assign new cue to the fader. If the cue number doesn't exist we receive
    // a dummy cue
-   m_pCue = MainGetCueManager()->CueManGetCue( cueNumber );
+    m_pCue = cue;
 
    return true; // ???
 }
@@ -132,9 +99,7 @@ Fader::FaderSetCue( int cueNumber )
 ----------------------------------------------------------------------------*/
 
 void 
-Fader::FaderClearCue(
-   int cueNumber,    // number for cue to remove from any faders
-   Cue* pDummyCue )  // dummy cue pointer to replace any cue reference with
+Fader::FaderClearCue( int cueNumber )    // number for cue to remove from any faders
 {
    // check if the cue matches the cue on the fader
    if( cueNumber == m_pCue->CueGetNumber())
@@ -142,7 +107,7 @@ Fader::FaderClearCue(
       // replace the cue pointer with the given dummy cue pointer. This 
       // ensures that the fader always has a valid cue pointer and never
       // has to validate the cue pointer.
-      m_pCue = pDummyCue;
+       m_pCue = &Cue::dummy;
    }
 }
 
@@ -165,7 +130,7 @@ Fader::FaderClearCue(
 
 void 
 Fader::FaderUpdateBuffer( 
-   BYTE* pOutputBuffer,
+   uint8* pOutputBuffer,
    int GMLevel )        // grand master level
 {
    // In the function Console::SortFaders() all faders with the value zero
@@ -186,6 +151,7 @@ Fader::FaderUpdateBuffer(
 }
 
 
+#if 0
 /*----------------------------------------------------------------------------
    Fader::FaderCalculateEffects   
 
@@ -232,6 +198,7 @@ Fader::FaderAdvanceEffectPosition( unsigned int updateID )
    m_pCue->CueAdvanceEffectPositions( updateID );
 }
 
+#endif
 
 
 // Private Functions .........................................................

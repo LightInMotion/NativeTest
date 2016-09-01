@@ -99,6 +99,8 @@ class Cue
 //      EffectData* CueFindEffectData( const Control* pControl ) const;
 
 
+    static Cue dummy; // An empty cue
+    
    private:
 
       // Private Functions ...................................................

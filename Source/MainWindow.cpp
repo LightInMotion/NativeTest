@@ -144,7 +144,7 @@ MainAppWindow::MainAppWindow()
                 Logger::outputDebugString(String (outputBuffer[n]));
             zeromem (outputBuffer, MAIN_DMX_CHANNEL_BUFFER_COUNT * 2);
             cueList[0]->CueUpdateBuffer(outputBuffer, FADER_MAX_LEVEL >> 2, FADER_MAX_LEVEL >> 2);
-            Logger::outputDebugString ("Half");
+            Logger::outputDebugString ("Quarter");
             for (int n = 0; n < 32; ++n)
                 Logger::outputDebugString(String (outputBuffer[n]));
             Logger::outputDebugString ("It fades!");
