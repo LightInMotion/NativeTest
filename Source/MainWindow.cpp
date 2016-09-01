@@ -11,6 +11,8 @@
 #include "pole.h"
 #include "ShowFile.h"
 #include "Device.h"
+#include "Cue.h"
+#include "Fader.h"
 
 void visit( int indent, POLE::Storage* storage, String path )
 {
@@ -84,6 +86,16 @@ MainAppWindow::MainAppWindow()
     setUsingNativeTitleBar (true);
     setVisible (true);
 
+//    ScopedPointer<POLE::Storage> testwrite = new POLE::Storage("/Users/jfitzpat/test.xx");
+//    testwrite->open (true, true);
+//    if (testwrite->result() == POLE::Storage::Ok)
+//    {
+//        ScopedPointer<POLE::Stream> ss = new POLE::Stream( testwrite, "/Booger/Test", true );
+//        ss->write ((uint8 *)"Yo mamma", 8);
+//        ss->flush();
+//        testwrite->close();
+//    }
+    
     ScopedPointer<POLE::Storage> storage = new POLE::Storage( "/Users/jfitzpat/X1Test.x1" );
     storage->open();
     if( storage->result() == POLE::Storage::Ok )
@@ -92,34 +104,51 @@ MainAppWindow::MainAppWindow()
     ShowFile show("/Users/jfitzpat/X1Test.x1");
     if (show.Open())
     {
-        show.SetPath ("/Devices/0/Info");
-        Logger::outputDebugString(show.GetPath());
+        OwnedArray<Device> deviceList;
+        OwnedArray<Cue> cueList;
         
-        Uuid uid;
-        show.ReadGuid (uid);
-        Logger::outputDebugString (uid.toDashedString());
+        uint32 deviceIndex = 0;
+        while (show.IsDirectory("/Devices/" + String(deviceIndex) + "/"))
+        {
+            show.SetPath ("/Devices/" + String(deviceIndex) + "/");
+            ScopedPointer<Device> device = new Device();
+            if (! device->DeviceLoad(show, 1, nullptr))
+                break;
+            
+            deviceList.add (device);
+            device.release();
+            ++deviceIndex;
+        }
         
-        uint32 groupindex;
-        show.ReadDword (groupindex);
+        uint cueIndex = 0;
+        while (show.IsDirectory("/Cues/" + String(cueIndex) + "/"))
+        {
+            show.SetPath ("/Cues/" + String(cueIndex) + "/");
+            ScopedPointer<Cue> cue = new Cue();
+            if (! cue->CueLoad(show, 1, deviceList))
+                break;
+            
+            cueList.add (cue);
+            cue.release();
+            ++cueIndex;
+        }
         
-        uint32 baseaddr;
-        show.ReadDword (baseaddr);
+        ScopedPointer<uint8> outputBuffer = new uint8[MAIN_DMX_CHANNEL_BUFFER_COUNT * 2];
         
-        uint32 numcontrols;
-        show.ReadDword (numcontrols);
-        
-        String s;
-        show.ReadString (s);
-        Logger::outputDebugString (s);
-        
-        show.SetPath ("/Devices/0/Controls");
-        uint8 outbuf[60];
-        uint32 bytesread;
-        show.ReadBytes (outbuf, sizeof (outbuf), bytesread);
-        
-        show.SetPath ("/Devices/1/");
-        Device d;
-        d.DeviceLoad(show, 0, nullptr);
+        if (cueList.size())
+        {
+            zeromem (outputBuffer, MAIN_DMX_CHANNEL_BUFFER_COUNT * 2);
+            cueList[0]->CueUpdateBuffer(outputBuffer, FADER_MAX_LEVEL, FADER_MAX_LEVEL);
+            Logger::outputDebugString ("Full");
+            for (int n = 0; n < 32; ++n)
+                Logger::outputDebugString(String (outputBuffer[n]));
+            zeromem (outputBuffer, MAIN_DMX_CHANNEL_BUFFER_COUNT * 2);
+            cueList[0]->CueUpdateBuffer(outputBuffer, FADER_MAX_LEVEL >> 2, FADER_MAX_LEVEL >> 2);
+            Logger::outputDebugString ("Half");
+            for (int n = 0; n < 32; ++n)
+                Logger::outputDebugString(String (outputBuffer[n]));
+            Logger::outputDebugString ("It fades!");
+        }
     }
     
     blueliteDevice = new BlueLiteX1();

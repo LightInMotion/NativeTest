@@ -133,6 +133,7 @@
     <ClCompile Include="..\..\Source\Native\UsbDevice_Unix.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Cue.cpp"/>
     <ClCompile Include="..\..\Source\Device.cpp"/>
     <ClCompile Include="..\..\Source\FaderControl.cpp"/>
     <ClCompile Include="..\..\Source\Control.cpp"/>
@@ -1156,6 +1157,7 @@
     <ClInclude Include="..\..\Source\IntelHexReader.h"/>
     <ClInclude Include="..\..\Source\UsbDevice.h"/>
     <ClInclude Include="..\..\Source\Native\libusb.h"/>
+    <ClInclude Include="..\..\Source\Cue.h"/>
     <ClInclude Include="..\..\Source\Device.h"/>
     <ClInclude Include="..\..\Source\Fader.h"/>
     <ClInclude Include="..\..\Source\Main.h"/>

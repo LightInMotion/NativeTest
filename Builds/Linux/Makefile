@@ -53,6 +53,7 @@ OBJECTS := \
   $(OBJDIR)/BlueLiteUsbDevice_3ad0d213.o \
   $(OBJDIR)/IntelHexReader_5ed5ab11.o \
   $(OBJDIR)/UsbDevice_a591255b.o \
+  $(OBJDIR)/Cue_578b3714.o \
   $(OBJDIR)/Device_57ed22df.o \
   $(OBJDIR)/FaderControl_3a0de810.o \
   $(OBJDIR)/Control_9e19bf3e.o \
@@ -106,6 +107,11 @@ $(OBJDIR)/IntelHexReader_5ed5ab11.o: ../../Source/IntelHexReader.cpp
 $(OBJDIR)/UsbDevice_a591255b.o: ../../Source/UsbDevice.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling UsbDevice.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Cue_578b3714.o: ../../Source/Cue.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Cue.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/Device_57ed22df.o: ../../Source/Device.cpp

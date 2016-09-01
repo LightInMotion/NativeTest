@@ -232,6 +232,9 @@
     <ClCompile Include="..\..\Source\Native\UsbDevice_Unix.cpp">
       <Filter>NativeTest\BlueLite\Native</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Cue.cpp">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Device.cpp">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClCompile>
@@ -1367,6 +1370,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Native\libusb.h">
       <Filter>NativeTest\BlueLite\Native</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Cue.h">
+      <Filter>NativeTest\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Device.h">
       <Filter>NativeTest\DMX Engine</Filter>
