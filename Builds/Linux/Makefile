@@ -53,13 +53,14 @@ OBJECTS := \
   $(OBJDIR)/BlueLiteUsbDevice_3ad0d213.o \
   $(OBJDIR)/IntelHexReader_5ed5ab11.o \
   $(OBJDIR)/UsbDevice_a591255b.o \
+  $(OBJDIR)/pole_adebdc21.o \
+  $(OBJDIR)/ShowFile_29e40422.o \
   $(OBJDIR)/Fader_6a7919d7.o \
   $(OBJDIR)/Cue_578b3714.o \
   $(OBJDIR)/Device_57ed22df.o \
+  $(OBJDIR)/SelectControl_4f0a8ba2.o \
   $(OBJDIR)/FaderControl_3a0de810.o \
   $(OBJDIR)/Control_9e19bf3e.o \
-  $(OBJDIR)/ShowFile_29e40422.o \
-  $(OBJDIR)/pole_adebdc21.o \
   $(OBJDIR)/TimeComponent_5ed54811.o \
   $(OBJDIR)/DmxOutComponent_f607555f.o \
   $(OBJDIR)/DmxInComponent_e1f85bd2.o \
@@ -110,6 +111,16 @@ $(OBJDIR)/UsbDevice_a591255b.o: ../../Source/UsbDevice.cpp
 	@echo "Compiling UsbDevice.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
+$(OBJDIR)/pole_adebdc21.o: ../../Source/pole.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling pole.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/ShowFile_29e40422.o: ../../Source/ShowFile.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling ShowFile.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
 $(OBJDIR)/Fader_6a7919d7.o: ../../Source/Fader.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Fader.cpp"
@@ -125,6 +136,11 @@ $(OBJDIR)/Device_57ed22df.o: ../../Source/Device.cpp
 	@echo "Compiling Device.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
+$(OBJDIR)/SelectControl_4f0a8ba2.o: ../../Source/SelectControl.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling SelectControl.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
 $(OBJDIR)/FaderControl_3a0de810.o: ../../Source/FaderControl.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling FaderControl.cpp"
@@ -133,16 +149,6 @@ $(OBJDIR)/FaderControl_3a0de810.o: ../../Source/FaderControl.cpp
 $(OBJDIR)/Control_9e19bf3e.o: ../../Source/Control.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Control.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/ShowFile_29e40422.o: ../../Source/ShowFile.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling ShowFile.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/pole_adebdc21.o: ../../Source/pole.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling pole.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/TimeComponent_5ed54811.o: ../../Source/TimeComponent.cpp

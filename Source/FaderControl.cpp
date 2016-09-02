@@ -369,31 +369,31 @@ FaderControl::ControlLoad( ShowFile& show,
       return false;
 
    // read is-2 channel flag
-   if (! show.ReadBool (m_2Channels))
+   if (! show.readBool (m_2Channels))
       return false;
 
    // load high offset
-   if (! show.ReadDword (m_HighChannelOffset))
+   if (! show.readDword (m_HighChannelOffset))
       return false;
 
    // load low offset
-   if (! show.ReadDword (m_LowChannelOffset))
+   if (! show.readDword (m_LowChannelOffset))
       return false;
 
    // load max value
-   if (! show.ReadInt (m_MaxValue))
+   if (! show.readInt (m_MaxValue))
       return false;
 
    // load min value
-   if (! show.ReadInt (m_MinValue))
+   if (! show.readInt (m_MinValue))
       return false;
 
    // load reverse value
-   if (! show.ReadBool (m_IsReverseFader))
+   if (! show.readBool (m_IsReverseFader))
       return false;
 
    // load grand master controlled flag
-   if (! show.ReadBool (m_GMControlled))
+   if (! show.readBool (m_GMControlled))
       return false;
 
    return true;

@@ -133,13 +133,14 @@
     <ClCompile Include="..\..\Source\Native\UsbDevice_Unix.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\Source\pole.cpp"/>
+    <ClCompile Include="..\..\Source\ShowFile.cpp"/>
     <ClCompile Include="..\..\Source\Fader.cpp"/>
     <ClCompile Include="..\..\Source\Cue.cpp"/>
     <ClCompile Include="..\..\Source\Device.cpp"/>
+    <ClCompile Include="..\..\Source\SelectControl.cpp"/>
     <ClCompile Include="..\..\Source\FaderControl.cpp"/>
     <ClCompile Include="..\..\Source\Control.cpp"/>
-    <ClCompile Include="..\..\Source\ShowFile.cpp"/>
-    <ClCompile Include="..\..\Source\pole.cpp"/>
     <ClCompile Include="..\..\Source\TimeComponent.cpp"/>
     <ClCompile Include="..\..\Source\DmxOutComponent.cpp"/>
     <ClCompile Include="..\..\Source\DmxInComponent.cpp"/>
@@ -1158,14 +1159,15 @@
     <ClInclude Include="..\..\Source\IntelHexReader.h"/>
     <ClInclude Include="..\..\Source\UsbDevice.h"/>
     <ClInclude Include="..\..\Source\Native\libusb.h"/>
+    <ClInclude Include="..\..\Source\pole.h"/>
+    <ClInclude Include="..\..\Source\ShowFile.h"/>
     <ClInclude Include="..\..\Source\Fader.h"/>
     <ClInclude Include="..\..\Source\Cue.h"/>
     <ClInclude Include="..\..\Source\Device.h"/>
+    <ClInclude Include="..\..\Source\SelectControl.h"/>
     <ClInclude Include="..\..\Source\FaderControl.h"/>
     <ClInclude Include="..\..\Source\Control.h"/>
     <ClInclude Include="..\..\Source\Main.h"/>
-    <ClInclude Include="..\..\Source\ShowFile.h"/>
-    <ClInclude Include="..\..\Source\pole.h"/>
     <ClInclude Include="..\..\Source\TimeComponent.h"/>
     <ClInclude Include="..\..\Source\DmxOutComponent.h"/>
     <ClInclude Include="..\..\Source\DmxInComponent.h"/>

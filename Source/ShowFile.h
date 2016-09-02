@@ -1,44 +1,51 @@
 /*
-  ==============================================================================
-
     ShowFile.h
-    Created: 30 Aug 2016 8:20:17pm
-    Author:  Joseph Fitzpatrick
-
-  ==============================================================================
+ 
+    Simple Show File Access
+    You Stream from a single specific path, so if sub classes need to
+    change the stream used inside the OLE doc they should get the
+    current path and restore it when done.
 */
 
 #ifndef SHOWFILE_H_INCLUDED
 #define SHOWFILE_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "pole.h"
+
+namespace POLE
+{
+    class Storage;
+    class Stream;
+}
 
 class ShowFile {
 public:
     ShowFile (String filename);
     ~ShowFile();
     
-    bool Open();
-    void Close();
+    // Open/Close the master file
+    bool open();
+    void close();
     
-    bool SetPath (String path);
-    String GetPath();
-    bool IsDirectory (String path);
-    StringArray GetDirectory();
+    // Psuedo directory access
+    bool setPath (String path);
+    String getPath();
+    bool isDirectory (String path);
+    StringArray getDirectory();
     
-    bool ReadBytes (uint8* outbuf, uint32 readsize, uint32& bytesread);
-    bool ReadDword (uint32& dw);
-    bool ReadInt (int32& i);
-    bool ReadBool (bool& b);
-    bool ReadString (String& outstring);
-    bool ReadGuid (Uuid& uuid);
+    // Stream access
+    bool readBytes (uint8* outbuf, uint32 readsize, uint32& bytesread);
+    bool readDword (uint32& dw);
+    bool readInt (int32& i);
+    bool readBool (bool& b);
+    bool readString (String& outstring);
+    bool readGuid (Uuid& uuid);
     
 private:
-    String filename;
-    String currentPath;
+    String filename;    // Physical filename
+    String currentPath; // Virtual path inside OLE doc
     
-    ScopedPointer<POLE::Storage> storage;
+    ScopedPointer<POLE::Storage> storage;   // POLE Handles
     ScopedPointer<POLE::Stream> stream;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ShowFile)

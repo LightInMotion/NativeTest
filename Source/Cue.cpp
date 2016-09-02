@@ -1,32 +1,29 @@
 /*
-   Module Description:
+    Module Description:
 
-      A Cue is a central part of the application. Each Show (project) has
-      a cue list which can contain an unlimited number of cues. The cue list
-      is contained in the CueManager.
-      Each cue has a list with devices that belong to the cue. It can be any
-      device which is in the main device list (see DeviceManager), but it 
-      doesn't have to include all of the devices from the show/project.
+    A Cue is a central part of the application. Each Show (project) has
+    a cue list which can contain an unlimited number of cues. The cue list
+    is contained in the CueManager.
+    Each cue has a list with devices that belong to the cue. It can be any
+    device which is in the main device list (see DeviceManager), but it
+    doesn't have to include all of the devices from the show/project.
 
-      A cue has a cue buffer which contains the cue data from all 2048 
-      DMX channels (currently we have 4 DMX universes with 512 channels each).
-      Each DMX channel is represented with one byte in the 
-      cue buffer.
+    A cue has a cue buffer which contains the cue data from all 2048
+    DMX channels (currently we have 4 DMX universes with 512 channels each).
+    Each DMX channel is represented with one byte in the
+    cue buffer.
 
-      When the update function is called on the cue (from a fader) then the 
-      cue buffer is passed to all the devices which internally call the 
-      update functions on the controls and the controls know how to modify
-      the cue buffer (cue data).
+    When the update function is called on the cue (from a fader) then the
+    cue buffer is passed to all the devices which internally call the
+    update functions on the controls and the controls know how to modify
+    the cue buffer (cue data).
 */
 
 // Includes ..................................................................
 
 #include "Cue.h"
 #include "Device.h"
-//#include "FileHelper.h"
-//#include "resource.h"
 #include "Main.h"
-//#include "DeviceManager.h"
 #include "Control.h"
 
 
@@ -36,44 +33,44 @@
 
 // Public Interface ..........................................................
 
-Cue Cue::dummy(0);    // 0 is reserved for an empty Cue
+Cue Cue::dummy(0);  // 0 is reserved for an empty Cue
 
 /*----------------------------------------------------------------------------
-   Cue::Cue   
+    Cue::Cue
 
-   Constructor
+    Constructor
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 Cue::Cue()
-   :  m_Number(0)
+    : m_Number(0)
 {
-   zeromem (m_CueBuffer, MAIN_DMX_CHANNEL_BUFFER_COUNT);
+    zeromem (m_CueBuffer, MAIN_DMX_CHANNEL_BUFFER_COUNT);
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::Cue
+    Cue::Cue
 
-   Constructor taking a cue number
+    Constructor taking a cue number
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
-Cue::Cue( int number )
-   :  m_Number( number )
+Cue::Cue (int number)
+    : m_Number (number)
 {
-   zeromem (m_CueBuffer, MAIN_DMX_CHANNEL_BUFFER_COUNT);
+    zeromem (m_CueBuffer, MAIN_DMX_CHANNEL_BUFFER_COUNT);
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::~Cue
+    Cue::~Cue
 
-   Destructor
+    Destructor
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 Cue::~Cue()
@@ -92,161 +89,160 @@ Cue::~Cue()
 // Member access functions ...................................................
 
 /*
-   Get/Set cue members like name, description and number
+    Get/Set cue members like name, description and number
 */
 
 /*----------------------------------------------------------------------------
-   Cue::CueGetName
+    Cue::getName
 
-   Get the cue name
+    Get the cue name
 
-   Returns: cue name
+    Returns: cue name
 ----------------------------------------------------------------------------*/
 
 String
-Cue::CueGetName() const
+Cue::getName() const
 {
-   return m_Name;
+    return m_Name;
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueSetName
+    Cue::setName
 
-   set the cue name
+    set the cue name
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Cue::CueSetName (String name)
+Cue::setName (String name)
 {
-   // set the name
-   m_Name = name;
+    // set the name
+    m_Name = name;
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueGetNumber
+    Cue::getNumber
 
-   get the cue number. There is no set cue number function. The cue number
-   can't be changed once a cue is created.
+    get the cue number. There is no set cue number function. The cue number
+    can't be changed once a cue is created.
 
-   Returns: cue number
+    Returns: cue number
 ----------------------------------------------------------------------------*/
 
 int 
-Cue::CueGetNumber() const
+Cue::getNumber() const
 {
-   return m_Number;
+    return m_Number;
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueSetNumber
+    Cue::setNumber
 
-   !!!IMPORTANT: The cue number should NEVER be changed AFTER the cue is added
-   to the cue manager (by calling CueManAddCue()). This function is ONLY 
-   added for the snapshot, which creates an 'unnumbered' cue while it doesn't
-   know the cue number yet. This function should not be called from anywhere
-   else!!!
+    !!!IMPORTANT: The cue number should NEVER be changed AFTER the cue is added
+    to the cue manager (by calling CueManAddCue()). This function is ONLY
+    added for the snapshot, which creates an 'unnumbered' cue while it doesn't
+    know the cue number yet. This function should not be called from anywhere
+    else!!!
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Cue::CueSetNumber( int number )  // cue number
+Cue::setNumber (int number)  // cue number
 {
-   // set the cue number
-   m_Number = number;
+    // set the cue number
+    m_Number = number;
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueGetDescription
+    Cue::getDescription
 
-   get cue description
+    get cue description
 
-   Returns: cue description
+    Returns: cue description
 ----------------------------------------------------------------------------*/
 
 String
-Cue::CueGetDescription() const
+Cue::getDescription() const
 {
-   return m_Description;
+    return m_Description;
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueSetDescription
+    Cue::setDescription
 
-   set cue description
+    set cue description
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Cue::CueSetDescription( String description )
+Cue::setDescription (String description)
 {
-   m_Description = description;
+    m_Description = description;
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueGetBuffer
+    Cue::getBuffer
 
-   Return the pointer to the cue buffer. This function is called from the 
-   cue editor to get direct access to the cue buffer. The cue editor is
-   the only instance in the system to access the cue buffer directly
-   (besides the Cue of course). The Update function reads from the cue buffer
-   and the cue editor writes to the cue buffer.
+    Return the pointer to the cue buffer. This function is called from the
+    cue editor to get direct access to the cue buffer. The cue editor is
+    the only instance in the system to access the cue buffer directly
+    (besides the Cue of course). The Update function reads from the cue buffer
+    and the cue editor writes to the cue buffer.
 
-   Returns: pointer to cue buffer
+    Returns: pointer to cue buffer
 ----------------------------------------------------------------------------*/
 
 uint8*
-Cue::CueGetBuffer()
+Cue::getBuffer()
 {
-   // return pointer to cue buffer
-   return m_CueBuffer;
+    // return pointer to cue buffer
+    return m_CueBuffer;
 }
 
 
 // update functions...........................................................
 /*
-   Core functionality of the system. The update functions get called from
-   the main update thread every 33ms to update all cues.
+    Core functionality of the system. The update functions get called from
+    the main update thread every 33ms to update all cues.
 */
 
 /*----------------------------------------------------------------------------
-   Cue::CueUpdateBuffer
+    Cue::updateBuffer
 
-   This function walks the device list and calls DeviceUpdateBuffer on
-   all devices in the list.
+    This function walks the device list and calls DeviceUpdateBuffer on
+    all devices in the list.
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Cue::CueUpdateBuffer( 
-   uint8* pOutputBuffer,
-   int faderLevel,      // fader level
-   int GMAdjustedLevel )// grand master adjusted fader level, used for grand
-                        // master controlled controls.
+Cue::updateBuffer (uint8* pOutputBuffer,
+                   int faderLevel,      // fader level
+                   int GMAdjustedLevel )// grand master adjusted fader level, used for grand
+                                        // master controlled controls.
 {
-   // get number of devices contained in the cue
-   int deviceCount = m_DeviceList.size();
+    // get number of devices contained in the cue
+    int deviceCount = m_DeviceList.size();
 
-   // for all devices in the list
-   for( int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++ )
-   {
-      // call the update function on the device, passing in the cue buffer
-      // and the given output buffer
-      m_DeviceList[deviceIndex]->DeviceUpdateBuffer( m_CueBuffer,
-                                                     pOutputBuffer,
-                                                     faderLevel,
-                                                     GMAdjustedLevel );
-   }
+    // for all devices in the list
+    for (int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
+    {
+        // call the update function on the device, passing in the cue buffer
+        // and the given output buffer
+        m_DeviceList[deviceIndex]->DeviceUpdateBuffer (m_CueBuffer,
+                                                       pOutputBuffer,
+                                                       faderLevel,
+                                                       GMAdjustedLevel);
+    }
 }
 
 #if 0
@@ -333,206 +329,203 @@ Cue::CueAdvanceEffectPositions( UINT updateID )
 
 // Device Access..............................................................
 /*
-   Access to the devices contained in the cue.
+    Access to the devices contained in the cue.
 */
 
 /*----------------------------------------------------------------------------
-   Cue::CueGetDeviceCount
+    Cue::getDeviceCount
 
-   Return the number of devices in the cue
+    Return the number of devices in the cue
 
-   Returns: number of devices
+    Returns: number of devices
 ----------------------------------------------------------------------------*/
 
 int 
-Cue::CueGetDeviceCount() const
+Cue::getDeviceCount() const
 {
-   // return number of devices in cue
-   return m_DeviceList.size();
+    // return number of devices in cue
+    return m_DeviceList.size();
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueGetDevice
+    Cue::getDevice
 
-   Get the specified device in the cue. The device index has to be a valid
-   device index
+    Get the specified device in the cue. The device index has to be a valid
+    device index
 
-   Returns: device pointer
+    Returns: device pointer
 ----------------------------------------------------------------------------*/
 
 Device* 
-Cue::CueGetDevice( int index ) const   // device index
+Cue::getDevice (int index) const  // device index
 {
-   // return the device pointer
-   return m_DeviceList[index];
+    // return the device pointer
+    return m_DeviceList[index];
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueAddDevice
+    Cue::addDevice
 
-   Add a device (pointer) to the cue list. The device itself belongs to the
-   device manager and the device manager has to make sure to delete any 
-   references to a device before it gets deleted.
+    Add a device (pointer) to the cue list. The device itself belongs to the
+    device manager and the device manager has to make sure to delete any
+    references to a device before it gets deleted.
 
-   This function does not check if the device already exits, therefor the
-   caller of this function has to make sure that the device pointer is not
-   already in the device list of the cue.
+    This function does not check if the device already exits, therefor the
+    caller of this function has to make sure that the device pointer is not
+    already in the device list of the cue.
 
-   It is recommended to get the critical section from the main module to
-   halt the main update thread, because the main update thread works on the
-   devices in the cue. It might still work correctly without getting the
-   critical section (because we are only adding devices) but we don't want
-   to take the chance.
+    It is recommended to get the critical section from the main module to
+    halt the main update thread, because the main update thread works on the
+    devices in the cue. It might still work correctly without getting the
+    critical section (because we are only adding devices) but we don't want
+    to take the chance.
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Cue::CueAddDevice( Device* pDevice )
+Cue::addDevice (Device* pDevice)
 {
-   // add the device pointer to the list
-   m_DeviceList.add( pDevice );
+    // add the device pointer to the list
+    m_DeviceList.add( pDevice );
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueRemoveDevice
+    Cue::removeDevice
 
-   Remove a device from the device list. This function doesn't delete the 
-   device itself, it only removes it from the list and clears the cue buffer.
-   This function is called from the cue manager. The caller of this function 
-   has to make sure that the main update thread is halted by getting the main
-   critical section from the main module.
+    Remove a device from the device list. This function doesn't delete the
+    device itself, it only removes it from the list and clears the cue buffer.
+    This function is called from the cue manager. The caller of this function
+    has to make sure that the main update thread is halted by getting the main
+    critical section from the main module.
 
-   This function also removes all entries (Control pointers) from the effect 
-   data list, if the selected device contains controls with activated effects.
+    This function also removes all entries (Control pointers) from the effect
+    data list, if the selected device contains controls with activated effects.
 
-   ! Important: The device still has to exist when calling this function.
-   Call this function before calling DevManRemoveDevice() !
+    ! Important: The device still has to exist when calling this function.
+    Call this function before calling DevManRemoveDevice() !
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Cue::CueRemoveDevice( Device* pDevice )
+Cue::removeDevice (Device* pDevice)
 {
-   // walk the device list and remove the pointer if it matches.
+    // walk the device list and remove the pointer if it matches.
+    int deviceCount = m_DeviceList.size();
 
-   int deviceCount = m_DeviceList.size();
+    // for all devices
+    for (int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
+    {
+        // does the device pointer match
+        if (m_DeviceList[deviceIndex] == pDevice)
+        {
+            // for all controls of that device
+            int controlCount = pDevice->DeviceGetControlCount();
+            for (int controlIndex = 0; controlIndex < controlCount;controlIndex++)
+            {
+                // remove the effect data entry if it exists. This function
+                // also gets the critical section from the main update thread
+                // (again). But this is ok, since a critical section doesn't
+                // block if it gets locked from the same thread twice.
 
-   // for all devices
-   for( int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++ )
-   {
-      // does the device pointer match
-      if( m_DeviceList[deviceIndex] == pDevice )
-      {
-         // for all controls of that device
-         int controlCount = pDevice->DeviceGetControlCount();
-         for(int controlIndex = 0; controlIndex < controlCount;controlIndex++)
-         {
-            // remove the effect data entry if it exists. This function 
-            // also gets the critical section from the main update thread
-            // (again). But this is ok, since a critical section doesn't
-            // block if it gets locked from the same thread twice.
+                ;
+                //           CueRemoveEffectData( pDevice->DeviceGetControl( controlIndex ));
+            }
 
-             ;
-//           CueRemoveEffectData( pDevice->DeviceGetControl( controlIndex ));
-         }
+            // get the base address and number of channels occupied by the
+            // device. The base address is zero based.
+            uint32 baseAddress = pDevice->DeviceGetBaseAddress();
+            int numberOfChannels = pDevice->DeviceGetNumberOfChannels();
 
-         // get the base address and number of channels occupied by the 
-         // device. The base address is zero based.
-         uint32 baseAddress = pDevice->DeviceGetBaseAddress();
-         int numberOfChannels = pDevice->DeviceGetNumberOfChannels();
+            // clear the cue buffer which was occupied by this device
+            zeromem (m_CueBuffer + baseAddress, numberOfChannels);
 
-         // clear the cue buffer which was occupied by this device
-         zeromem (m_CueBuffer + baseAddress, numberOfChannels);
-
-         // remove it from the list and return
-         m_DeviceList.remove (deviceIndex);
-         return;
-      }
-   }
+            // remove it from the list and return
+            m_DeviceList.remove (deviceIndex);
+            return;
+        }
+    }
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueMoveDevice
+    Cue::moveDevice
 
-   This function gets called when a device changes its base address. We check
-   if that device exists in this cue and copy the cue data to the new 
-   destination. We also have to clear the old cue data.
+    This function gets called when a device changes its base address. We check
+    if that device exists in this cue and copy the cue data to the new
+    destination. We also have to clear the old cue data.
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Cue::CueMoveDevice(
-   const Device* pDevice,  // device which is being moved
-   int oldAddress,         // old base address before the move
-   int newAddress )        // new base address after the move
+Cue::moveDevice (const Device* pDevice,  // device which is being moved
+                 int oldAddress,         // old base address before the move
+                 int newAddress )        // new base address after the move
 {
-   int deviceCount = m_DeviceList.size();
+    int deviceCount = m_DeviceList.size();
 
-   // for all devices
-   for( int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++ )
-   {
-      // does the device pointer match
-      if( m_DeviceList[deviceIndex] == pDevice )
-      {
-         // get number of channels
-         int numberOfChannels = pDevice->DeviceGetNumberOfChannels();
+    // for all devices
+    for (int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
+    {
+        // does the device pointer match
+        if (m_DeviceList[deviceIndex] == pDevice)
+        {
+            // get number of channels
+            int numberOfChannels = pDevice->DeviceGetNumberOfChannels();
 
-         // create temporary buffer for cue data.
-         uint8* pTempBuffer = new uint8[numberOfChannels];
-         if( pTempBuffer )
-         {
-            // copy the cue data to a temporary buffer. This is necessary in
-            // case the new devcie overlaps the old device
+            // create temporary buffer for cue data.
+            uint8* pTempBuffer = new uint8[numberOfChannels];
+            if (pTempBuffer)
+            {
+                // copy the cue data to a temporary buffer. This is necessary in
+                // case the new devcie overlaps the old device
             
-            memcpy ( pTempBuffer,
-                     m_CueBuffer + oldAddress,
-                     numberOfChannels );
+                memcpy (pTempBuffer,
+                        m_CueBuffer + oldAddress,
+                        numberOfChannels);
 
-            // clear the old cue data
-            zeromem ( m_CueBuffer + oldAddress, numberOfChannels );
+                // clear the old cue data
+                zeromem (m_CueBuffer + oldAddress, numberOfChannels);
 
-            // copy the data to the new destination
-            memcpy ( m_CueBuffer + newAddress,
+                // copy the data to the new destination
+                memcpy (m_CueBuffer + newAddress,
                         pTempBuffer, 
-                        numberOfChannels );
+                        numberOfChannels);
 
-            delete[] pTempBuffer;
-         }
-      }
-   }
+                delete[] pTempBuffer;
+            }
+        }
+    }
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueIsDeviceInUse
+    Cue::isDeviceInUse
 
-   Check if the given device is used in that cue
+    Check if the given device is used in that cue
 
-   Returns: true if the device is used, false otherwise
+    Returns: true if the device is used, false otherwise
 ----------------------------------------------------------------------------*/
 
 bool 
-Cue::CueIsDeviceInUse( 
-   const Device* pDevice ) const  // device to check for usage
+Cue::isDeviceInUse (const Device* pDevice) const  // device to check for usage
 {
-   // for all devices
-   int deviceCount = m_DeviceList.size();
-   for( int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++ )
-   {
-      // does the device pointer match
-      if( m_DeviceList[deviceIndex] == pDevice )
-         return true;
-   }
+    // for all devices
+    int deviceCount = m_DeviceList.size();
+    for (int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
+    {
+        // does the device pointer match
+        if (m_DeviceList[deviceIndex] == pDevice)
+            return true;
+    }
 
-   // device is not in use
-   return false;
+    // device is not in use
+    return false;
 }
 
 
@@ -587,7 +580,7 @@ Cue::CueSerialize( IStorage* pStorage ) const
 #endif 
 
 /*----------------------------------------------------------------------------
-   Cue::CueLoad
+   Cue::load
 
    Load all cue data from the structure storage file. As with all load 
    functions, the critical section from the main module has to be locked
@@ -597,7 +590,7 @@ Cue::CueSerialize( IStorage* pStorage ) const
 ----------------------------------------------------------------------------*/
 
 bool 
-Cue::CueLoad( ShowFile& show,
+Cue::load( ShowFile& show,
               uint32 version,
               const OwnedArray<Device>& devicelist )
 {
@@ -605,14 +598,14 @@ Cue::CueLoad( ShowFile& show,
    uint32 effectCount = 0;
 
    // load basic data from the "Info" stream
-   if( ! LoadInfo( show, deviceCount, effectCount ))
+   if( ! loadInfo( show, deviceCount, effectCount ))
       return false;
 
    // do we have any devices to load
    if( deviceCount > 0 )
    {
       // load device data 
-      if( ! LoadDevices( show, deviceCount, devicelist ))
+      if( ! loadDevices( show, deviceCount, devicelist ))
          return false;
    }
 
@@ -620,30 +613,30 @@ Cue::CueLoad( ShowFile& show,
 //   if( effectCount > 0 )
 //   {
       // load effect data
-//      if( ! LoadEffects( pStorage, effectCount, version ))
+//      if( ! loadEffects( pStorage, effectCount, version ))
 //         return false;
 //   }
 
    bool result = true;
 
    // open "Data" stream for cue buffer
-   String oldpath = show.GetPath();
+   String oldpath = show.getPath();
 
-   if (show.SetPath (oldpath + "Data"))
+   if (show.setPath (oldpath + "Data"))
    {
-      if( ! LoadBuffer( show ))
+      if( ! loadBuffer( show ))
          result = false;
    }
    else
       result = false;;
 
-   show.SetPath (oldpath);
+   show.setPath (oldpath);
    return result;
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueClone
+   Cue::clone
 
    Doublicate/Clone the cue. The new cue number has to be an non-existing
    valid cue number. No validation is performed here.
@@ -652,7 +645,7 @@ Cue::CueLoad( ShowFile& show,
 ----------------------------------------------------------------------------*/
 
 Cue* 
-Cue::CueClone( 
+Cue::clone( 
    int newNumber ) const   // new cue number, has to be an non-existing
                            // valid cue number
 {
@@ -770,7 +763,7 @@ Cue::CueAddEffectData(
    called from the UI position control and has to be synchronized with the 
    main update thread.
 
-   This function is also called from CueRemoveDevice() to make sure we don't 
+   This function is also called from removeDevice() to make sure we don't 
    have any invalid entries in the effect data list after deleting a device.
 
    Returns: no return value
@@ -848,7 +841,7 @@ Cue::CueFindEffectData(
 
 // save/load subfunctions ....................................................
 /*
-   Subfunctions of CueSerialize() and CueLoad() functions.
+   Subfunctions of CueSerialize() and load() functions.
 */
 
 /*----------------------------------------------------------------------------
@@ -902,7 +895,7 @@ Cue::SerializeInfo( IStorage* pStorage ) const
 #endif
 
 /*----------------------------------------------------------------------------
-   Cue::LoadInfo
+   Cue::loadInfo
 
    Load basic cue data from the "Info" stream
 
@@ -910,41 +903,41 @@ Cue::SerializeInfo( IStorage* pStorage ) const
 ----------------------------------------------------------------------------*/
 
 bool 
-Cue::LoadInfo( ShowFile& show,
+Cue::loadInfo( ShowFile& show,
                uint32& deviceCount,
                uint32& effectCount )
 {
    bool result = true;
 
    // open stream "Info"
-   String oldpath = show.GetPath();
+   String oldpath = show.getPath();
     
-   if (show.SetPath (oldpath + "Info"))
+   if (show.setPath (oldpath + "Info"))
    {
       // load cue number
-      if (! show.ReadInt(m_Number))
+      if (! show.readInt(m_Number))
          result = false;
 
       // load cue name
-      if (! show.ReadString (m_Name))
+      if (! show.readString (m_Name))
          result = false;
 
       // load cue comment
-      if (! show.ReadString (m_Description))
+      if (! show.readString (m_Description))
          result = false;
 
       // load number of devices
-      if(! show.ReadDword (deviceCount))
+      if(! show.readDword (deviceCount))
          result = false;
 
       // load number of effects
-      if(! show.ReadDword (effectCount))
+      if(! show.readDword (effectCount))
          result = false;
    }
    else
       result = false;
 
-   show.SetPath (oldpath);
+   show.setPath (oldpath);
    return result;
 }
 
@@ -1000,7 +993,7 @@ Cue::SerializeDevices( IStorage* pStorage ) const
 #endif
 
 /*----------------------------------------------------------------------------
-   Cue::LoadDevices
+   Cue::loadDevices
 
    Load device data from the "Devices stream
 
@@ -1008,7 +1001,7 @@ Cue::SerializeDevices( IStorage* pStorage ) const
 ----------------------------------------------------------------------------*/
 
 bool 
-Cue::LoadDevices( ShowFile& show,
+Cue::loadDevices( ShowFile& show,
                   uint32 deviceCount,
                   const OwnedArray<Device>& deviceList)
 {
@@ -1021,8 +1014,8 @@ Cue::LoadDevices( ShowFile& show,
     int devicesInVector = deviceList.size();
     
    // open stream "Devices"
-   String oldpath = show.GetPath();
-   if (show.SetPath(oldpath + "Devices"))
+   String oldpath = show.getPath();
+   if (show.setPath(oldpath + "Devices"))
    {
       // for all devices in the stream
       for (uint32 index = 0; index < deviceCount; index++)
@@ -1033,7 +1026,7 @@ Cue::LoadDevices( ShowFile& show,
          // cues so that we can get the device pointers here !
 
          int deviceIndex = 0;
-         if (show.ReadInt (deviceIndex))
+         if (show.readInt (deviceIndex))
          {
             // check if the index is valid
             if(( deviceIndex >= 0 ) && ( deviceIndex < devicesInVector ))
@@ -1063,7 +1056,7 @@ Cue::LoadDevices( ShowFile& show,
    else
       result = false;
 
-   show.SetPath (oldpath);
+   show.setPath (oldpath);
    return result;
 }
 
@@ -1111,7 +1104,7 @@ Cue::SerializeEffects( IStorage* pStorage ) const
 
 
 /*----------------------------------------------------------------------------
-   Cue::LoadEffects
+   Cue::loadEffects
 
    Load effect data from the "Effects" stream
 
@@ -1119,7 +1112,7 @@ Cue::SerializeEffects( IStorage* pStorage ) const
 ----------------------------------------------------------------------------*/
 
 bool 
-Cue::LoadEffects( IStorage* pStorage, 
+Cue::loadEffects( IStorage* pStorage,
                   DWORD effectCount,   // number of effects to load
 						DWORD version )		// file version being loaded
 {
@@ -1285,7 +1278,7 @@ Cue::SerializeBuffer( IStream* pStream ) const
 #endif
 
 /*----------------------------------------------------------------------------
-   Cue::LoadBuffer
+   Cue::loadBuffer
 
    Read the cue buffer from the stream and encode it. See SerializeBuffer()
    for a description of the decoding.
@@ -1294,7 +1287,7 @@ Cue::SerializeBuffer( IStream* pStream ) const
 ----------------------------------------------------------------------------*/
 
 bool 
-Cue::LoadBuffer( ShowFile& show )
+Cue::loadBuffer( ShowFile& show )
 {
    // position into the cue buffer
    uint32 position = 0;
@@ -1307,7 +1300,7 @@ Cue::LoadBuffer( ShowFile& show )
 
    // as long as we can read the next flag byte and we don't exceed the
    // maximum of the cue buffer
-   while(( show.ReadBytes( &flagByte, 1, bytesRead )) &&
+   while(( show.readBytes( &flagByte, 1, bytesRead )) &&
          ( bytesRead == 1 ) &&
          ( position < MAIN_DMX_CHANNEL_BUFFER_COUNT ))
    {
@@ -1326,7 +1319,7 @@ Cue::LoadBuffer( ShowFile& show )
          // we have a repeating pattern and the next byte represents the 
          // pattern, read it.
          uint8 patternByte = 0;
-         if (! show.ReadBytes( &patternByte, 1, bytesRead ))
+         if (! show.readBytes( &patternByte, 1, bytesRead ))
             return false;
 
          if( bytesRead != 1 )
@@ -1341,7 +1334,7 @@ Cue::LoadBuffer( ShowFile& show )
       {
          // if the flag is not set then the bytes have to be copied directly
          // to the cue buffer
-         if(! show.ReadBytes( &m_CueBuffer[position], length, bytesRead))
+         if(! show.readBytes( &m_CueBuffer[position], length, bytesRead))
             return false;
 
          if( bytesRead != length )

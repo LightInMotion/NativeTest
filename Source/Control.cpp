@@ -233,7 +233,7 @@ Control::ControlLoad( ShowFile& show,
    int rectSize = sizeof(Position);
 
    // load position
-   if(! show.ReadBytes ((uint8 *)(&m_Position), rectSize, bytesRead))
+   if(! show.readBytes ((uint8 *)(&m_Position), rectSize, bytesRead))
       return false;
 
    // check read bytes
@@ -241,7 +241,7 @@ Control::ControlLoad( ShowFile& show,
       return false;
 
    // load control name
-    if (! show.ReadString (m_Name))
+    if (! show.readString (m_Name))
       return false;
 
    return true;

@@ -102,15 +102,15 @@ MainAppWindow::MainAppWindow()
         visit( 0, storage, "/" );
     
     ShowFile show("/Users/jfitzpat/X1Test.x1");
-    if (show.Open())
+    if (show.open())
     {
         OwnedArray<Device> deviceList;
         OwnedArray<Cue> cueList;
         
         uint32 deviceIndex = 0;
-        while (show.IsDirectory("/Devices/" + String(deviceIndex) + "/"))
+        while (show.isDirectory("/Devices/" + String(deviceIndex) + "/"))
         {
-            show.SetPath ("/Devices/" + String(deviceIndex) + "/");
+            show.setPath ("/Devices/" + String(deviceIndex) + "/");
             ScopedPointer<Device> device = new Device();
             if (! device->DeviceLoad(show, 1, nullptr))
                 break;
@@ -121,11 +121,11 @@ MainAppWindow::MainAppWindow()
         }
         
         uint cueIndex = 0;
-        while (show.IsDirectory("/Cues/" + String(cueIndex) + "/"))
+        while (show.isDirectory("/Cues/" + String(cueIndex) + "/"))
         {
-            show.SetPath ("/Cues/" + String(cueIndex) + "/");
+            show.setPath ("/Cues/" + String(cueIndex) + "/");
             ScopedPointer<Cue> cue = new Cue();
-            if (! cue->CueLoad(show, 1, deviceList))
+            if (! cue->load(show, 1, deviceList))
                 break;
             
             cueList.add (cue);
@@ -137,16 +137,25 @@ MainAppWindow::MainAppWindow()
         
         if (cueList.size())
         {
+            Fader fader;
+            
+            fader.setCue (cueList[0]);
+            fader.setLevel (FADER_MAX_LEVEL);
+            
             zeromem (outputBuffer, MAIN_DMX_CHANNEL_BUFFER_COUNT * 2);
-            cueList[0]->CueUpdateBuffer(outputBuffer, FADER_MAX_LEVEL, FADER_MAX_LEVEL);
+            fader.updateBuffer (outputBuffer, FADER_MAX_LEVEL);
             Logger::outputDebugString ("Full");
             for (int n = 0; n < 32; ++n)
                 Logger::outputDebugString(String (outputBuffer[n]));
+
             zeromem (outputBuffer, MAIN_DMX_CHANNEL_BUFFER_COUNT * 2);
-            cueList[0]->CueUpdateBuffer(outputBuffer, FADER_MAX_LEVEL >> 2, FADER_MAX_LEVEL >> 2);
+            fader.setLevel (FADER_MAX_LEVEL >> 2);
+            fader.updateBuffer (outputBuffer, FADER_MAX_LEVEL);
             Logger::outputDebugString ("Quarter");
             for (int n = 0; n < 32; ++n)
                 Logger::outputDebugString(String (outputBuffer[n]));
+ 
+            fader.clearCue();
             Logger::outputDebugString ("It fades!");
         }
     }

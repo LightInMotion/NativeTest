@@ -1,15 +1,16 @@
 /*
-  ==============================================================================
-
     ShowFile.cpp
-    Created: 30 Aug 2016 8:20:17pm
-    Author:  Joseph Fitzpatrick
-
-  ==============================================================================
+ 
+    Simple Show File Access
 */
 
 #include "ShowFile.h"
+#include "pole.h"
 
+//==============================================================================
+//==============================================================================
+// Constructor/Destructor
+//
 ShowFile::ShowFile (String _filename)
     : filename (_filename),
       currentPath ("/")
@@ -19,10 +20,12 @@ ShowFile::ShowFile (String _filename)
 
 ShowFile::~ShowFile()
 {
-//    stream = nullptr;
 }
 
-bool ShowFile::Open()
+//==============================================================================
+// File open Close
+//
+bool ShowFile::open()
 {
     storage->open();
     if (storage->result() == POLE::Storage::Ok)
@@ -31,12 +34,15 @@ bool ShowFile::Open()
     return false;
 }
 
-void ShowFile::Close()
+void ShowFile::close()
 {
     storage->close();
 }
 
-bool ShowFile::SetPath (String path)
+//==============================================================================
+// Virtual Path Management
+//
+bool ShowFile::setPath (String path)
 {
     currentPath = path;
     
@@ -56,22 +62,25 @@ bool ShowFile::SetPath (String path)
     return true;
 }
 
-String ShowFile::GetPath()
+String ShowFile::getPath()
 {
     return currentPath;
 }
 
-bool ShowFile::IsDirectory (String path)
+bool ShowFile::isDirectory (String path)
 {
     return storage->isDirectory (path);
 }
 
-StringArray ShowFile::GetDirectory()
+StringArray ShowFile::getDirectory()
 {
     return storage->entries (currentPath);
 }
 
-bool ShowFile::ReadBytes (uint8* outbuf, uint32 readsize, uint32& bytesread)
+//==============================================================================
+// Stream Access
+//
+bool ShowFile::readBytes (uint8* outbuf, uint32 readsize, uint32& bytesread)
 {
     if (stream == nullptr)
         return false;
@@ -81,33 +90,33 @@ bool ShowFile::ReadBytes (uint8* outbuf, uint32 readsize, uint32& bytesread)
     return true;
 }
 
-bool ShowFile::ReadDword (uint32& dw)
+bool ShowFile::readDword (uint32& dw)
 {
     uint32 bytesread;
     
-    if (ReadBytes ((uint8 *)(&dw), sizeof (dw), bytesread))
+    if (readBytes ((uint8 *)(&dw), sizeof (dw), bytesread))
         if (bytesread == sizeof (dw))
             return true;
     
     return false;
 }
 
-bool ShowFile::ReadInt (int32& i)
+bool ShowFile::readInt (int32& i)
 {
     uint32 bytesread;
     
-    if (ReadBytes ((uint8 *)(&i), sizeof (i), bytesread))
+    if (readBytes ((uint8 *)(&i), sizeof (i), bytesread))
         if (bytesread == sizeof (i))
             return true;
     
     return false;
 }
 
-bool ShowFile::ReadBool (bool& b)
+bool ShowFile::readBool (bool& b)
 {
     uint32 dw;
     
-    if (! ReadDword (dw))
+    if (! readDword (dw))
         return false;
     
     if (dw)
@@ -118,36 +127,40 @@ bool ShowFile::ReadBool (bool& b)
     return true;
 }
 
-bool ShowFile::ReadGuid (Uuid& uuid)
+bool ShowFile::readGuid (Uuid& uuid)
 {
     uint8 rawid[16];
     uint32 bytesread;
     
-    if (ReadBytes (rawid, sizeof (rawid), bytesread))
+    if (readBytes (rawid, sizeof (rawid), bytesread))
+    {
         if (bytesread == sizeof (rawid))
         {
             uuid = Uuid(rawid);
             return true;
         }
-    
+    }
     return false;
 }
 
-bool ShowFile::ReadString (String& outstring)
+bool ShowFile::readString (String& outstring)
 {
+    // Strings are always UTF_16, stored Pascal style (length, no terminator)
     uint32 length;
-    if (! ReadDword (length))
+    if (! readDword (length))
         return false;
     
+    // Reality check
     if (length > 2000)
         return false;
     
     ScopedPointer<uint8> tempBuf = new uint8[length + 2];
     
     uint32 bytesread;
-    if (! ReadBytes(tempBuf, length, bytesread))
+    if (! readBytes(tempBuf, length, bytesread))
         return false;
     
+    // Terminate and cast to a String
     tempBuf[length] = tempBuf[length + 1] = 0;
     outstring = CharPointer_UTF16 ((CharPointer_UTF16::CharType *)(tempBuf.get()));
     return true;

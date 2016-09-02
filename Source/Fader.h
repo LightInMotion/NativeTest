@@ -1,12 +1,12 @@
 /*
-   Module Description:
+    Module Description:
 
-      Faders are included in the console. They can be either submasters,
-      x/y faders or chasers. They have two main elements, one is the fader
-      level and one is a cue pointer.
+    Faders are included in the console. They can be either submasters,
+    x/y faders or chasers. They have two main elements, one is the fader
+    level and one is a cue pointer.
 
-      The update functions get called from the console and get redirected
-      to the associated cue.
+    The update functions get called from the console and get redirected
+    to the associated cue.
 */
 
 
@@ -34,40 +34,43 @@ const int FADER_BIT_SHIFT = 13;
 
 class Fader
 {
-   public:
+public:
+    // Public Interface ......................................................
 
-      Fader();
-      ~Fader();
+    // Construct / Desstruct
+    Fader();
+    ~Fader();
+    
+    // Level/Cue Access
+    inline int getLevel() const { return m_Level; };
+    inline void setLevel (int level) { m_Level = level; };
 
-      // Public Interface ....................................................
-
-      // Level/Cue Access
-      inline int FaderGetLevel() const { return m_Level; };
-      inline void FaderSetLevel( int level ) { m_Level = level; };
-
-      int FaderGetCueNumber() const;
-      bool FaderSetCue( Cue* cue );
-      void FaderClearCue( int cueNumber );
+    int getCueNumber() const;
+    void setCue (Cue* cue);
+    void clearCue (int cueNumber);
+    void clearCue (Cue* cue);
+    void clearCue();
       
-      // Update
-      void FaderUpdateBuffer( uint8* pOutputBuffer, int GMLevel );
-		void FaderCalculateEffects();
-      void FaderUpdateEffects( uint8* pOutputBuffer );
-      void FaderAdvanceEffectPosition( unsigned int updateID );
+    // Update
+    void updateBuffer (uint8* pOutputBuffer, int GMLevel);
+    void calculateEffects();
+    void updateEffects (uint8* pOutputBuffer);
+    void advanceEffectPosition (unsigned int updateID);
 
 
-   private:
+private:
+    // Private Functions ...................................................
 
-      // Private Functions ...................................................
+    // Private Members .....................................................
 
-      // Private Members .....................................................
-
-      // fader level
-      int m_Level;
+    // fader level
+    int m_Level;
       
-      // the cue pointer is always valid. If no 'real' cue is assigned we
-      // assign a dummy cue.
-      Cue* m_pCue;
+    // the cue pointer is always valid. If no 'real' cue is assigned we
+    // assign a dummy cue.
+    Cue* m_pCue;
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Fader)
 };
 
 

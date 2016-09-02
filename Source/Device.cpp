@@ -28,7 +28,7 @@
 //#include "DeviceManager.h"
 #include "FaderControl.h"
 //#include "PositionControl.h"
-//#include "SelectControl.h"
+#include "SelectControl.h"
 //#include "ModeControl.h"
 
 
@@ -689,18 +689,18 @@ Device::LoadInfo(
    bool result = true;
 
    // open stream "Info"
-   String oldpath = show.GetPath();
+   String oldpath = show.getPath();
    
-   if (show.SetPath (oldpath + "Info"))
+   if (show.setPath (oldpath + "Info"))
    {
       // Load the GUID
-      if (! show.ReadGuid(m_GUID))
+      if (! show.readGuid(m_GUID))
           result = false;
  
       // load the device group index
       int groupIndex = 0;
 
-      if (! show.ReadInt (groupIndex))
+      if (! show.readInt (groupIndex))
           return false;
        
        m_pDeviceGroup = nullptr;
@@ -722,21 +722,21 @@ Device::LoadInfo(
 #endif
        
       // load base address
-      if (! show.ReadDword (m_BaseAddress))
+      if (! show.readDword (m_BaseAddress))
          result = false;
 
       // load number of controls
-      if (! show.ReadDword (controlCount))
+      if (! show.readDword (controlCount))
          result = false;
 
       // load device name
-      if (! show.ReadString (m_Name))
+      if (! show.readString (m_Name))
           result = false;
    }
    else
       result = false;
 
-   show.SetPath (oldpath);
+   show.setPath (oldpath);
    return result;
 }
 
@@ -758,9 +758,9 @@ Device::LoadControls(
    bool result = true;
 
    // open stream "Controls"
-   String oldpath = show.GetPath();
+   String oldpath = show.getPath();
     
-   if (show.SetPath (oldpath + "Controls"))
+   if (show.setPath (oldpath + "Controls"))
    {
       // for all controls
       for (uint32 controlIndex = 0; controlIndex < controlCount; controlIndex++)
@@ -773,14 +773,14 @@ Device::LoadControls(
 
          // read control type
          uint32 controlType = 0;
-         if (show.ReadDword (controlType))
+         if (show.readDword (controlType))
          {
             // check the control type
             switch( controlType )
             {
                case CT_SELECT:
                   // create select control, check result below
-//                  pControl = new SelectControl;
+                  pControl = new SelectControl;
                   break;
 
                case CT_FADER:    
@@ -842,7 +842,7 @@ Device::LoadControls(
    else
       result = false;
 
-   show.SetPath (oldpath);
+   show.setPath (oldpath);
    return result;
 }
 
