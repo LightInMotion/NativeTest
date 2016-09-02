@@ -23,11 +23,9 @@
 #include "Device.h"
 #include "Control.h"
 //#include "Template.h"
-//#include "FileHelper.h"
-//#include "resource.h"
 //#include "DeviceManager.h"
 #include "FaderControl.h"
-//#include "PositionControl.h"
+#include "PositionControl.h"
 #include "SelectControl.h"
 //#include "ModeControl.h"
 
@@ -800,7 +798,7 @@ Device::LoadControls(
 
                case CT_POSITION: 
                   // create position control, check result below
-//                  pControl = new PositionControl;
+                  pControl = new PositionControl;
                   break;
 
                case CT_LABEL:    
