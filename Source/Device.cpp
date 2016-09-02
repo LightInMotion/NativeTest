@@ -1,21 +1,14 @@
 /*
-   File Info:
+    Module Description:
 
-      $Workfile:   Device.cpp  $
-      $Author:   JOE  $
-      $Revision:   1.0  $
-      $Modtime:   22 Oct 2009 11:39:24  $
-
-   Module Description:
-
-      A Device is very similar to a Template, the only main difference
-      between a template and a device is that a device can not modify, add
-      or delete and controls anymore. The device also can't modify the 
-      control settings/properties anymore.
-      Each Device contains a (now fixed) list of controls. Once the update
-      function is called (from the cue) the device walks the control list
-      and calls the update functions in the controls. The controls do the
-      actual work and calculate the DMX values.
+    A Device is very similar to a Template, the only main difference
+    between a template and a device is that a device can not modify, add
+    or delete and controls anymore. The device also can't modify the
+    control settings/properties anymore.
+    Each Device contains a (now fixed) list of controls. Once the update
+    function is called (from the cue) the device walks the control list
+    and calls the update functions in the controls. The controls do the
+    actual work and calculate the DMX values.
 */
 
 // Includes ..................................................................
@@ -27,7 +20,7 @@
 #include "FaderControl.h"
 #include "PositionControl.h"
 #include "SelectControl.h"
-//#include "ModeControl.h"
+#include "ModeControl.h"
 
 
 // Local Defines .............................................................
@@ -788,7 +781,7 @@ Device::LoadControls(
 
                case CT_MODE:     
                   // create mode control, check result below
-//                  pControl = new ModeControl;
+                  pControl = new ModeControl;
                   break;
 
                case CT_SWITCH:   

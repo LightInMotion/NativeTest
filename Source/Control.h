@@ -85,9 +85,9 @@ class Control
                                         EffectData* pEffectData,
                                         int faderLevel) {};
       virtual void ControlAdvanceEffectPosition (uint32 updateID) {};
-
-      virtual void ControlCorrectSnapshotValues (uint8* pCueBuffer) const {};
 */
+      virtual void ControlCorrectSnapshotValues (uint8* pCueBuffer) const {};
+
 
    protected:
 

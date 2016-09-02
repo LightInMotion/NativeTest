@@ -58,6 +58,7 @@ OBJECTS := \
   $(OBJDIR)/Fader_6a7919d7.o \
   $(OBJDIR)/Cue_578b3714.o \
   $(OBJDIR)/Device_57ed22df.o \
+  $(OBJDIR)/ModeControl_805c239b.o \
   $(OBJDIR)/PositionControl_8b403e55.o \
   $(OBJDIR)/SelectControl_4f0a8ba2.o \
   $(OBJDIR)/FaderControl_3a0de810.o \
@@ -135,6 +136,11 @@ $(OBJDIR)/Cue_578b3714.o: ../../Source/Cue.cpp
 $(OBJDIR)/Device_57ed22df.o: ../../Source/Device.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Device.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/ModeControl_805c239b.o: ../../Source/ModeControl.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling ModeControl.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/PositionControl_8b403e55.o: ../../Source/PositionControl.cpp

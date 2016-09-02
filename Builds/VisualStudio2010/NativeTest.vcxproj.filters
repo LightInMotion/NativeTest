@@ -250,6 +250,9 @@
     <ClCompile Include="..\..\Source\Device.cpp">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\ModeControl.cpp">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\PositionControl.cpp">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClCompile>
@@ -1396,6 +1399,9 @@
       <Filter>NativeTest\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Device.h">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ModeControl.h">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PositionControl.h">

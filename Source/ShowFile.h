@@ -38,6 +38,7 @@ public:
     bool readDword (uint32& dw);
     bool readInt (int32& i);
     bool readBool (bool& b);
+    bool readByte (uint8& b);
     bool readString (String& outstring);
     bool readGuid (Uuid& uuid);
     

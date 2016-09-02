@@ -102,6 +102,8 @@
       <FILE id="gX3lRG" name="Cue.h" compile="0" resource="0" file="Source/Cue.h"/>
       <FILE id="z6lNra" name="Device.cpp" compile="1" resource="0" file="Source/Device.cpp"/>
       <FILE id="nz3UZF" name="Device.h" compile="0" resource="0" file="Source/Device.h"/>
+      <FILE id="VGZyLo" name="ModeControl.cpp" compile="1" resource="0" file="Source/ModeControl.cpp"/>
+      <FILE id="DTRnMR" name="ModeControl.h" compile="0" resource="0" file="Source/ModeControl.h"/>
       <FILE id="SELNvK" name="PositionControl.cpp" compile="1" resource="0"
             file="Source/PositionControl.cpp"/>
       <FILE id="sDVEm1" name="PositionControl.h" compile="0" resource="0"

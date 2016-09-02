@@ -138,6 +138,7 @@
     <ClCompile Include="..\..\Source\Fader.cpp"/>
     <ClCompile Include="..\..\Source\Cue.cpp"/>
     <ClCompile Include="..\..\Source\Device.cpp"/>
+    <ClCompile Include="..\..\Source\ModeControl.cpp"/>
     <ClCompile Include="..\..\Source\PositionControl.cpp"/>
     <ClCompile Include="..\..\Source\SelectControl.cpp"/>
     <ClCompile Include="..\..\Source\FaderControl.cpp"/>
@@ -1165,6 +1166,7 @@
     <ClInclude Include="..\..\Source\Fader.h"/>
     <ClInclude Include="..\..\Source\Cue.h"/>
     <ClInclude Include="..\..\Source\Device.h"/>
+    <ClInclude Include="..\..\Source\ModeControl.h"/>
     <ClInclude Include="..\..\Source\PositionControl.h"/>
     <ClInclude Include="..\..\Source\SelectControl.h"/>
     <ClInclude Include="..\..\Source\FaderControl.h"/>
