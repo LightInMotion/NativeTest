@@ -66,6 +66,7 @@ OBJECTS := \
   $(OBJDIR)/EffectDataEntry_dafadd38.o \
   $(OBJDIR)/Effect_8fa2a89a.o \
   $(OBJDIR)/EffectPattern_aeeafca0.o \
+  $(OBJDIR)/ConsoleComponent_af0a6cef.o \
   $(OBJDIR)/TimeComponent_5ed54811.o \
   $(OBJDIR)/DmxOutComponent_f607555f.o \
   $(OBJDIR)/DmxInComponent_e1f85bd2.o \
@@ -179,6 +180,11 @@ $(OBJDIR)/Effect_8fa2a89a.o: ../../Source/Effect.cpp
 $(OBJDIR)/EffectPattern_aeeafca0.o: ../../Source/EffectPattern.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling EffectPattern.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/ConsoleComponent_af0a6cef.o: ../../Source/ConsoleComponent.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling ConsoleComponent.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/TimeComponent_5ed54811.o: ../../Source/TimeComponent.cpp

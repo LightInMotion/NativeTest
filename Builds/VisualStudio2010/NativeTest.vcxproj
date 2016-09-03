@@ -146,6 +146,7 @@
     <ClCompile Include="..\..\Source\EffectDataEntry.cpp"/>
     <ClCompile Include="..\..\Source\Effect.cpp"/>
     <ClCompile Include="..\..\Source\EffectPattern.cpp"/>
+    <ClCompile Include="..\..\Source\ConsoleComponent.cpp"/>
     <ClCompile Include="..\..\Source\TimeComponent.cpp"/>
     <ClCompile Include="..\..\Source\DmxOutComponent.cpp"/>
     <ClCompile Include="..\..\Source\DmxInComponent.cpp"/>
@@ -1178,6 +1179,7 @@
     <ClInclude Include="..\..\Source\Effect.h"/>
     <ClInclude Include="..\..\Source\EffectPattern.h"/>
     <ClInclude Include="..\..\Source\Main.h"/>
+    <ClInclude Include="..\..\Source\ConsoleComponent.h"/>
     <ClInclude Include="..\..\Source\TimeComponent.h"/>
     <ClInclude Include="..\..\Source\DmxOutComponent.h"/>
     <ClInclude Include="..\..\Source\DmxInComponent.h"/>

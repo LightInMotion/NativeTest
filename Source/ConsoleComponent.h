@@ -17,12 +17,16 @@
   ==============================================================================
 */
 
-#ifndef __JUCE_HEADER_29A2FDAD02391576__
-#define __JUCE_HEADER_29A2FDAD02391576__
+#ifndef __JUCE_HEADER_945E0AE88D0433AC__
+#define __JUCE_HEADER_945E0AE88D0433AC__
 
 //[Headers]     -- You can add your own extra header files here --
-#include "BlueLiteDevice.h"
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "BlueLiteDevice.h"
+#include "Device.h"
+#include "Cue.h"
+#include "Fader.h"
+#include "EffectPattern.h"
 //[/Headers]
 
 
@@ -30,20 +34,22 @@
 //==============================================================================
 /**
                                                                     //[Comments]
-    An auto-generated component, created by the Jucer.
+    An auto-generated component, created by the Projucer.
 
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class TestTabsComponent  : public Component
+class ConsoleComponent  : public Component,
+                          Thread
 {
 public:
     //==============================================================================
-    TestTabsComponent (BlueLiteDevice::Ptr blueliteDevice_);
-    ~TestTabsComponent();
+    ConsoleComponent (BlueLiteDevice::Ptr blueliteDevice_);
+    ~ConsoleComponent();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+    bool loadFile (File file);
     //[/UserMethods]
 
     void paint (Graphics& g) override;
@@ -53,18 +59,25 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
+    void run() override;
+
     BlueLiteDevice::Ptr blueliteDevice;
+    BlueLiteEvent::Ptr timeEvent;
+    
+    OwnedArray<EffectPattern> effectPatterns;
+    OwnedArray<Device> deviceList;
+    OwnedArray<Cue> cueList;
+    OwnedArray<Fader> faderList;
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<TabbedComponent> tabbedComponent;
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestTabsComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ConsoleComponent)
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
 
-#endif   // __JUCE_HEADER_29A2FDAD02391576__
+#endif   // __JUCE_HEADER_945E0AE88D0433AC__
