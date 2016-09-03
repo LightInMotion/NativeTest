@@ -16,7 +16,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "ShowFile.h"
-// #include "Effect.h"
+#include "Effect.h"
 
 
 // Defines ...................................................................
@@ -78,14 +78,14 @@ class Control
       virtual bool ControlLoad (ShowFile& show, uint32 version);
 
       // effects (only used from position control)
-/*
+
       virtual void ControlCalculateEffect (EffectData* pEffectData,
                                            int faderLevel) {};
       virtual void ControlUpdateEffect (uint8* pOutputBuffer,
                                         EffectData* pEffectData,
                                         int faderLevel) {};
       virtual void ControlAdvanceEffectPosition (uint32 updateID) {};
-*/
+
       virtual void ControlCorrectSnapshotValues (uint8* pCueBuffer) const {};
 
 

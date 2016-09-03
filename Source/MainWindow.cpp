@@ -143,7 +143,7 @@ MainAppWindow::MainAppWindow()
         {
             show.setPath ("/Cues/" + String(cueIndex) + "/");
             ScopedPointer<Cue> cue = new Cue();
-            if (! cue->load(show, 1, deviceList))
+            if (! cue->load(show, 1, deviceList, effectPatterns))
                 break;
             
             cueList.add (cue);

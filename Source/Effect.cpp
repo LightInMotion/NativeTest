@@ -1,28 +1,28 @@
 /*
-   Module Description:
+    Module Description:
 
-      The Effect object knows how to rotate patterns, scale them, sequence
-      through them, and use them to offset XY pairs.  Normally, each
-      position control owns one Effect object.  Since all EffectPattern
-      objects use the same origin, and since all Effect objects use a single
-      index, cross fading of effects is possible
+    The Effect object knows how to rotate patterns, scale them, sequence
+    through them, and use them to offset XY pairs.  Normally, each
+    position control owns one Effect object.  Since all EffectPattern
+    objects use the same origin, and since all Effect objects use a single
+    index, cross fading of effects is possible
 
-      The effect manager (see EffectManager.cpp) actually loads and manages
-      the patterns, patterns are passed, along with control data to Effect
-      objects indirectly.  The effect manager also creates an effect for
-      rendering, but that is a special case.
+    The effect manager (see EffectManager.cpp) actually loads and manages
+    the patterns, patterns are passed, along with control data to Effect
+    objects indirectly.  The effect manager also creates an effect for
+    rendering, but that is a special case.
 
-      Though the effect manager handles the loading of patterns, the actual
-      pattern object and data objects are declared here, so that a circular
-      dependancy is not created between this object and the Effect manager
+    Though the effect manager handles the loading of patterns, the actual
+    pattern object and data objects are declared here, so that a circular
+    dependancy is not created between this object and the Effect manager
 */
 
 // Includes ..................................................................
 
 #include "Effect.h"		// Our stuff
 #include "Fader.h"		// We need FADER defines for scaling
-#include "main.h"			// For EffectData Serialize
-#include "EffectManager.h"
+#include "main.h"		// For EffectData Serialize
+//#include "EffectManager.h"
 
 
 // Local Defines .............................................................
@@ -36,7 +36,7 @@ const int _EFFECT_NULL_SPEED = 0;
 // Local Data ................................................................
 
 /*
-	We built a SIN table in shorts using the following code:
+    We built a SIN table in shorts using the following code:
 
 		#include <stdio.h>
 		#include <math.h>
@@ -66,7 +66,7 @@ const int _EFFECT_NULL_SPEED = 0;
 			}			
 		}
 
-	We then added 90 degrees to the end so that we
+    We then added 90 degrees to the end so that we
 	could directly look up COS as well
 */
 
@@ -82,41 +82,46 @@ const short Effect::m_SinTable[] = {
 // Effect Data Load Serialize Methods ........................................
 
 /*----------------------------------------------------------------------------
-   EffectData::EffectDataLoad
+    EffectData::EffectDataLoad
 
-   Load EffectData settings from a file
-   Obtains an EffectPattern from the Effect Manager
+    Load EffectData settings from a file
+    Obtains an EffectPattern from the Effect Manager
 
-   Returns: true or false
+    Returns: true or false
 ----------------------------------------------------------------------------*/
 
 bool
-EffectData::EffectDataLoad( IStream *pStream,      // Stream to load from
-									 DWORD version )			// version to load
+EffectData::EffectDataLoad (ShowFile& show,     // Stream to load from
+                            uint32 version,     // version to load
+                            const OwnedArray<EffectPattern>& patterns) // Patterns to match
 {
-	DWORD bread;
-	HRESULT hr;
+	uint32 bread;
 
 	// Read the variables
 	int csize;
 
 	csize = sizeof(EffectData) - sizeof(EffectPattern *);
 
-	hr = pStream->Read(this, csize, &bread);
-	if (hr != S_OK || bread != csize)
+	if (! show.readBytes ((uint8*)this, csize, bread) || bread != csize)
 		return false;
 
 	// Read the guid for the pattern
-	GUID guid;
-	hr = pStream->Read(&guid, sizeof(GUID), &bread);
-	if (hr != S_OK || bread != sizeof(GUID))
+	Uuid guid;
+    if (! show.readGuid (guid))
 		return false;
 
-	m_pPattern = MainGetEffectManager()->EffectManGetPattern(guid);
-	if (m_pPattern == NULL)
-		return FALSE;
+    for (int n = 0; n < patterns.size(); ++n)
+    {
+        Uuid pGuid;
+        patterns[n]->EffectPatGetGuid(pGuid);
+        if (pGuid == guid)
+        {
+            m_pPattern = patterns[n];
+            return true;
+        }
+    }
 
-   return true;
+    return false;
 }
 
 
@@ -128,6 +133,7 @@ EffectData::EffectDataLoad( IStream *pStream,      // Stream to load from
    Returns: true or false
 ----------------------------------------------------------------------------*/
 
+#if 0
 bool
 EffectData::EffectDataSerialize( IStream *pStream ) const // Stream to save to
 {
@@ -155,33 +161,33 @@ EffectData::EffectDataSerialize( IStream *pStream ) const // Stream to save to
 	return true;
 }
 
+#endif
 
 // Public Interface ..........................................................
 
 /*----------------------------------------------------------------------------
-   Effect::Effect
+    Effect::Effect
 
-   Constructor
+    Constructor
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 Effect::Effect()
-   :  m_CombinedSpeed(_EFFECT_NULL_SPEED),
-      m_CombinedDirection(0),
-		m_CombinedRotation(0),
-      m_CurrentPosition(0),
-      m_LastUpdateID(0)
+    : m_CombinedRotation (0),
+      m_CombinedSpeed (_EFFECT_NULL_SPEED),
+      m_CombinedDirection (0),
+      m_CurrentPosition (0),
+      m_LastUpdateID (0)
 {
 }
 
-
 /*----------------------------------------------------------------------------
-   Effect::~Effect
+    Effect::~Effect
 
-   Destructor
+    Destructor
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 Effect::~Effect()
@@ -192,33 +198,33 @@ Effect::~Effect()
 // Update Functions ..........................................................
 
 /*
-   The update functions are called whenever an effect is active. An effect
-   is active when an EffectData entry is in a effect data entry list in an
-   selected cue.
+    The update functions are called whenever an effect is active. An effect
+    is active when an EffectData entry is in a effect data entry list in an
+    selected cue.
 
-	We are actually called three times:
+    We are actually called three times:
 
-		EffectCalculate:			Combine speed, direction, rotation, and gain
-		EffectUpdate:				Sum XY pairs using combined rotation and gain
+        EffectCalculate:		Combine speed, direction, rotation, and gain
+		EffectUpdate:			Sum XY pairs using combined rotation and gain
 		EffectAdvancePosition:	Advance position based upon combined speed
-										and direction, then zero everything
+                                and direction, then zero everything
 */
 
 
 /*----------------------------------------------------------------------------
-   Effect::EffectCalculate
+    Effect::EffectCalculate
 
-   We get called by the position control with a pointer to our EffectData
+    We get called by the position control with a pointer to our EffectData
 	and our fader level.  We use this to combine speed,
 	direction and rotation, which we will later use when each effect
 	is actually updated (summed into	the pan/tilt channels) and advanced
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Effect::EffectCalculate( EffectData* pEffectData, 
-						       int faderLevel )
+Effect::EffectCalculate (EffectData* pEffectData,
+                         int faderLevel )
 {
 	// Start by scaling speed, and rotation
 	int speed = ((pEffectData->m_Speed) * faderLevel) >> FADER_BIT_SHIFT;
@@ -256,19 +262,19 @@ Effect::EffectCalculate( EffectData* pEffectData,
 
 
 /*----------------------------------------------------------------------------
-   Effect::EffectUpdate
+    Effect::EffectUpdate
 
-   This function gets called from the position control. The position control
-   passes the x/y positions as WORDs and the update function modifies them.
+    This function gets called from the position control. The position control
+    passes the x/y positions as WORDs and the update function modifies them.
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Effect::EffectUpdate( WORD& xPos, 
-                      WORD& yPos, 
+Effect::EffectUpdate (int16& xPos,
+                      int16& yPos,
                       EffectData* pEffectData, 
-                      int faderLevel )
+                      int faderLevel)
 {
 	// Start by scaling our gain
 	int gain = ((pEffectData->m_Gain) * faderLevel) >> FADER_BIT_SHIFT;
@@ -341,7 +347,7 @@ Effect::EffectUpdate( WORD& xPos,
 		x = 0xFFFF;
 
 	// Save it
-	xPos = (WORD)x;
+	xPos = (int16)x;
 
 	// Offset and clip
 	// Note, Y axis is inverted on
@@ -355,24 +361,24 @@ Effect::EffectUpdate( WORD& xPos,
 		y = 0xFFFF;
 
 	// Save it
-	yPos = (WORD)y;
+	yPos = (int16)y;
 }
 
 
 /*----------------------------------------------------------------------------
-   Effect::EffectAdvancePosition
+    Effect::EffectAdvancePosition
 
-   Advance the effect position and reset the combined speed and direction.
-   The updateID is unique for one update cycle and can be compared with the
-   last update ID.
+    Advance the effect position and reset the combined speed and direction.
+    The updateID is unique for one update cycle and can be compared with the
+    last update ID.
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 // !!!! Why is Effect Reset not happening more often? !!!!
 
 void 
-Effect::EffectAdvancePosition( unsigned int updateID )
+Effect::EffectAdvancePosition (unsigned int updateID)
 {
 	// Only advance if updateID is new
 	if (updateID != m_LastUpdateID)
@@ -416,7 +422,7 @@ Effect::EffectAdvancePosition( unsigned int updateID )
 		m_CurrentPosition = newposition;
 
 		// Reset composit values
-      m_CombinedSpeed = _EFFECT_NULL_SPEED;
+        m_CombinedSpeed = _EFFECT_NULL_SPEED;
 		m_CombinedDirection = 0;
 		m_CombinedRotation = 0;
 

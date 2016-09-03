@@ -1,20 +1,20 @@
 /*
-   Module Description:
+    Module Description:
 
-      The Effect object knows how to rotate patterns, scale them, sequence
-      through them, and use them to offset XY pairs.  Normally, each
-      position control owns one Effect object.  Since all EffectPattern
-      objects use the same origin, and since all Effect objects use a single
-      index, cross fading of effects is possible
+    The Effect object knows how to rotate patterns, scale them, sequence
+    through them, and use them to offset XY pairs.  Normally, each
+    position control owns one Effect object.  Since all EffectPattern
+    objects use the same origin, and since all Effect objects use a single
+    index, cross fading of effects is possible
 
-      The effect manager (see EffectManager.cpp) actually loads and manages
-      the patterns, patterns are passed, along with control data to Effect
-      objects indirectly.  The effect manager also creates an effect for
-      rendering, but that is a special case.
+    The effect manager (see EffectManager.cpp) actually loads and manages
+    the patterns, patterns are passed, along with control data to Effect
+    objects indirectly.  The effect manager also creates an effect for
+    rendering, but that is a special case.
 
-      Though the effect manager handles the loading of patterns, the actual
-      pattern object and data objects are declared here, so that a circular
-      dependancy is not created between this object and the Effect manager
+    Though the effect manager handles the loading of patterns, the actual
+    pattern object and data objects are declared here, so that a circular
+    dependancy is not created between this object and the Effect manager
 */
 
 
@@ -24,7 +24,8 @@
 // Includes ..................................................................
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "effectpattern.h"
+#include "ShowFile.h"
+#include "EffectPattern.h"
 
 
 // Defines ...................................................................
@@ -52,85 +53,87 @@ const bool EFFECT_DEFAULT_DIRECTION = false;
 class EffectData
 {
 public:
-   // Constructors/Destructor ................................................
+    // Constructors/Destructor ................................................
 
-   // For loading
-   EffectData() :
-		m_Gain(0),
-		m_Speed(0),
-		m_Rotation(0),
-		m_Reverse(false),
-		m_pPattern(NULL) {};
+    // For loading
+    EffectData() :
+        m_Gain (0),
+		m_Speed (0),
+		m_Rotation (0),
+		m_Reverse (false),
+		m_pPattern (NULL) {};
 
-   // For editing
-   EffectData (EffectPattern* pPattern) :
+    // For editing
+    EffectData (EffectPattern* pPattern) :
 			m_Gain(EFFECT_DEFAULT_GAIN),
 			m_Speed(EFFECT_DEFAULT_SPEED),
 			m_Rotation(EFFECT_DEFAULT_ROTATION),
 			m_Reverse(EFFECT_DEFAULT_DIRECTION),
 			m_pPattern (pPattern) {};
 
-   ~EffectData(){};
+    ~EffectData(){};
 
-   // Current Settings .......................................................
+    // Current Settings .......................................................
 
-   int m_Gain;
-   int m_Speed;
-   int m_Rotation;
-   bool m_Reverse;
-   EffectPattern* m_pPattern;	// Must be last (for serialize)
+    int m_Gain;
+    int m_Speed;
+    int m_Rotation;
+    bool m_Reverse;
+    EffectPattern* m_pPattern;	// Must be last (for serialize)
 
-   // API ....................................................................
+    // API ....................................................................
 
 //   bool EffectDataSerialize(IStream *stream) const;
-//   bool EffectDataLoad(IStream *stream, DWORD version);
+    bool EffectDataLoad (ShowFile& show,
+                         uint32 version,
+                         const OwnedArray<EffectPattern>& patterns);
 };
 
 // Class Definition ..........................................................
 
 class Effect
 {
-   public:
+public:
 
-      Effect();
-      ~Effect();
+    Effect();
+    ~Effect();
 
-      // Public Interface ....................................................
+    // Public Interface ....................................................
 
-      void EffectCalculate( EffectData* pEffectData,
-						          int faderLevel );
+    void EffectCalculate (EffectData* pEffectData,
+                          int faderLevel);
 
-      void EffectUpdate (int16& xPos,
-                         int16& yPos,
-                         EffectData* pEffectData, 
-                         int faderLevel);
+    void EffectUpdate (int16& xPos,
+                       int16& yPos,
+                       EffectData* pEffectData,
+                       int faderLevel);
 
-      void EffectAdvancePosition (uint32 updateID);
+    void EffectAdvancePosition (uint32 updateID);
 
 
-   private:
+private:
 
-      // Private Functions ...................................................
+    // Private Functions ...................................................
 
-      // Private Members .....................................................
+    // Private Members .....................................................
 
-      // the following are summed in the EffectCalculate()
-      // function call and reset from EffectAdvancePosition().
-      int m_CombinedRotation;
-      int m_CombinedSpeed;
-      int m_CombinedDirection;
+    // the following are summed in the EffectCalculate()
+    // function call and reset from EffectAdvancePosition().
+    int m_CombinedRotation;
+    int m_CombinedSpeed;
+    int m_CombinedDirection;
 
-      // current position in the effect table
-      int m_CurrentPosition;
+    // current position in the effect table
+    int m_CurrentPosition;
 
-      // the updateID gets incremented each update cycle. We need this id to
-      // check if EffectAdvancePosition gets called muliple times in one 
-      // update cycle
-      uint32 m_LastUpdateID;
+    // the updateID gets incremented each update cycle. We need this id to
+    // check if EffectAdvancePosition gets called muliple times in one
+    // update cycle
+    uint32 m_LastUpdateID;
 
-		// Our sin/cos table for rotation
-      static const int m_CosOffset;
-      static const short m_SinTable[];
+    // Our sin/cos table for rotation
+    static const int m_CosOffset;
+    static const short m_SinTable[];
 };
 
 #endif // _EFFECT_H_

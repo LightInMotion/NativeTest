@@ -75,14 +75,6 @@ Cue::Cue (int number)
 
 Cue::~Cue()
 {
-   // delete all EffectData elements associated with the cue
-
-   // for all effect data entries
-//   int effectCount = m_EffectDataList.size();
-//   for( int effectIndex = 0; effectIndex < effectCount; effectIndex++ )
-      // delete the effect data element, don't delete the control pointer
-      // (obviously)
-//      delete m_EffectDataList[effectIndex].m_pEffectData;
 }
 
 
@@ -245,87 +237,86 @@ Cue::updateBuffer (uint8* pOutputBuffer,
     }
 }
 
-#if 0
+
 /*----------------------------------------------------------------------------
-   Cue::CueCalculateEffects
+    Cue::CueCalculateEffects
 
-   This function looks if the effect data list is non empty. If so it walks
-   the list and calls ControlCalculateEffect on all entries.
+    This function looks if the effect data list is non empty. If so it walks
+    the list and calls ControlCalculateEffect on all entries.
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Cue::CueCalculateEffects( int faderLevel )
+Cue::CueCalculateEffects (int faderLevel)
 {
-   // effect date entries
-   int effectCount = m_EffectDataList.size();
+    // effect date entries
+    int effectCount = m_EffectDataList.size();
 
-   // for all (if any) effects in the effect data list
-   for( int effectIndex = 0; effectIndex < effectCount; effectIndex++ )
-   {
-      // call the update effect function on the position control pointer
-      m_EffectDataList[effectIndex].m_pControl->
-         ControlCalculateEffect( m_EffectDataList[effectIndex].m_pEffectData,
-                              faderLevel );
+    // for all (if any) effects in the effect data list
+    for (int effectIndex = 0; effectIndex < effectCount; effectIndex++)
+    {
+        // call the update effect function on the position control pointer
+        m_EffectDataList[effectIndex]->m_pControl->
+            ControlCalculateEffect(m_EffectDataList[effectIndex]->m_pEffectData,
+                                   faderLevel);
    }
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueUpdateEffects
+    Cue::CueUpdateEffects
 
-   This function looks if the effect data list is non empty. If so it walks
-   the list and calls ControlUpdateEffect on all entries. It passes the 
-   output buffer to add the effect data to the already existing dmx data.
+    This function looks if the effect data list is non empty. If so it walks
+    the list and calls ControlUpdateEffect on all entries. It passes the
+    output buffer to add the effect data to the already existing dmx data.
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Cue::CueUpdateEffects( BYTE* pOutputBuffer, 
+Cue::CueUpdateEffects (uint8* pOutputBuffer,
                        int faderLevel )
 {
-   // effect date entries
-   int effectCount = m_EffectDataList.size();
+    // effect date entries
+    int effectCount = m_EffectDataList.size();
 
-   // for all (if any) effects in the effect data list
-   for( int effectIndex = 0; effectIndex < effectCount; effectIndex++ )
+    // for all (if any) effects in the effect data list
+    for (int effectIndex = 0; effectIndex < effectCount; effectIndex++)
    {
-      // call the update effect function on the position control pointer
-      m_EffectDataList[effectIndex].m_pControl->
-         ControlUpdateEffect( pOutputBuffer,
-                              m_EffectDataList[effectIndex].m_pEffectData,
-                              faderLevel );
+       // call the update effect function on the position control pointer
+       m_EffectDataList[effectIndex]->m_pControl->
+            ControlUpdateEffect (pOutputBuffer,
+                                 m_EffectDataList[effectIndex]->m_pEffectData,
+                                 faderLevel);
    }
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueAdvanceEffectPositions
+    Cue::CueAdvanceEffectPositions
 
-   This function walks the effect data list (if non empty) and calls 
-   PosConAdvanceEffectPosition() on all PositionControls in the list.
+    This function walks the effect data list (if non empty) and calls
+    PosConAdvanceEffectPosition() on all PositionControls in the list.
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Cue::CueAdvanceEffectPositions( UINT updateID )
+Cue::CueAdvanceEffectPositions (uint32 updateID)
 {
-   // effect date entries
-   int effectCount = m_EffectDataList.size();
+    // effect date entries
+    int effectCount = m_EffectDataList.size();
 
-   // for all (if any) effects in the effect data list
-   for( int effectIndex = 0; effectIndex < effectCount; effectIndex++ )
-   {
-      // call the advance position function on the position control
-      m_EffectDataList[effectIndex].m_pControl->
-               ControlAdvanceEffectPosition( updateID );
-   }
+    // for all (if any) effects in the effect data list
+    for (int effectIndex = 0; effectIndex < effectCount; effectIndex++)
+    {
+        // call the advance position function on the position control
+        m_EffectDataList[effectIndex]->m_pControl->
+            ControlAdvanceEffectPosition (updateID);
+    }
 }
 
-#endif
 
 // Device Access..............................................................
 /*
@@ -590,48 +581,49 @@ Cue::CueSerialize( IStorage* pStorage ) const
 ----------------------------------------------------------------------------*/
 
 bool 
-Cue::load( ShowFile& show,
-              uint32 version,
-              const OwnedArray<Device>& devicelist )
+Cue::load (ShowFile& show,
+           uint32 version,
+           const OwnedArray<Device>& devicelist,
+           const OwnedArray<EffectPattern>& patterns)
 {
-   uint32 deviceCount = 0;
-   uint32 effectCount = 0;
+    uint32 deviceCount = 0;
+    uint32 effectCount = 0;
 
-   // load basic data from the "Info" stream
-   if( ! loadInfo( show, deviceCount, effectCount ))
-      return false;
+    // load basic data from the "Info" stream
+    if( ! loadInfo (show, deviceCount, effectCount))
+        return false;
 
-   // do we have any devices to load
-   if( deviceCount > 0 )
-   {
-      // load device data 
-      if( ! loadDevices( show, deviceCount, devicelist ))
-         return false;
-   }
+    // do we have any devices to load
+    if (deviceCount > 0)
+    {
+        // load device data
+        if( ! loadDevices( show, deviceCount, devicelist ))
+            return false;
+    }
 
-   // do we have any effect data to load
-//   if( effectCount > 0 )
-//   {
-      // load effect data
-//      if( ! loadEffects( pStorage, effectCount, version ))
-//         return false;
-//   }
+    // do we have any effect data to load
+    if (effectCount > 0)
+    {
+        // load effect data
+        if (! loadEffects (show, effectCount, version, devicelist, patterns))
+            return false;
+    }
 
-   bool result = true;
+    bool result = true;
 
-   // open "Data" stream for cue buffer
-   String oldpath = show.getPath();
+    // open "Data" stream for cue buffer
+    String oldpath = show.getPath();
 
-   if (show.setPath (oldpath + "Data"))
-   {
-      if( ! loadBuffer( show ))
-         result = false;
-   }
-   else
-      result = false;;
+    if (show.setPath (oldpath + "Data"))
+    {
+        if (! loadBuffer (show))
+            result = false;
+    }
+    else
+        result = false;;
 
-   show.setPath (oldpath);
-   return result;
+    show.setPath (oldpath);
+    return result;
 }
 
 
@@ -680,162 +672,135 @@ Cue::clone(
    // and destroyed) and we have to duplicate them here.
 
    // for all existing effect data entries
-#if 0
     int effectCount = m_EffectDataList.size();
-   for( int effectIndex = 0; effectIndex < effectCount; effectIndex++ )
-   {
-      // create new effect data entry, copy the existing data.
-      EffectDataEntry newEntry( m_EffectDataList[effectIndex] );
+    for (int effectIndex = 0; effectIndex < effectCount; effectIndex++)
+    {
+        // create new effect data entry, copy the existing data.
+        ScopedPointer<EffectDataEntry> newEntry =
+            new EffectDataEntry (m_EffectDataList[effectIndex]->m_pControl,
+                                 m_EffectDataList[effectIndex]->m_pEffectData);
 
-      // create new EffectData and assign the pointer to the new effect data
-      // entry.
-      newEntry.m_pEffectData = new EffectData;
-      if( ! newEntry.m_pEffectData )
-         return NULL;
+        // create new EffectData and assign the pointer to the new effect data
+        // entry.
+        newEntry->m_pEffectData = new EffectData;
+        if (! newEntry->m_pEffectData)
+            return NULL;
 
-      // copy the EffectData object
-      *(newEntry.m_pEffectData) = 
-         *(m_EffectDataList[effectIndex].m_pEffectData);
+        // copy the EffectData object
+        *(newEntry->m_pEffectData) =
+            *(m_EffectDataList[effectIndex]->m_pEffectData);
 
-      // add the new EffectDataEntry to the new cue
-      pNewCue->m_EffectDataList.push_back( newEntry );
+        // add the new EffectDataEntry to the new cue
+        pNewCue->m_EffectDataList.add (newEntry);
+        newEntry.release();
    }
-#endif
+
    // return cloned cue
    return pNewCue;
 }
 
 
 // effect data access ........................................................
+
 /*
-   The effect data access functions get called from the UIPositionControl
-   when the user switches effects on or off. The add/remove functions have
-   to be synchronized with the main update thread, since CueUpdateEffects()
-   walks the effect data entry vector which gets modified from the add/remove
-   functions.
+    The effect data access functions get called from the UIPositionControl
+    when the user switches effects on or off. The add/remove functions have
+    to be synchronized with the main update thread, since CueUpdateEffects()
+    walks the effect data entry vector which gets modified from the add/remove
+    functions.
 */
 
-#if 0
 /*----------------------------------------------------------------------------
-   Cue::CueAddEffectData
+    Cue::CueAddEffectData
 
-   Add a new effect data entry to the vector. This function has to be 
-   synchronized with the main update thread. This function is called from 
-   the UIPositionControl.
+    Add a new effect data entry to the vector. This function has to be
+    synchronized with the main update thread. This function is called from
+    the UIPositionControl.
 
-   Each position control can only have exactly one effect data entry. This
-   function doesn't check if an effect data entry already exists, therefor
-   the caller has to make sure to only call this function if no effect 
-   exists yet.
+    Each position control can only have exactly one effect data entry. This
+    function doesn't check if an effect data entry already exists, therefor
+    the caller has to make sure to only call this function if no effect
+    exists yet.
 
-   Returns: pointer to the new allocated EffectData
+    Returns: pointer to the new allocated EffectData
 ----------------------------------------------------------------------------*/
 
 EffectData* 
-Cue::CueAddEffectData( 
-   Control* pControl,         // pointer to the PositionControl
-   EffectPattern* pPattern)   // effect pattern to add.
+Cue::CueAddEffectData (Control* pControl,       // pointer to the PositionControl
+                       EffectPattern* pPattern) // effect pattern to add.
 {
-   // create new effect data, using the default setting for speed, gain
-   // and rotation.
-   EffectData* pNewEffectData = new EffectData( pPattern );
-   if( ! pNewEffectData )
-      return NULL;
+    // create new effect data, using the default setting for speed, gain
+    // and rotation.
+    EffectData* pNewEffectData = new EffectData (pPattern);
+    if (! pNewEffectData)
+        return NULL;
 
-   // we need to synchronize the add/remove with the main update thread
-   // since the update function walks the same vector at the same time.
-   MainGetDeletionCriticalSection();
-   {
-      // add new effect data entry
-      m_EffectDataList.push_back( EffectDataEntry(pControl, pNewEffectData));
-   }
-   MainReleaseDeletionCriticalSection();
+    // List is protected with a critical section, so we don't fight update
+    m_EffectDataList.add (new EffectDataEntry(pControl, pNewEffectData));
 
-   // return new effect data pointer
-   return pNewEffectData;
+    // return new effect data pointer
+    return pNewEffectData;
 }
 
-
 /*----------------------------------------------------------------------------
-   Cue::CueRemoveEffectData
+    Cue::CueRemoveEffectData
 
-   This function removes the effect from the given position control. It gets
-   called from the UI position control and has to be synchronized with the 
-   main update thread.
+    This function removes the effect from the given position control. It gets
+    called from the UI position control and has to be synchronized with the
+    main update thread.
 
-   This function is also called from removeDevice() to make sure we don't 
-   have any invalid entries in the effect data list after deleting a device.
+    This function is also called from removeDevice() to make sure we don't
+    have any invalid entries in the effect data list after deleting a device.
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Cue::CueRemoveEffectData( 
-   const Control* pControl )// position control containing the effect to 
-                            // remove
+Cue::CueRemoveEffectData (const Control* pControl)  // position control containing
+                                                    // the effect to remove
 {
-   // we need to synchronize the add/remove with the main update thread
-   // since the update function walks the same vector at the same time.
-   MainGetDeletionCriticalSection();
-   {
-      // for all effect data entries (all effects used for that cue)
-      int effectCount = m_EffectDataList.size();
-      for( int effectIndex = 0; effectIndex < effectCount; effectIndex++ )
-      {
-         // compare the control pointer with the given control pointer
-         if( m_EffectDataList[effectIndex].m_pControl == pControl )
-         {
-            // delete the effect data element
-            delete m_EffectDataList[effectIndex].m_pEffectData;
-
-            // remove the effect data entry element from the vector
-            m_EffectDataList.erase( m_EffectDataList.begin() + effectIndex );
-
-            // exit for loop
+    // for all effect data entries (all effects used for that cue)
+    int effectCount = m_EffectDataList.size();
+    for (int effectIndex = 0; effectIndex < effectCount; effectIndex++)
+    {
+        // compare the control pointer with the given control pointer
+        if( m_EffectDataList[effectIndex]->m_pControl == pControl )
+        {
+            // List is critical section protected
+            m_EffectDataList.remove(effectIndex);
             break;
-         }
-      }
-   }
-   MainReleaseDeletionCriticalSection();
+        }
+    }
 }
 
 
 /*----------------------------------------------------------------------------
-   Cue::CueFindEffectData
+    Cue::CueFindEffectData
 
-   This function gets called from the UIPositionControl in order to initialize
-   itself. The UIPositionControl has to know if an effect is turned on or not.
-   That's what this function is for.
+    This function gets called from the UIPositionControl in order to initialize
+    itself. The UIPositionControl has to know if an effect is turned on or not.
+    That's what this function is for.
 
-   Returns: EffectData pointer if an entry exists for this position control,
-            NULL if no effect is turned on.
+    Returns: EffectData pointer if an entry exists for this position control,
+             NULL if no effect is turned on.
 ----------------------------------------------------------------------------*/
 
 EffectData* 
-Cue::CueFindEffectData( 
-   const Control* pControl ) const // position control to check the effect 
-                                   // data entry for.
+Cue::CueFindEffectData (const Control* pControl) const
 {
-   // this function doesn't add or remove any effect data entries from our
-   // vector, therefor we don't have to halt the main update thread while
-   // we search/access the vector. The vector is multithread save (at least
-   // if you compile with the multithread standard library)
-
-   // for all effect data entries (all effects used for that cue)
-   int effectCount = m_EffectDataList.size();
-   for( int effectIndex = 0; effectIndex < effectCount; effectIndex++ )
-   {
-      // compare the control pointer with the given control pointer
-      if( m_EffectDataList[effectIndex].m_pControl == pControl )
+    // for all effect data entries (all effects used for that cue)
+    int effectCount = m_EffectDataList.size();
+    for (int effectIndex = 0; effectIndex < effectCount; effectIndex++)
+    {
+        // compare the control pointer with the given control pointer
+        if (m_EffectDataList[effectIndex]->m_pControl == pControl )
          // return the effect data pointer 
-         return m_EffectDataList[effectIndex].m_pEffectData;
-   }
+         return m_EffectDataList[effectIndex]->m_pEffectData;
+    }
 
-   // no effect turned on for that position control
-   return NULL;
+    // no effect turned on for that position control
+    return nullptr;
 }
-
-#endif
 
 // Private Functions .........................................................
 
@@ -1102,51 +1067,52 @@ Cue::SerializeEffects( IStorage* pStorage ) const
    return result;
 }
 
+#endif
 
 /*----------------------------------------------------------------------------
-   Cue::loadEffects
+    Cue::loadEffects
 
-   Load effect data from the "Effects" stream
+    Load effect data from the "Effects" stream
 
-   Returns: true or false
+    Returns: true or false
 ----------------------------------------------------------------------------*/
 
 bool 
-Cue::loadEffects( IStorage* pStorage,
-                  DWORD effectCount,   // number of effects to load
-						DWORD version )		// file version being loaded
+Cue::loadEffects (ShowFile& show,
+                  uint32 effectCount,   // number of effects to load
+                  uint32 version,       // file version being loaded
+                  const OwnedArray<Device>& devices,
+                  const OwnedArray<EffectPattern>& patterns)
 {
-   bool result = true;
+    bool result = true;
 
-   // open stream "Effects"
-   IStream* pStreamEffects = FileHelpOpenStream( pStorage, 
-                                                 IDS_FILE_CUE_EFFECTS );
-   if( pStreamEffects )
-   {
-      // for all effects
-      for( DWORD index = 0; index < effectCount; index++ )
-      {
-         EffectDataEntry newEntry;
+    // open stream "Effects"
+    String oldpath = show.getPath();
+    if (show.setPath (oldpath + "Effects"))
+    {
+        // for all effects
+        for (uint32 index = 0; index < effectCount; index++)
+        {
+            ScopedPointer<EffectDataEntry> newEntry = new EffectDataEntry();
 
-         // load the effect data entry and the associated effect data
-         if( ! newEntry.EffDatEntryLoad( pStreamEffects, version ))
-         {
-            // exit for loop
-            result = false;
-            break;
-         }
+            // load the effect data entry and the associated effect data
+            if (! newEntry->EffDatEntryLoad (show, version, devices, patterns))
+            {
+                // exit for loop
+                result = false;
+                break;
+            }
 
-         // add effect data entry to the effect vector
-         m_EffectDataList.push_back( newEntry );
-      }
+            // add effect data entry to the effect vector
+            m_EffectDataList.add (newEntry);
+            newEntry.release();
+        }
+    }
+    else
+        result = false;
 
-      // close stream "Effects"
-      pStreamEffects->Release();
-   }
-   else
-      result = false;
-
-   return result;
+    show.setPath (oldpath);
+    return result;
 }
 
 
@@ -1155,6 +1121,7 @@ Cue::loadEffects( IStorage* pStorage,
    Save and load the cue buffer. We encode the cue buffer to save space
 */
 
+#if 0
 /*----------------------------------------------------------------------------
    Cue::SerializeBuffer
 

@@ -265,6 +265,12 @@
     <ClCompile Include="..\..\Source\Control.cpp">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\EffectDataEntry.cpp">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Effect.cpp">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\EffectPattern.cpp">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClCompile>
@@ -1417,6 +1423,12 @@
       <Filter>NativeTest\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Control.h">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\EffectDataEntry.h">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Effect.h">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\EffectPattern.h">

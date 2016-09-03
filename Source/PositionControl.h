@@ -19,7 +19,7 @@
 // Includes ..................................................................
 
 #include "Control.h"
-// #include "Effect.h"
+#include "Effect.h"
 
 
 // Defines ...................................................................
@@ -56,17 +56,14 @@ public:
                                       int faderLevel,
                                       int GMAdjustedLevel);
 
-#if 0
-    virtual void PositionControl::ControlCalculateEffect(
-													 EffectData* pEffectData,
-                                        int faderLevel );
+    virtual void ControlCalculateEffect (EffectData* pEffectData,
+                                         int faderLevel );
 
-      virtual void ControlUpdateEffect( BYTE* pOutputBuffer,
-                                        EffectData* pEffectData,
-                                        int faderLevel );
+    virtual void ControlUpdateEffect (uint8* pOutputBuffer,
+                                      EffectData* pEffectData,
+                                      int faderLevel);
 
-      virtual void ControlAdvanceEffectPosition( UINT updateID );
-#endif
+    virtual void ControlAdvanceEffectPosition (uint32 updateID );
     
     // member access
     void getValues( bool& resolution,
@@ -90,7 +87,7 @@ private:
     // we always have an effect object associated with an position control
     // but the effect is only active when the cue has an entry in its
     // effect data list.
-//      Effect m_Effect;
+    Effect m_Effect;
 
     // the position control can be either 8 or 16 bit. If the control is set
     // to 8bit then we ignore the fine-channels and use only the coarse

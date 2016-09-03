@@ -28,8 +28,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "ShowFile.h"
 #include "Main.h"
-//#include "Effect.h"
-//#include "EffectDataEntry.h"
+#include "Effect.h"
+#include "EffectDataEntry.h"
 
 class Device;
 class Control;
@@ -70,9 +70,9 @@ public:
                        int faderLevel,
                        int GMAdjustedLevel);
 
-//      void CueCalculateEffects( int faderLevel );
-//      void CueUpdateEffects( BYTE* pOutputBuffer, int faderLevel );
-//      void CueAdvanceEffectPositions( UINT updateID );
+    void CueCalculateEffects (int faderLevel);
+    void CueUpdateEffects (uint8* pOutputBuffer, int faderLevel);
+    void CueAdvanceEffectPositions (uint32 updateID);
 
     // device access
     int getDeviceCount() const;
@@ -87,17 +87,18 @@ public:
 
     // save/load
 //      bool CueSerialize( IStorage* pStorage ) const;
-    bool load (ShowFile& show, uint32 version, const OwnedArray<Device>& devicelist);
+    bool load (ShowFile& show, uint32 version,
+               const OwnedArray<Device>& devicelist,
+               const OwnedArray<EffectPattern>& patterns);
 
     Cue* clone (int newNumber) const;
 
     // effect data access
-//      EffectData* CueAddEffectData( Control* pControl,
-//                                    EffectPattern* pPattern );
+    EffectData* CueAddEffectData(Control* pControl,
+                                 EffectPattern* pPattern);
 
-//      void CueRemoveEffectData( const Control* pControl );
-//      EffectData* CueFindEffectData( const Control* pControl ) const;
-
+    void CueRemoveEffectData (const Control* pControl);
+    EffectData* CueFindEffectData( const Control* pControl ) const;
 
     static Cue dummy; // An empty cue
     
@@ -114,7 +115,9 @@ private:
 //      bool SerializeDevices( IStorage* pStorage ) const;
     bool loadDevices (ShowFile& show, uint32 deviceCount, const OwnedArray<Device>& devicelist);
 //      bool SerializeEffects( IStorage* pStorage ) const;
-    bool loadEffects (ShowFile& show, uint32 effectCount, uint32 version );
+    bool loadEffects (ShowFile& show, uint32 effectCount, uint32 version,
+                      const OwnedArray<Device>& devices,
+                      const OwnedArray<EffectPattern>& patterns);
 
     // save/load buffer
 //      bool SerializeBuffer( IStream* pStream ) const;
@@ -143,7 +146,7 @@ private:
     Array<Device*> m_DeviceList;
 
     // vector of effect data entries.
-//      Array<EffectDataEntry> m_EffectDataList;
+    OwnedArray<EffectDataEntry, CriticalSection> m_EffectDataList;
 };
 
 #endif // _CUE_H_

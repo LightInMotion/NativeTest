@@ -63,6 +63,8 @@ OBJECTS := \
   $(OBJDIR)/SelectControl_4f0a8ba2.o \
   $(OBJDIR)/FaderControl_3a0de810.o \
   $(OBJDIR)/Control_9e19bf3e.o \
+  $(OBJDIR)/EffectDataEntry_dafadd38.o \
+  $(OBJDIR)/Effect_8fa2a89a.o \
   $(OBJDIR)/EffectPattern_aeeafca0.o \
   $(OBJDIR)/TimeComponent_5ed54811.o \
   $(OBJDIR)/DmxOutComponent_f607555f.o \
@@ -162,6 +164,16 @@ $(OBJDIR)/FaderControl_3a0de810.o: ../../Source/FaderControl.cpp
 $(OBJDIR)/Control_9e19bf3e.o: ../../Source/Control.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Control.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/EffectDataEntry_dafadd38.o: ../../Source/EffectDataEntry.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling EffectDataEntry.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Effect_8fa2a89a.o: ../../Source/Effect.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Effect.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/EffectPattern_aeeafca0.o: ../../Source/EffectPattern.cpp

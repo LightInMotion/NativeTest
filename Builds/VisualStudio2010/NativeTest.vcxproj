@@ -143,6 +143,8 @@
     <ClCompile Include="..\..\Source\SelectControl.cpp"/>
     <ClCompile Include="..\..\Source\FaderControl.cpp"/>
     <ClCompile Include="..\..\Source\Control.cpp"/>
+    <ClCompile Include="..\..\Source\EffectDataEntry.cpp"/>
+    <ClCompile Include="..\..\Source\Effect.cpp"/>
     <ClCompile Include="..\..\Source\EffectPattern.cpp"/>
     <ClCompile Include="..\..\Source\TimeComponent.cpp"/>
     <ClCompile Include="..\..\Source\DmxOutComponent.cpp"/>
@@ -1172,6 +1174,8 @@
     <ClInclude Include="..\..\Source\SelectControl.h"/>
     <ClInclude Include="..\..\Source\FaderControl.h"/>
     <ClInclude Include="..\..\Source\Control.h"/>
+    <ClInclude Include="..\..\Source\EffectDataEntry.h"/>
+    <ClInclude Include="..\..\Source\Effect.h"/>
     <ClInclude Include="..\..\Source\EffectPattern.h"/>
     <ClInclude Include="..\..\Source\Main.h"/>
     <ClInclude Include="..\..\Source\TimeComponent.h"/>

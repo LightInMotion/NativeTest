@@ -113,9 +113,8 @@ PositionControl::ControlClone() const
     // I don't think we actually need to copy any effect data here because
     // the template editor doesn't change any effect data. Only once the
     // control gets used in the cue editor does the effect object data change.
-#if 0
     pNewControl->m_Effect = m_Effect;
-#endif
+
     return pNewControl;
 }
 
@@ -264,100 +263,97 @@ PositionControl::ControlUpdateBuffer(
     }
 }
 
-
-#if 0
 /*----------------------------------------------------------------------------
-   PositionControl::ControlUpdateEffect
+    PositionControl::ControlUpdateEffect
 
-   This call gives the effects a chance to properly combine virtual settings,
+    This call gives the effects a chance to properly combine virtual settings,
 	like speed and rotation, before actually using them to alter data in
 	effect update
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
 PositionControl::ControlCalculateEffect( EffectData* pEffectData,
                                          int faderLevel )
 {
-   // call the update function on the effect
-   m_Effect.EffectCalculate( pEffectData, faderLevel );
+    // call the update function on the effect
+    m_Effect.EffectCalculate (pEffectData, faderLevel);
 }
 
 /*----------------------------------------------------------------------------
-   PositionControl::ControlUpdateEffect
+    PositionControl::ControlUpdateEffect
 
-   We check if the position control is set to 2 or 4 channels (one or two
-   channels per axis) and call the EffectUpdate() function. All the effect
-   calculation is done in the effect class.
+    We check if the position control is set to 2 or 4 channels (one or two
+    channels per axis) and call the EffectUpdate() function. All the effect
+    calculation is done in the effect class.
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-PositionControl::ControlUpdateEffect( BYTE* pOutputBuffer,
+PositionControl::ControlUpdateEffect (uint8* pOutputBuffer,
                                       EffectData* pEffectData,
                                       int faderLevel )
 {
-   // get the coarse position for the output buffer
+    // get the coarse position for the output buffer
 
-   WORD xPosOutput = 
-      *(pOutputBuffer + m_DeviceBaseAddress + m_PanCoarseChannelOffset ) << 8;
+    int16 xPosOutput =
+        *(pOutputBuffer + m_DeviceBaseAddress + m_PanCoarseChannelOffset ) << 8;
 
-   WORD yPosOutput = 
-      *(pOutputBuffer + m_DeviceBaseAddress + m_TiltCoarseChannelOffset ) <<8;
+    int16 yPosOutput =
+        *(pOutputBuffer + m_DeviceBaseAddress + m_TiltCoarseChannelOffset ) <<8;
 
-   // do we have 16bit resolution. If not we ignore the fine channels
-   if( m_16BitResolution )
-   {
-      // add the fine values
+    // do we have 16bit resolution. If not we ignore the fine channels
+    if( m_16BitResolution )
+    {
+        // add the fine values
 
-      xPosOutput += 
-         *(pOutputBuffer + m_DeviceBaseAddress + m_PanFineChannelOffset );
+        xPosOutput +=
+            *(pOutputBuffer + m_DeviceBaseAddress + m_PanFineChannelOffset );
 
-      yPosOutput += 
-         *(pOutputBuffer + m_DeviceBaseAddress + m_TiltFineChannelOffset );
-   }
+        yPosOutput +=
+            *(pOutputBuffer + m_DeviceBaseAddress + m_TiltFineChannelOffset );
+    }
 
-   // call the update function on the effect
-   m_Effect.EffectUpdate( xPosOutput, yPosOutput, pEffectData, faderLevel );
+    // call the update function on the effect
+    m_Effect.EffectUpdate (xPosOutput, yPosOutput, pEffectData, faderLevel);
 
-   *(pOutputBuffer + m_DeviceBaseAddress + m_PanCoarseChannelOffset ) =
-      (BYTE)( xPosOutput >> 8 );
+    *(pOutputBuffer + m_DeviceBaseAddress + m_PanCoarseChannelOffset ) =
+        (uint8)( xPosOutput >> 8 );
 
-   *(pOutputBuffer + m_DeviceBaseAddress + m_TiltCoarseChannelOffset ) =
-      (BYTE)( yPosOutput >> 8 );
+    *(pOutputBuffer + m_DeviceBaseAddress + m_TiltCoarseChannelOffset ) =
+        (uint8)( yPosOutput >> 8 );
 
-   // do we use 16bit
-   if( m_16BitResolution )
-   {
-      // move the fine values back to the output buffer
+    // do we use 16bit
+    if( m_16BitResolution )
+    {
+        // move the fine values back to the output buffer
 
-      *(pOutputBuffer + m_DeviceBaseAddress + m_PanFineChannelOffset ) =
-         (BYTE)( xPosOutput );
+        *(pOutputBuffer + m_DeviceBaseAddress + m_PanFineChannelOffset ) =
+            (uint8)( xPosOutput );
 
-      *(pOutputBuffer + m_DeviceBaseAddress + m_TiltFineChannelOffset ) =
-         (BYTE)( yPosOutput );
+        *(pOutputBuffer + m_DeviceBaseAddress + m_TiltFineChannelOffset ) =
+            (uint8)( yPosOutput );
    }
 }
 
 
 /*----------------------------------------------------------------------------
-   PositionControl::ControlAdvanceEffectPosition
+    PositionControl::ControlAdvanceEffectPosition
 
-   Advance the effect position. Call EffectAdvancePosition().
+    Advance the effect position. Call EffectAdvancePosition().
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-PositionControl::ControlAdvanceEffectPosition( unsigned int updateID )
+PositionControl::ControlAdvanceEffectPosition (uint32 updateID)
 {
    // call the advance position in the effect object
    m_Effect.EffectAdvancePosition( updateID );
 }
 
-#endif 
 
 // member access..............................................................
 /*

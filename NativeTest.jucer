@@ -116,6 +116,12 @@
       <FILE id="pPLG5x" name="FaderControl.h" compile="0" resource="0" file="Source/FaderControl.h"/>
       <FILE id="b51hJg" name="Control.h" compile="0" resource="0" file="Source/Control.h"/>
       <FILE id="BkOAhP" name="Control.cpp" compile="1" resource="0" file="Source/Control.cpp"/>
+      <FILE id="pNSjEz" name="EffectDataEntry.cpp" compile="1" resource="0"
+            file="Source/EffectDataEntry.cpp"/>
+      <FILE id="qsRkJv" name="EffectDataEntry.h" compile="0" resource="0"
+            file="Source/EffectDataEntry.h"/>
+      <FILE id="j9Jz0H" name="Effect.cpp" compile="1" resource="0" file="Source/Effect.cpp"/>
+      <FILE id="ivXtqv" name="Effect.h" compile="0" resource="0" file="Source/Effect.h"/>
       <FILE id="M0yyKT" name="EffectPattern.cpp" compile="1" resource="0"
             file="Source/EffectPattern.cpp"/>
       <FILE id="ZlVhlP" name="EffectPattern.h" compile="0" resource="0" file="Source/EffectPattern.h"/>
