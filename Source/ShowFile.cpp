@@ -112,6 +112,17 @@ bool ShowFile::readInt (int32& i)
     return false;
 }
 
+bool ShowFile::readShort (int16& i)
+{
+    uint32 bytesread;
+    
+    if (readBytes ((uint8 *)(&i), sizeof (i), bytesread))
+        if (bytesread == sizeof (i))
+            return true;
+    
+    return false;
+}
+
 bool ShowFile::readByte (uint8& b)
 {
     uint32 bytesread;

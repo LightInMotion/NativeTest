@@ -265,6 +265,9 @@
     <ClCompile Include="..\..\Source\Control.cpp">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\EffectPattern.cpp">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\TimeComponent.cpp">
       <Filter>NativeTest\UI\Test Tabs</Filter>
     </ClCompile>
@@ -1414,6 +1417,9 @@
       <Filter>NativeTest\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Control.h">
+      <Filter>NativeTest\DMX Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\EffectPattern.h">
       <Filter>NativeTest\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Main.h">

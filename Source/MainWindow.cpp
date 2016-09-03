@@ -13,6 +13,7 @@
 #include "Device.h"
 #include "Cue.h"
 #include "Fader.h"
+#include "EffectPattern.h"
 
 void visit( int indent, POLE::Storage* storage, String path )
 {
@@ -100,6 +101,23 @@ MainAppWindow::MainAppWindow()
     storage->open();
     if( storage->result() == POLE::Storage::Ok )
         visit( 0, storage, "/" );
+    
+    File f("~/X1Effects/");
+    Array<File> effectFiles;
+    f.findChildFiles (effectFiles, File::findFiles, false, "*.eff");
+    
+    OwnedArray<EffectPattern> effectPatterns;
+    
+    for (int i = 0; i < effectFiles.size(); ++i)
+    {
+        ScopedPointer<EffectPattern> pattern = new EffectPattern;
+        
+        if (pattern->EffectPatLoad (effectFiles[i].getFullPathName()))
+        {
+            effectPatterns.add (pattern);
+            pattern.release();
+        }
+    }
     
     ShowFile show("/Users/jfitzpat/X1Test.x1");
     if (show.open())

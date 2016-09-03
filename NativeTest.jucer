@@ -116,6 +116,9 @@
       <FILE id="pPLG5x" name="FaderControl.h" compile="0" resource="0" file="Source/FaderControl.h"/>
       <FILE id="b51hJg" name="Control.h" compile="0" resource="0" file="Source/Control.h"/>
       <FILE id="BkOAhP" name="Control.cpp" compile="1" resource="0" file="Source/Control.cpp"/>
+      <FILE id="M0yyKT" name="EffectPattern.cpp" compile="1" resource="0"
+            file="Source/EffectPattern.cpp"/>
+      <FILE id="ZlVhlP" name="EffectPattern.h" compile="0" resource="0" file="Source/EffectPattern.h"/>
       <FILE id="fUA2Pl" name="Main.h" compile="0" resource="0" file="Source/Main.h"/>
     </GROUP>
     <GROUP id="{DE0EFEC2-E357-A5DF-7171-6764ED593CB5}" name="UI">

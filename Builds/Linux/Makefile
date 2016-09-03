@@ -63,6 +63,7 @@ OBJECTS := \
   $(OBJDIR)/SelectControl_4f0a8ba2.o \
   $(OBJDIR)/FaderControl_3a0de810.o \
   $(OBJDIR)/Control_9e19bf3e.o \
+  $(OBJDIR)/EffectPattern_aeeafca0.o \
   $(OBJDIR)/TimeComponent_5ed54811.o \
   $(OBJDIR)/DmxOutComponent_f607555f.o \
   $(OBJDIR)/DmxInComponent_e1f85bd2.o \
@@ -161,6 +162,11 @@ $(OBJDIR)/FaderControl_3a0de810.o: ../../Source/FaderControl.cpp
 $(OBJDIR)/Control_9e19bf3e.o: ../../Source/Control.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Control.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/EffectPattern_aeeafca0.o: ../../Source/EffectPattern.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling EffectPattern.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/TimeComponent_5ed54811.o: ../../Source/TimeComponent.cpp

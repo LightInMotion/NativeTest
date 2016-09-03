@@ -1,12 +1,5 @@
 /*
-   File Info:
-
-      $Workfile:   effectpattern.h  $
-      $Author:   JOE  $
-      $Revision:   1.0  $
-      $Modtime:   13 Jul 2004 18:01:00  $
-
-   Module Description:
+    Module Description:
 
 	This module is an 'effect pattern', basically a shape scanned by the
 	effect class.  It knows how to load itself from a filename, or from
@@ -22,7 +15,8 @@
 
 // Includes ..................................................................
 
-#include <string>
+#include "../JuceLibraryCode/JuceHeader.h"
+#include "ShowFile.h"
 
 
 // Defines ...................................................................
@@ -37,12 +31,12 @@ const int EFFECT_PAT_MAX_POINT = 3000;	// All patterns are fixed size
 class EffectPoint
 {
 public:
-   EffectPoint(){};
-   ~EffectPoint(){};
+    EffectPoint(){};
+    ~EffectPoint(){};
 
-   // XY pair
-   short m_X;
-   short m_Y;
+    // XY pair
+    short m_X;
+    short m_Y;
 };
 
 
@@ -50,36 +44,35 @@ public:
 
 class EffectPattern
 {
-	friend class Effect;
+friend class Effect;
 
-	public:
-		EffectPattern(){}
-		~EffectPattern(){};
+public:
+    EffectPattern(){}
+    ~EffectPattern(){};
 
-		// Public Interface ....................................................
-		bool EffectPatLoad( LPCTSTR pFile );
+    // Public Interface ....................................................
+    bool EffectPatLoad (String pFile);
 
-		void EffectPatGetGuid(GUID &guid);
-		void EffectPatGetName(std::wstring &name);
+    void EffectPatGetGuid(Uuid &guid);
+    String EffectPatGetName();
 
-	private:
+private:
 
-		// Private Functions ...................................................
-		// Effect file access
-		IStorage* OpenFileForRead( LPCTSTR pFile );
-		bool VerifyVersion( IStorage* pStorage );
-		bool ReadInfo( IStorage* pStorage );
-		bool ReadPoints( IStorage* pStorage );
+    // Private Functions ...................................................
+    // Effect file access
+    bool VerifyVersion (ShowFile& show);
+    bool ReadInfo (ShowFile& show);
+    bool ReadPoints (ShowFile& show);
 
-		// Private Members .....................................................
+    // Private Members .....................................................
 
-		GUID m_Guid;
-		std::wstring m_Name;
+    Uuid m_Guid;
+    String m_Name;
 
-		// Semi Private Members ................................................
-		// Accessed by Friend class Effect (yuck)
-		short m_EffectPatCount;
-		EffectPoint m_EffectPatData[EFFECT_PAT_MAX_POINT];
+    // Semi Private Members ................................................
+    // Accessed by Friend class Effect (yuck)
+    short m_EffectPatCount;
+    EffectPoint m_EffectPatData[EFFECT_PAT_MAX_POINT];
 };
 
 

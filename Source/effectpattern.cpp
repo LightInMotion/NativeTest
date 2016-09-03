@@ -1,12 +1,5 @@
 /*
-   File Info:
-
-      $Workfile:   effectpattern.cpp  $
-      $Author:   JOE  $
-      $Revision:   1.0  $
-      $Modtime:   30 Aug 2004 12:52:28  $
-
-   Module Description:
+    Module Description:
 
 	This module is an 'effect pattern', basically a shape scanned by the
 	effect class.  It knows how to load itself from a filename, or from
@@ -18,18 +11,16 @@
 
 // Includes ..................................................................
 
-#include "EffectPattern.h"		// Our stuff
-#include "filehelper.h"
-#include "resource.h"
+#include "EffectPattern.h"
 
 
 // Local Defines .............................................................
 
 // effect file versions.
-const DWORD _EFFECT_FILE_VERSION_1_00    = 0x0100;
+const uint32 _EFFECT_FILE_VERSION_1_00    = 0x0100;
 
 // current version
-const DWORD _EFFECT_FILE_VERSION_CURRENT = _EFFECT_FILE_VERSION_1_00;
+const uint32 _EFFECT_FILE_VERSION_CURRENT = _EFFECT_FILE_VERSION_1_00;
 
 
 // Local Data Types ..........................................................
@@ -41,42 +32,38 @@ const DWORD _EFFECT_FILE_VERSION_CURRENT = _EFFECT_FILE_VERSION_1_00;
 // Public Interface ..........................................................
 
 /*
-	A pattern is asked to load itself from disk here.
+    A pattern is asked to load itself from disk here.
 */
 
 /*----------------------------------------------------------------------------
-   EffectPattern::EffectPatLoad
+    EffectPattern::EffectPatLoad
 
-   Load an individual pattern from a file
+    Load an individual pattern from a file
 
-   Returns: true or false
+    Returns: true or false
 ----------------------------------------------------------------------------*/
 
 bool
-EffectPattern::EffectPatLoad( LPCTSTR pFile )
+EffectPattern::EffectPatLoad (String file)
 {
-	IStorage *pStorage;
+    bool result = false;
+    
+    ShowFile show (file);
 	
-	pStorage = OpenFileForRead(pFile);
-
-	if (pStorage != NULL)
-	{
+    if (show.open())
+    {
 		// If we got here, it is structured storage and
 		// is supposed to be an EffectFile
 		// Try to read the info and points
-		if (ReadInfo(pStorage) == true)
-		{
-			if (ReadPoints(pStorage) == true)
-			{
-				pStorage->Release();
-				return true;
-			}
-		}
+        if (VerifyVersion(show) == true)
+            if (ReadInfo (show) == true)
+                if (ReadPoints (show) == true)
+                    result = true;
 
-		pStorage->Release();
+        show.close();
 	}
 
-	return false;
+    return result;
 }
 
 
@@ -87,7 +74,7 @@ EffectPattern::EffectPatLoad( LPCTSTR pFile )
 ----------------------------------------------------------------------------*/
 
 void
-EffectPattern::EffectPatGetGuid( GUID &guid )	// OUT:  Guid to retrieve
+EffectPattern::EffectPatGetGuid (Uuid &guid )	// OUT:  Guid to retrieve
 {
 	guid = m_Guid;
 }
@@ -99,55 +86,19 @@ EffectPattern::EffectPatGetGuid( GUID &guid )	// OUT:  Guid to retrieve
 	Fetch the Name for a pattern
 ----------------------------------------------------------------------------*/
 
-void
-EffectPattern::EffectPatGetName(std::wstring &name ) // OUT: Name
+String
+EffectPattern::EffectPatGetName ()
 {
-	name = m_Name;
+    return m_Name;
 }
 
 
 // Effect File Helpers .......................................................
 
 /*
-	This bundles up the structured storage stuff and version checking, etc.
-	for effect files
+    This bundles up the structured storage stuff and version checking, etc.
+    for effect files
 */
-
-/*----------------------------------------------------------------------------
-   EffectPattern::OpenFileForRead
-
-   Open the effect file for reading. This function is called from LoadPattern()
-	We also check for the file version here
-
-   Returns: root storage pointer or NULL if failed
-----------------------------------------------------------------------------*/
-
-IStorage* 
-EffectPattern::OpenFileForRead( LPCTSTR pFile )
-{
-   // open structure storage file with read access
-   IStorage* pStorage = NULL;
-   if( StgOpenStorageEx( pFile, 
-                         STGM_READ | STGM_SHARE_DENY_WRITE | STGM_DIRECT,// STGM_SHARE_EXCLUSIVE 
-                         STGFMT_STORAGE,
-                         0,
-                         NULL,
-                         0,
-                         IID_IStorage,
-                         (void**)&pStorage ) == S_OK )
-   {
-      // verify the template version and return the storage object
-      if( VerifyVersion( pStorage ))
-         return pStorage;
-      else
-      {
-         pStorage->Release();
-         return NULL;
-      }
-   }
-
-   return NULL;
-}
 
 
 /*----------------------------------------------------------------------------
@@ -160,37 +111,32 @@ EffectPattern::OpenFileForRead( LPCTSTR pFile )
 ----------------------------------------------------------------------------*/
 
 bool 
-EffectPattern::VerifyVersion( IStorage* pStorage )
+EffectPattern::VerifyVersion (ShowFile& show)
 {
-   bool result = true;
+    bool result = false;
 
-   // open version stream
-   IStream* pStreamVersion = FileHelpOpenStream( pStorage, 
-                                                 IDS_EFFECT_FILE_VERSION );
-   if( pStreamVersion )
-   {
-      // load effect file version
-      DWORD fileVersion = 0;
-      if( FileHelpReadDWORD( pStreamVersion, fileVersion ))
-      {
-         // verify the version. Currently we have only one template file
-         // version and we don't support any other version.
-         // Should we change the file format in a later version then we
-         // have to be able to load new and old versions.
+    // Save Path
+    String oldpath = show.getPath();
 
-         if( fileVersion != _EFFECT_FILE_VERSION_CURRENT )
-            result = false;
-      }
-      else
-         result = false;
+    // open version stream
+    if (show.setPath (oldpath + "EffectX1"))
+    {
+        // load effect file version
+        uint32 fileVersion = 0;
+        if (show.readDword (fileVersion))
+        {
+            // verify the version. Currently we have only one effect file
+            // version and we don't support any other version.
+            // Should we change the file format in a later version then we
+            // have to be able to load new and old versions.
 
-      // close version stream
-      pStreamVersion->Release();
-   }
-   else
-      result = false;
+            if (fileVersion == _EFFECT_FILE_VERSION_CURRENT)
+                result = true;
+        }
+    }
 
-   return result;
+    show.setPath (oldpath);
+    return result;
 }
 
 
@@ -203,88 +149,67 @@ EffectPattern::VerifyVersion( IStorage* pStorage )
 ----------------------------------------------------------------------------*/
 
 bool 
-EffectPattern::ReadInfo( IStorage* pStorage )			// Open file
+EffectPattern::ReadInfo (ShowFile& show)			// Open file
 {
-   bool result = true;
+    bool result = false;
 
-   // open info stream
-   IStream* pStreamInfo = FileHelpOpenStream( pStorage, 
-                                              IDS_EFFECT_FILE_INFO );
-   if( pStreamInfo )
-   {
-		do
-		{
-			HRESULT hr;
-			DWORD bread;
+    // Save Path
+    String oldpath = show.getPath();
 
-			// Load the GUID
-			hr = pStreamInfo->Read(&(m_Guid), sizeof(GUID), &bread);
-			if ( (hr != S_OK) || (bread != sizeof(GUID)) )
-			{
-				result = false;
-				break;
-			}
+    // open info stream
+    if (show.setPath (oldpath + "Info"))
+    {
+        do
+        {
+            // Load the GUID
+            if (! show.readGuid(m_Guid))
+                break;
 
 			// Load the Count
-			hr = pStreamInfo->Read(&(m_EffectPatCount), sizeof(short), &bread);
-			if ( (hr != S_OK) || (bread != sizeof(short)) || 
-				  (m_EffectPatCount < 0) || (m_EffectPatCount != EFFECT_PAT_MAX_POINT) )
-			{
-				result = false;
-				break;
-			}
+            if (! show.readShort(m_EffectPatCount) || m_EffectPatCount != EFFECT_PAT_MAX_POINT)
+                break;
 
 			// Read the name
-			if (FileHelpReadString(pStreamInfo, m_Name) == false)
-			{
-				result = false;
+			if (! show.readString (m_Name))
 				break;
-			}
+            
+            result = true;
 
-		} while (0);
+        } while (0);
+    }
 
-      // close info stream
-      pStreamInfo->Release();
-   }
-   else
-      result = false;
-
-   return result;
+    show.setPath (oldpath);
+    return result;
 }
 
 
 /*----------------------------------------------------------------------------
-   EffectPattern::ReadPoints
+    EffectPattern::ReadPoints
 
-   Get the data points from the effect file.
+    Get the data points from the effect file.
 
-   Returns: true or false
+    Returns: true or false
 ----------------------------------------------------------------------------*/
 
 bool 
-EffectPattern::ReadPoints( IStorage* pStorage )				// Open file
+EffectPattern::ReadPoints (ShowFile& show)  // Open file
 {
-   bool result = true;
+    bool result = false;
 
-   // open info stream
-   IStream* pStreamPoints = FileHelpOpenStream( pStorage, 
-                                                IDS_EFFECT_FILE_POINTS );
-   if( pStreamPoints )
-   {
-		HRESULT hr;
-		DWORD bread;
+    // Save Path
+    String oldpath = show.getPath();
+    
+    // open info stream
+    if (show.setPath (oldpath + "Points"))
+    {
+		uint32 bread;
 
 		// Load the Points
 		int count = sizeof(EffectPoint) * m_EffectPatCount;
-		hr = pStreamPoints->Read(&(m_EffectPatData), count, &bread);
-		if ( (hr != S_OK) || (bread != count) )
-			result = false;
-
-      // close point stream
-      pStreamPoints->Release();
-   }
-   else
-      result = false;
-
-   return result;
+		if (show.readBytes ((uint8*)(&m_EffectPatData), count, bread) && bread == count)
+            result = true;
+    }
+    
+    show.setPath (oldpath);
+    return result;
 }

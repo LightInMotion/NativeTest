@@ -37,6 +37,7 @@ public:
     bool readBytes (uint8* outbuf, uint32 readsize, uint32& bytesread);
     bool readDword (uint32& dw);
     bool readInt (int32& i);
+    bool readShort (int16& i);
     bool readBool (bool& b);
     bool readByte (uint8& b);
     bool readString (String& outstring);
