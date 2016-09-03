@@ -73,6 +73,8 @@ private:
     // Accessed by Friend class Effect (yuck)
     short m_EffectPatCount;
     EffectPoint m_EffectPatData[EFFECT_PAT_MAX_POINT];
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EffectPattern)
 };
 
 

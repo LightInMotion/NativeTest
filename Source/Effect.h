@@ -87,6 +87,8 @@ public:
     bool EffectDataLoad (ShowFile& show,
                          uint32 version,
                          const OwnedArray<EffectPattern>& patterns);
+
+    JUCE_LEAK_DETECTOR (EffectData)
 };
 
 // Class Definition ..........................................................
@@ -134,6 +136,8 @@ private:
     // Our sin/cos table for rotation
     static const int m_CosOffset;
     static const short m_SinTable[];
+    
+    JUCE_LEAK_DETECTOR (Effect)
 };
 
 #endif // _EFFECT_H_

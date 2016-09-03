@@ -53,6 +53,8 @@ public:
 
     Control* m_pControl;
     ScopedPointer<EffectData> m_pEffectData;
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EffectDataEntry)
 };
 
 #endif // _EFFECT_DATA_ENTRY_H_

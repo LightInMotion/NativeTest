@@ -110,6 +110,8 @@ class Control
 
       // name
       String m_Name;
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Control)
 };
 
 #endif // _CONTROL_H_

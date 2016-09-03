@@ -102,16 +102,19 @@ FaderControl::~FaderControl()
 Control* 
 FaderControl::ControlClone() const
 {
-   // create new fader control
-   FaderControl* pNewControl = new FaderControl;
+   // create new fader control with existing fader data
+    FaderControl* pNewControl = new FaderControl (m_2Channels,
+                                                  m_HighChannelOffset,
+                                                  m_LowChannelOffset,
+                                                  m_MinValue,
+                                                  m_MaxValue,
+                                                  m_IsReverseFader,
+                                                  m_GMControlled);
    if( ! pNewControl )
       return NULL;
 
    // duplicate all base class members
    ControlCloneAllData( pNewControl );
-
-   // duplicate all fader data
-   *pNewControl = *this;
 
    // return new control pointer
    return pNewControl;

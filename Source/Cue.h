@@ -147,6 +147,8 @@ private:
 
     // vector of effect data entries.
     OwnedArray<EffectDataEntry, CriticalSection> m_EffectDataList;
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Cue)
 };
 
 #endif // _CUE_H_

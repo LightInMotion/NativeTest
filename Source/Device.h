@@ -142,6 +142,8 @@ class Device
     
       // device group. Every device (can) belong(s) to a device group.
       DeviceGroup* m_pDeviceGroup;
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Device)
 };
 
 
