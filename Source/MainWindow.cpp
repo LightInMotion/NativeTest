@@ -122,6 +122,8 @@ MainAppWindow::MainAppWindow()
     ShowFile show("/Users/jfitzpat/X1Test.x1");
     if (show.open())
     {
+        uint32 version = show.getVersion();
+        
         OwnedArray<Device> deviceList;
         OwnedArray<Cue> cueList;
         
@@ -130,7 +132,7 @@ MainAppWindow::MainAppWindow()
         {
             show.setPath ("/Devices/" + String(deviceIndex) + "/");
             ScopedPointer<Device> device = new Device();
-            if (! device->DeviceLoad(show, 1, nullptr))
+            if (! device->DeviceLoad(show, version, nullptr))
                 break;
             
             deviceList.add (device);
@@ -143,7 +145,7 @@ MainAppWindow::MainAppWindow()
         {
             show.setPath ("/Cues/" + String(cueIndex) + "/");
             ScopedPointer<Cue> cue = new Cue();
-            if (! cue->load(show, 1, deviceList, effectPatterns))
+            if (! cue->load(show, version, deviceList, effectPatterns))
                 break;
             
             cueList.add (cue);

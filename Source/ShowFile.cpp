@@ -40,6 +40,23 @@ void ShowFile::close()
 }
 
 //==============================================================================
+// High level access
+//
+uint32 ShowFile::getVersion()
+{
+    uint32 version = 0L;
+    
+    String oldpath = getPath();
+    
+    if (setPath ("/BlueLiteX1"))
+        if (! readDword (version))
+            version = 0L;
+    
+    setPath (oldpath);
+    return version;
+}
+
+//==============================================================================
 // Virtual Path Management
 //
 bool ShowFile::setPath (String path)

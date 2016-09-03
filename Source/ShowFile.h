@@ -27,6 +27,9 @@ public:
     bool open();
     void close();
     
+    // High Level Access
+    uint32 getVersion();
+    
     // Psuedo directory access
     bool setPath (String path);
     String getPath();
