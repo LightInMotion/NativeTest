@@ -29,8 +29,7 @@
 
 //==============================================================================
 ConsoleComponent::ConsoleComponent (BlueLiteDevice::Ptr blueliteDevice_)
-    : Thread ("Console Update Thread"),
-      blueliteDevice (blueliteDevice_)
+    : blueliteDevice (blueliteDevice_)
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -43,9 +42,8 @@ ConsoleComponent::ConsoleComponent (BlueLiteDevice::Ptr blueliteDevice_)
 
 
     //[Constructor] You can add your own custom stuff here..
-    timeEvent = new BlueLiteEvent();
-    blueliteDevice->addTimeEvent (timeEvent.getObject());
-    startThread();
+    console = new Console (blueliteDevice);
+    console->loadShow (File ("/Users/jfitzpat/X1Test.x1"));
     //[/Constructor]
 }
 
@@ -57,12 +55,6 @@ ConsoleComponent::~ConsoleComponent()
 
 
     //[Destructor]. You can add your own custom destruction code here..
-    signalThreadShouldExit();
-    blueliteDevice->removeTimeEvent (timeEvent.getObject());
-    timeEvent->signal();
-    stopThread (-1);
-    
-    timeEvent = nullptr;
     //[/Destructor]
 }
 
@@ -88,15 +80,6 @@ void ConsoleComponent::resized()
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
-void ConsoleComponent::run()
-{
-    while (! threadShouldExit())
-    {
-        timeEvent->wait();
-        if (threadShouldExit())
-            return;
-    }
-}
 //[/MiscUserCode]
 
 
@@ -110,10 +93,10 @@ void ConsoleComponent::run()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="ConsoleComponent" componentName=""
-                 parentClasses="public Component, Thread" constructorParams="BlueLiteDevice::Ptr blueliteDevice_"
-                 variableInitialisers="Thread (&quot;Console Update Thread&quot;),&#10;blueliteDevice (blueliteDevice_)"
-                 snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="0" initialWidth="600" initialHeight="400">
+                 parentClasses="public Component" constructorParams="BlueLiteDevice::Ptr blueliteDevice_"
+                 variableInitialisers="blueliteDevice (blueliteDevice_)" snapPixels="8"
+                 snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
+                 initialWidth="600" initialHeight="400">
   <BACKGROUND backgroundColour="ffffff"/>
 </JUCER_COMPONENT>
 

@@ -1,20 +1,18 @@
 /*
   ==============================================================================
 
-  This is an automatically generated file created by the Jucer!
-
-  Creation date:  29 Mar 2012 10:33:41pm
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Jucer version: 1.12
+  Created with Projucer version: 4.2.3
 
   ------------------------------------------------------------------------------
 
-  The Jucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-6 by Raw Material Software ltd.
+  The Projucer is part of the JUCE library - "Jules' Utility Class Extensions"
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -31,34 +29,13 @@
 //==============================================================================
 DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     : blueliteDevice (blueliteDevice_),
-      dmxData (24),
-      slider1 (0),
-      slider2 (0),
-      slider3 (0),
-      slider4 (0),
-      slider5 (0),
-      slider6 (0),
-      slider7 (0),
-      slider8 (0),
-      slider9 (0),
-      slider10 (0),
-      slider11 (0),
-      slider12 (0),
-      slider13 (0),
-      slider14 (0),
-      slider15 (0),
-      slider16 (0),
-      slider17 (0),
-      slider18 (0),
-      slider19 (0),
-      slider20 (0),
-      slider21 (0),
-      slider22 (0),
-      slider23 (0),
-      slider24 (0)
+      dmxData (24)
 {
-    addAndMakeVisible (slider1 = new Slider (L"slider1"));
-    slider1->setTooltip (L"Channel 1");
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
+    addAndMakeVisible (slider1 = new Slider ("slider1"));
+    slider1->setTooltip (TRANS("Channel 1"));
     slider1->setExplicitFocusOrder (1);
     slider1->setRange (0, 255, 1);
     slider1->setSliderStyle (Slider::LinearVertical);
@@ -66,8 +43,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider1->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider1->addListener (this);
 
-    addAndMakeVisible (slider2 = new Slider (L"slider2"));
-    slider2->setTooltip (L"Channel 2");
+    addAndMakeVisible (slider2 = new Slider ("slider2"));
+    slider2->setTooltip (TRANS("Channel 2"));
     slider2->setExplicitFocusOrder (2);
     slider2->setRange (0, 255, 1);
     slider2->setSliderStyle (Slider::LinearVertical);
@@ -75,8 +52,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider2->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider2->addListener (this);
 
-    addAndMakeVisible (slider3 = new Slider (L"slider3"));
-    slider3->setTooltip (L"Channel 3");
+    addAndMakeVisible (slider3 = new Slider ("slider3"));
+    slider3->setTooltip (TRANS("Channel 3"));
     slider3->setExplicitFocusOrder (3);
     slider3->setRange (0, 255, 1);
     slider3->setSliderStyle (Slider::LinearVertical);
@@ -84,8 +61,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider3->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider3->addListener (this);
 
-    addAndMakeVisible (slider4 = new Slider (L"slider4"));
-    slider4->setTooltip (L"Channel 4");
+    addAndMakeVisible (slider4 = new Slider ("slider4"));
+    slider4->setTooltip (TRANS("Channel 4"));
     slider4->setExplicitFocusOrder (4);
     slider4->setRange (0, 255, 1);
     slider4->setSliderStyle (Slider::LinearVertical);
@@ -93,8 +70,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider4->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider4->addListener (this);
 
-    addAndMakeVisible (slider5 = new Slider (L"slider5"));
-    slider5->setTooltip (L"Channel 5");
+    addAndMakeVisible (slider5 = new Slider ("slider5"));
+    slider5->setTooltip (TRANS("Channel 5"));
     slider5->setExplicitFocusOrder (5);
     slider5->setRange (0, 255, 1);
     slider5->setSliderStyle (Slider::LinearVertical);
@@ -102,8 +79,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider5->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider5->addListener (this);
 
-    addAndMakeVisible (slider6 = new Slider (L"slider6"));
-    slider6->setTooltip (L"Channel 6");
+    addAndMakeVisible (slider6 = new Slider ("slider6"));
+    slider6->setTooltip (TRANS("Channel 6"));
     slider6->setExplicitFocusOrder (6);
     slider6->setRange (0, 255, 1);
     slider6->setSliderStyle (Slider::LinearVertical);
@@ -111,8 +88,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider6->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider6->addListener (this);
 
-    addAndMakeVisible (slider7 = new Slider (L"slider7"));
-    slider7->setTooltip (L"Channel 7");
+    addAndMakeVisible (slider7 = new Slider ("slider7"));
+    slider7->setTooltip (TRANS("Channel 7"));
     slider7->setExplicitFocusOrder (7);
     slider7->setRange (0, 255, 1);
     slider7->setSliderStyle (Slider::LinearVertical);
@@ -120,8 +97,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider7->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider7->addListener (this);
 
-    addAndMakeVisible (slider8 = new Slider (L"slider8"));
-    slider8->setTooltip (L"Channel 8");
+    addAndMakeVisible (slider8 = new Slider ("slider8"));
+    slider8->setTooltip (TRANS("Channel 8"));
     slider8->setExplicitFocusOrder (8);
     slider8->setRange (0, 255, 1);
     slider8->setSliderStyle (Slider::LinearVertical);
@@ -129,8 +106,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider8->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider8->addListener (this);
 
-    addAndMakeVisible (slider9 = new Slider (L"slider9"));
-    slider9->setTooltip (L"Channel 9");
+    addAndMakeVisible (slider9 = new Slider ("slider9"));
+    slider9->setTooltip (TRANS("Channel 9"));
     slider9->setExplicitFocusOrder (9);
     slider9->setRange (0, 255, 1);
     slider9->setSliderStyle (Slider::LinearVertical);
@@ -138,8 +115,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider9->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider9->addListener (this);
 
-    addAndMakeVisible (slider10 = new Slider (L"slider10"));
-    slider10->setTooltip (L"Channel 10");
+    addAndMakeVisible (slider10 = new Slider ("slider10"));
+    slider10->setTooltip (TRANS("Channel 10"));
     slider10->setExplicitFocusOrder (10);
     slider10->setRange (0, 255, 1);
     slider10->setSliderStyle (Slider::LinearVertical);
@@ -147,8 +124,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider10->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider10->addListener (this);
 
-    addAndMakeVisible (slider11 = new Slider (L"slider11"));
-    slider11->setTooltip (L"Channel 11");
+    addAndMakeVisible (slider11 = new Slider ("slider11"));
+    slider11->setTooltip (TRANS("Channel 11"));
     slider11->setExplicitFocusOrder (11);
     slider11->setRange (0, 255, 1);
     slider11->setSliderStyle (Slider::LinearVertical);
@@ -156,8 +133,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider11->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider11->addListener (this);
 
-    addAndMakeVisible (slider12 = new Slider (L"slider12"));
-    slider12->setTooltip (L"Channel 12");
+    addAndMakeVisible (slider12 = new Slider ("slider12"));
+    slider12->setTooltip (TRANS("Channel 12"));
     slider12->setExplicitFocusOrder (12);
     slider12->setRange (0, 255, 1);
     slider12->setSliderStyle (Slider::LinearVertical);
@@ -165,8 +142,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider12->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider12->addListener (this);
 
-    addAndMakeVisible (slider13 = new Slider (L"slider13"));
-    slider13->setTooltip (L"Channel 13");
+    addAndMakeVisible (slider13 = new Slider ("slider13"));
+    slider13->setTooltip (TRANS("Channel 13"));
     slider13->setExplicitFocusOrder (13);
     slider13->setRange (0, 255, 1);
     slider13->setSliderStyle (Slider::LinearVertical);
@@ -174,8 +151,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider13->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider13->addListener (this);
 
-    addAndMakeVisible (slider14 = new Slider (L"slider14"));
-    slider14->setTooltip (L"Channel 14");
+    addAndMakeVisible (slider14 = new Slider ("slider14"));
+    slider14->setTooltip (TRANS("Channel 14"));
     slider14->setExplicitFocusOrder (14);
     slider14->setRange (0, 255, 1);
     slider14->setSliderStyle (Slider::LinearVertical);
@@ -183,8 +160,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider14->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider14->addListener (this);
 
-    addAndMakeVisible (slider15 = new Slider (L"slider15"));
-    slider15->setTooltip (L"Channel 15");
+    addAndMakeVisible (slider15 = new Slider ("slider15"));
+    slider15->setTooltip (TRANS("Channel 15"));
     slider15->setExplicitFocusOrder (15);
     slider15->setRange (0, 255, 1);
     slider15->setSliderStyle (Slider::LinearVertical);
@@ -192,8 +169,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider15->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider15->addListener (this);
 
-    addAndMakeVisible (slider16 = new Slider (L"slider16"));
-    slider16->setTooltip (L"Channel 16");
+    addAndMakeVisible (slider16 = new Slider ("slider16"));
+    slider16->setTooltip (TRANS("Channel 16"));
     slider16->setExplicitFocusOrder (16);
     slider16->setRange (0, 255, 1);
     slider16->setSliderStyle (Slider::LinearVertical);
@@ -201,16 +178,16 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider16->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider16->addListener (this);
 
-    addAndMakeVisible (slider17 = new Slider (L"slider17"));
-    slider17->setTooltip (L"Channel 17");
+    addAndMakeVisible (slider17 = new Slider ("slider17"));
+    slider17->setTooltip (TRANS("Channel 17"));
     slider17->setRange (0, 255, 1);
     slider17->setSliderStyle (Slider::LinearVertical);
     slider17->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
     slider17->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider17->addListener (this);
 
-    addAndMakeVisible (slider18 = new Slider (L"slider18"));
-    slider18->setTooltip (L"Channel 18");
+    addAndMakeVisible (slider18 = new Slider ("slider18"));
+    slider18->setTooltip (TRANS("Channel 18"));
     slider18->setExplicitFocusOrder (18);
     slider18->setRange (0, 255, 1);
     slider18->setSliderStyle (Slider::LinearVertical);
@@ -218,8 +195,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider18->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider18->addListener (this);
 
-    addAndMakeVisible (slider19 = new Slider (L"slider19"));
-    slider19->setTooltip (L"Channel 19");
+    addAndMakeVisible (slider19 = new Slider ("slider19"));
+    slider19->setTooltip (TRANS("Channel 19"));
     slider19->setExplicitFocusOrder (19);
     slider19->setRange (0, 255, 1);
     slider19->setSliderStyle (Slider::LinearVertical);
@@ -227,8 +204,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider19->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider19->addListener (this);
 
-    addAndMakeVisible (slider20 = new Slider (L"slider20"));
-    slider20->setTooltip (L"Channel 20");
+    addAndMakeVisible (slider20 = new Slider ("slider20"));
+    slider20->setTooltip (TRANS("Channel 20"));
     slider20->setExplicitFocusOrder (20);
     slider20->setRange (0, 255, 1);
     slider20->setSliderStyle (Slider::LinearVertical);
@@ -236,8 +213,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider20->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider20->addListener (this);
 
-    addAndMakeVisible (slider21 = new Slider (L"slider21"));
-    slider21->setTooltip (L"Channel 21");
+    addAndMakeVisible (slider21 = new Slider ("slider21"));
+    slider21->setTooltip (TRANS("Channel 21"));
     slider21->setExplicitFocusOrder (21);
     slider21->setRange (0, 255, 1);
     slider21->setSliderStyle (Slider::LinearVertical);
@@ -245,8 +222,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider21->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider21->addListener (this);
 
-    addAndMakeVisible (slider22 = new Slider (L"slider22"));
-    slider22->setTooltip (L"Channel 22");
+    addAndMakeVisible (slider22 = new Slider ("slider22"));
+    slider22->setTooltip (TRANS("Channel 22"));
     slider22->setExplicitFocusOrder (22);
     slider22->setRange (0, 255, 1);
     slider22->setSliderStyle (Slider::LinearVertical);
@@ -254,8 +231,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider22->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider22->addListener (this);
 
-    addAndMakeVisible (slider23 = new Slider (L"slider23"));
-    slider23->setTooltip (L"Channel 23");
+    addAndMakeVisible (slider23 = new Slider ("slider23"));
+    slider23->setTooltip (TRANS("Channel 23"));
     slider23->setExplicitFocusOrder (23);
     slider23->setRange (0, 255, 1);
     slider23->setSliderStyle (Slider::LinearVertical);
@@ -263,8 +240,8 @@ DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)
     slider23->setColour (Slider::thumbColourId, Colour (0xff252525));
     slider23->addListener (this);
 
-    addAndMakeVisible (slider24 = new Slider (L"slider24"));
-    slider24->setTooltip (L"Channel 24");
+    addAndMakeVisible (slider24 = new Slider ("slider24"));
+    slider24->setTooltip (TRANS("Channel 24"));
     slider24->setExplicitFocusOrder (24);
     slider24->setRange (0, 255, 1);
     slider24->setSliderStyle (Slider::LinearVertical);
@@ -290,30 +267,30 @@ DmxOutComponent::~DmxOutComponent()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
-    deleteAndZero (slider1);
-    deleteAndZero (slider2);
-    deleteAndZero (slider3);
-    deleteAndZero (slider4);
-    deleteAndZero (slider5);
-    deleteAndZero (slider6);
-    deleteAndZero (slider7);
-    deleteAndZero (slider8);
-    deleteAndZero (slider9);
-    deleteAndZero (slider10);
-    deleteAndZero (slider11);
-    deleteAndZero (slider12);
-    deleteAndZero (slider13);
-    deleteAndZero (slider14);
-    deleteAndZero (slider15);
-    deleteAndZero (slider16);
-    deleteAndZero (slider17);
-    deleteAndZero (slider18);
-    deleteAndZero (slider19);
-    deleteAndZero (slider20);
-    deleteAndZero (slider21);
-    deleteAndZero (slider22);
-    deleteAndZero (slider23);
-    deleteAndZero (slider24);
+    slider1 = nullptr;
+    slider2 = nullptr;
+    slider3 = nullptr;
+    slider4 = nullptr;
+    slider5 = nullptr;
+    slider6 = nullptr;
+    slider7 = nullptr;
+    slider8 = nullptr;
+    slider9 = nullptr;
+    slider10 = nullptr;
+    slider11 = nullptr;
+    slider12 = nullptr;
+    slider13 = nullptr;
+    slider14 = nullptr;
+    slider15 = nullptr;
+    slider16 = nullptr;
+    slider17 = nullptr;
+    slider18 = nullptr;
+    slider19 = nullptr;
+    slider20 = nullptr;
+    slider21 = nullptr;
+    slider22 = nullptr;
+    slider23 = nullptr;
+    slider24 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -321,7 +298,7 @@ DmxOutComponent::~DmxOutComponent()
 }
 
 //==============================================================================
-void DmxOutComponent::paint (Graphics& /*g*/)
+void DmxOutComponent::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
@@ -332,30 +309,33 @@ void DmxOutComponent::paint (Graphics& /*g*/)
 
 void DmxOutComponent::resized()
 {
-    slider1->setBounds (proportionOfWidth (0.0575f), proportionOfHeight (0.0547f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider2->setBounds (proportionOfWidth (0.1335f), proportionOfHeight (0.0547f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider3->setBounds (proportionOfWidth (0.2115f), proportionOfHeight (0.0547f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider4->setBounds (proportionOfWidth (0.2875f), proportionOfHeight (0.0547f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider5->setBounds (proportionOfWidth (0.3655f), proportionOfHeight (0.0547f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider6->setBounds (proportionOfWidth (0.4415f), proportionOfHeight (0.0547f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider7->setBounds (proportionOfWidth (0.5195f), proportionOfHeight (0.0547f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider8->setBounds (proportionOfWidth (0.5955f), proportionOfHeight (0.0547f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider9->setBounds (proportionOfWidth (0.6735f), proportionOfHeight (0.0547f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider10->setBounds (proportionOfWidth (0.7474f), proportionOfHeight (0.0547f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider11->setBounds (proportionOfWidth (0.8255f), proportionOfHeight (0.0547f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider12->setBounds (proportionOfWidth (0.9014f), proportionOfHeight (0.0547f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider13->setBounds (proportionOfWidth (0.0575f), proportionOfHeight (0.5262f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider14->setBounds (proportionOfWidth (0.1335f), proportionOfHeight (0.5262f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider15->setBounds (proportionOfWidth (0.2115f), proportionOfHeight (0.5262f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider16->setBounds (proportionOfWidth (0.2875f), proportionOfHeight (0.5262f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider17->setBounds (proportionOfWidth (0.3655f), proportionOfHeight (0.5262f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider18->setBounds (proportionOfWidth (0.4415f), proportionOfHeight (0.5262f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider19->setBounds (proportionOfWidth (0.5195f), proportionOfHeight (0.5262f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider20->setBounds (proportionOfWidth (0.5955f), proportionOfHeight (0.5262f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider21->setBounds (proportionOfWidth (0.6735f), proportionOfHeight (0.5262f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider22->setBounds (proportionOfWidth (0.7474f), proportionOfHeight (0.5262f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider23->setBounds (proportionOfWidth (0.8255f), proportionOfHeight (0.5262f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
-    slider24->setBounds (proportionOfWidth (0.9014f), proportionOfHeight (0.5262f), proportionOfWidth (0.0349f), proportionOfHeight (0.4169f));
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
+    slider1->setBounds (proportionOfWidth (0.0579f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider2->setBounds (proportionOfWidth (0.1334f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider3->setBounds (proportionOfWidth (0.2122f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider4->setBounds (proportionOfWidth (0.2878f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider5->setBounds (proportionOfWidth (0.3650f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider6->setBounds (proportionOfWidth (0.4421f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider7->setBounds (proportionOfWidth (0.5193f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider8->setBounds (proportionOfWidth (0.5949f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider9->setBounds (proportionOfWidth (0.6736f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider10->setBounds (proportionOfWidth (0.7476f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider11->setBounds (proportionOfWidth (0.8248f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider12->setBounds (proportionOfWidth (0.9019f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider13->setBounds (proportionOfWidth (0.0579f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider14->setBounds (proportionOfWidth (0.1334f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider15->setBounds (proportionOfWidth (0.2122f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider16->setBounds (proportionOfWidth (0.2878f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider17->setBounds (proportionOfWidth (0.3650f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider18->setBounds (proportionOfWidth (0.4421f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider19->setBounds (proportionOfWidth (0.5193f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider20->setBounds (proportionOfWidth (0.5949f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider21->setBounds (proportionOfWidth (0.6736f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider22->setBounds (proportionOfWidth (0.7476f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider23->setBounds (proportionOfWidth (0.8248f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider24->setBounds (proportionOfWidth (0.9019f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -531,7 +511,7 @@ if (dmxData[index] == 0)
 else if ((uint8)dmxData[index] == 255)
     slider->setColour (Slider::thumbColourId, Colour (0xffbFbFbF));
 else
-    slider->setColour (Slider::thumbColourId, Colour (0xff757575));            
+    slider->setColour (Slider::thumbColourId, Colour (0xff757575));
 }
 
 void DmxOutComponent::sendData()
@@ -545,140 +525,145 @@ void DmxOutComponent::sendData()
 
 //==============================================================================
 #if 0
-/*  -- Jucer information section --
+/*  -- Projucer information section --
 
-    This is where the Jucer puts all of its metadata, so don't change anything in here!
+    This is where the Projucer stores the metadata that describe this GUI layout, so
+    make changes in here at your peril!
 
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="DmxOutComponent" componentName=""
                  parentClasses="public Component" constructorParams="BlueLiteDevice::Ptr blueliteDevice_"
                  variableInitialisers="blueliteDevice (blueliteDevice_),&#10;dmxData (24)"
-                 snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330000013"
+                 snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="0" initialWidth="416" initialHeight="440">
   <BACKGROUND backgroundColour="ffffff"/>
   <SLIDER name="slider1" id="3dd4263526f2660a" memberName="slider1" virtualName=""
-          explicitFocusOrder="1" pos="5.788% 5.484% 3.537% 41.682%" tooltip="Channel 1"
+          explicitFocusOrder="1" pos="5.836% 5.505% 3.448% 41.651%" tooltip="Channel 1"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider2" id="360ef04fca23b799" memberName="slider2" virtualName=""
-          explicitFocusOrder="2" pos="13.344% 5.484% 3.537% 41.682%" tooltip="Channel 2"
+          explicitFocusOrder="2" pos="13.263% 5.505% 3.448% 41.651%" tooltip="Channel 2"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider3" id="580efc4de85d7adc" memberName="slider3" virtualName=""
-          explicitFocusOrder="3" pos="21.222% 5.484% 3.537% 41.682%" tooltip="Channel 3"
+          explicitFocusOrder="3" pos="21.22% 5.505% 3.448% 41.651%" tooltip="Channel 3"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider4" id="f2dde0dd416c1e84" memberName="slider4" virtualName=""
-          explicitFocusOrder="4" pos="28.778% 5.484% 3.537% 41.682%" tooltip="Channel 4"
+          explicitFocusOrder="4" pos="28.647% 5.505% 3.448% 41.651%" tooltip="Channel 4"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider5" id="bfb4535b82185fed" memberName="slider5" virtualName=""
-          explicitFocusOrder="5" pos="36.495% 5.484% 3.537% 41.682%" tooltip="Channel 5"
+          explicitFocusOrder="5" pos="36.605% 5.505% 3.448% 41.651%" tooltip="Channel 5"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider6" id="679f90b8f07cb4ee" memberName="slider6" virtualName=""
-          explicitFocusOrder="6" pos="44.212% 5.484% 3.537% 41.682%" tooltip="Channel 6"
+          explicitFocusOrder="6" pos="44.297% 5.505% 3.448% 41.651%" tooltip="Channel 6"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider7" id="44ad98a2262cd229" memberName="slider7" virtualName=""
-          explicitFocusOrder="7" pos="51.929% 5.484% 3.537% 41.682%" tooltip="Channel 7"
+          explicitFocusOrder="7" pos="51.989% 5.505% 3.448% 41.651%" tooltip="Channel 7"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider8" id="85ff76e13a1ec2a3" memberName="slider8" virtualName=""
-          explicitFocusOrder="8" pos="59.486% 5.484% 3.537% 41.682%" tooltip="Channel 8"
+          explicitFocusOrder="8" pos="59.416% 5.505% 3.448% 41.651%" tooltip="Channel 8"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider9" id="776c3f04e2556496" memberName="slider9" virtualName=""
-          explicitFocusOrder="9" pos="67.363% 5.484% 3.537% 41.682%" tooltip="Channel 9"
+          explicitFocusOrder="9" pos="67.374% 5.505% 3.448% 41.651%" tooltip="Channel 9"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider10" id="3ae59e3cf4f55f86" memberName="slider10" virtualName=""
-          explicitFocusOrder="10" pos="74.759% 5.484% 3.537% 41.682%" tooltip="Channel 10"
+          explicitFocusOrder="10" pos="74.801% 5.505% 3.448% 41.651%" tooltip="Channel 10"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider11" id="79792787596ae791" memberName="slider11" virtualName=""
-          explicitFocusOrder="11" pos="82.476% 5.484% 3.537% 41.682%" tooltip="Channel 11"
+          explicitFocusOrder="11" pos="82.493% 5.505% 3.448% 41.651%" tooltip="Channel 11"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider12" id="71d7be10add7e20b" memberName="slider12" virtualName=""
-          explicitFocusOrder="12" pos="90.193% 5.484% 3.537% 41.682%" tooltip="Channel 12"
+          explicitFocusOrder="12" pos="90.186% 5.505% 3.448% 41.651%" tooltip="Channel 12"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider13" id="f4fec1d538673f4a" memberName="slider13" virtualName=""
-          explicitFocusOrder="13" pos="5.788% 52.651% 3.537% 41.682%" tooltip="Channel 13"
+          explicitFocusOrder="13" pos="5.836% 52.661% 3.448% 41.651%" tooltip="Channel 13"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider14" id="2a85667136c4a974" memberName="slider14" virtualName=""
-          explicitFocusOrder="14" pos="13.344% 52.651% 3.537% 41.682%"
+          explicitFocusOrder="14" pos="13.263% 52.661% 3.448% 41.651%"
           tooltip="Channel 14" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider15" id="dd34e28ad89b9dbd" memberName="slider15" virtualName=""
-          explicitFocusOrder="15" pos="21.222% 52.651% 3.537% 41.682%"
-          tooltip="Channel 15" thumbcol="ff252525" min="0" max="255" int="1"
-          style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <SLIDER name="slider16" id="1800066dd5b0e135" memberName="slider16" virtualName=""
-          explicitFocusOrder="16" pos="28.778% 52.651% 3.537% 41.682%"
-          tooltip="Channel 16" thumbcol="ff252525" min="0" max="255" int="1"
-          style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <SLIDER name="slider17" id="246bcbd8f7c8a43" memberName="slider17" virtualName=""
-          explicitFocusOrder="0" pos="36.495% 52.651% 3.537% 41.682%" tooltip="Channel 17"
+          explicitFocusOrder="15" pos="21.22% 52.661% 3.448% 41.651%" tooltip="Channel 15"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
+  <SLIDER name="slider16" id="1800066dd5b0e135" memberName="slider16" virtualName=""
+          explicitFocusOrder="16" pos="28.647% 52.661% 3.448% 41.651%"
+          tooltip="Channel 16" thumbcol="ff252525" min="0" max="255" int="1"
+          style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
+  <SLIDER name="slider17" id="246bcbd8f7c8a43" memberName="slider17" virtualName=""
+          explicitFocusOrder="0" pos="36.605% 52.661% 3.448% 41.651%" tooltip="Channel 17"
+          thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
+          textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider18" id="b0c57e3500d80cd5" memberName="slider18" virtualName=""
-          explicitFocusOrder="18" pos="44.212% 52.651% 3.537% 41.682%"
+          explicitFocusOrder="18" pos="44.297% 52.661% 3.448% 41.651%"
           tooltip="Channel 18" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider19" id="ae0da53a6fe6f1b9" memberName="slider19" virtualName=""
-          explicitFocusOrder="19" pos="51.929% 52.651% 3.537% 41.682%"
+          explicitFocusOrder="19" pos="51.989% 52.661% 3.448% 41.651%"
           tooltip="Channel 19" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider20" id="bf3f1185e99f8568" memberName="slider20" virtualName=""
-          explicitFocusOrder="20" pos="59.486% 52.651% 3.537% 41.682%"
+          explicitFocusOrder="20" pos="59.416% 52.661% 3.448% 41.651%"
           tooltip="Channel 20" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider21" id="d00d46b0bf7a97d5" memberName="slider21" virtualName=""
-          explicitFocusOrder="21" pos="67.363% 52.651% 3.537% 41.682%"
+          explicitFocusOrder="21" pos="67.374% 52.661% 3.448% 41.651%"
           tooltip="Channel 21" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider22" id="f1e61468b0b315f8" memberName="slider22" virtualName=""
-          explicitFocusOrder="22" pos="74.759% 52.651% 3.537% 41.682%"
+          explicitFocusOrder="22" pos="74.801% 52.661% 3.448% 41.651%"
           tooltip="Channel 22" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider23" id="3c9af5933de7a732" memberName="slider23" virtualName=""
-          explicitFocusOrder="23" pos="82.476% 52.651% 3.537% 41.682%"
+          explicitFocusOrder="23" pos="82.493% 52.661% 3.448% 41.651%"
           tooltip="Channel 23" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider24" id="112c3bb5c3f5dbb9" memberName="slider24" virtualName=""
-          explicitFocusOrder="24" pos="90.193% 52.651% 3.537% 41.682%"
+          explicitFocusOrder="24" pos="90.186% 52.661% 3.448% 41.651%"
           tooltip="Channel 24" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
 */
 #endif
+
+
+//[EndFile] You can add extra defines here...
+//[/EndFile]

@@ -95,17 +95,17 @@ EffectData::EffectDataLoad (ShowFile& show,     // Stream to load from
                             uint32 version,     // version to load
                             const OwnedArray<EffectPattern>& patterns) // Patterns to match
 {
-	uint32 bread;
-
 	// Read the variables
-	int csize;
+    if (! show.readInt (m_Gain))
+        return false;
+    if (! show.readInt (m_Speed))
+        return false;
+    if (! show.readInt (m_Rotation))
+        return false;
+    if (! show.readBool (m_Reverse))
+        return false;
 
-	csize = sizeof(EffectData) - sizeof(EffectPattern *);
-
-	if (! show.readBytes ((uint8*)this, csize, bread) || bread != csize)
-		return false;
-
-	// Read the guid for the pattern
+    // Read the guid for the pattern
 	Uuid guid;
     if (! show.readGuid (guid))
 		return false;

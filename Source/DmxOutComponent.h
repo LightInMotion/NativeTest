@@ -1,26 +1,24 @@
 /*
   ==============================================================================
 
-  This is an automatically generated file created by the Jucer!
-
-  Creation date:  29 Mar 2012 10:33:41pm
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Jucer version: 1.12
+  Created with Projucer version: 4.2.3
 
   ------------------------------------------------------------------------------
 
-  The Jucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-6 by Raw Material Software ltd.
+  The Projucer is part of the JUCE library - "Jules' Utility Class Extensions"
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_DMXOUTCOMPONENT_DMXOUTCOMPONENT_5FB2D384__
-#define __JUCER_HEADER_DMXOUTCOMPONENT_DMXOUTCOMPONENT_5FB2D384__
+#ifndef __JUCE_HEADER_EBB4BE8016DE70C0__
+#define __JUCE_HEADER_EBB4BE8016DE70C0__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "BlueLiteDevice.h"
@@ -50,14 +48,11 @@ public:
     void updateThumb (int index, Slider* slider);
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void sliderValueChanged (Slider* sliderThatWasMoved);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void sliderValueChanged (Slider* sliderThatWasMoved) override;
 
 
-
-    //==============================================================================
-    juce_UseDebuggingNewOperator
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
@@ -68,37 +63,37 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    Slider* slider1;
-    Slider* slider2;
-    Slider* slider3;
-    Slider* slider4;
-    Slider* slider5;
-    Slider* slider6;
-    Slider* slider7;
-    Slider* slider8;
-    Slider* slider9;
-    Slider* slider10;
-    Slider* slider11;
-    Slider* slider12;
-    Slider* slider13;
-    Slider* slider14;
-    Slider* slider15;
-    Slider* slider16;
-    Slider* slider17;
-    Slider* slider18;
-    Slider* slider19;
-    Slider* slider20;
-    Slider* slider21;
-    Slider* slider22;
-    Slider* slider23;
-    Slider* slider24;
+    ScopedPointer<Slider> slider1;
+    ScopedPointer<Slider> slider2;
+    ScopedPointer<Slider> slider3;
+    ScopedPointer<Slider> slider4;
+    ScopedPointer<Slider> slider5;
+    ScopedPointer<Slider> slider6;
+    ScopedPointer<Slider> slider7;
+    ScopedPointer<Slider> slider8;
+    ScopedPointer<Slider> slider9;
+    ScopedPointer<Slider> slider10;
+    ScopedPointer<Slider> slider11;
+    ScopedPointer<Slider> slider12;
+    ScopedPointer<Slider> slider13;
+    ScopedPointer<Slider> slider14;
+    ScopedPointer<Slider> slider15;
+    ScopedPointer<Slider> slider16;
+    ScopedPointer<Slider> slider17;
+    ScopedPointer<Slider> slider18;
+    ScopedPointer<Slider> slider19;
+    ScopedPointer<Slider> slider20;
+    ScopedPointer<Slider> slider21;
+    ScopedPointer<Slider> slider22;
+    ScopedPointer<Slider> slider23;
+    ScopedPointer<Slider> slider24;
 
 
     //==============================================================================
-    // (prevent copy constructor and operator= being generated..)
-    DmxOutComponent (const DmxOutComponent&);
-    const DmxOutComponent& operator= (const DmxOutComponent&);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DmxOutComponent)
 };
 
+//[EndFile] You can add extra defines here...
+//[/EndFile]
 
-#endif   // __JUCER_HEADER_DMXOUTCOMPONENT_DMXOUTCOMPONENT_5FB2D384__
+#endif   // __JUCE_HEADER_EBB4BE8016DE70C0__

@@ -83,7 +83,7 @@ void TestTabsComponent::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    tabbedComponent->setBounds (-1, 0, proportionOfWidth (1.0080f), proportionOfHeight (1.0018f));
+    tabbedComponent->setBounds (-1, 0, proportionOfWidth (1.0080f), proportionOfHeight (1.0017f));
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }

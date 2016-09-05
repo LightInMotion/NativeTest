@@ -235,11 +235,14 @@
     <ClCompile Include="..\..\Source\Native\UsbDevice_Unix.cpp">
       <Filter>NativeTest\BlueLite\Native</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\pole.cpp">
-      <Filter>NativeTest\DMX Engine\Pole</Filter>
+    <ClCompile Include="..\..\Source\Console.cpp">
+      <Filter>NativeTest\DMX Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\ShowFile.cpp">
       <Filter>NativeTest\DMX Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\pole.cpp">
+      <Filter>NativeTest\DMX Engine\Pole</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Fader.cpp">
       <Filter>NativeTest\DMX Engine</Filter>
@@ -1398,11 +1401,14 @@
     <ClInclude Include="..\..\Source\Native\libusb.h">
       <Filter>NativeTest\BlueLite\Native</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\pole.h">
-      <Filter>NativeTest\DMX Engine\Pole</Filter>
+    <ClInclude Include="..\..\Source\Console.h">
+      <Filter>NativeTest\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\ShowFile.h">
       <Filter>NativeTest\DMX Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pole.h">
+      <Filter>NativeTest\DMX Engine\Pole</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Fader.h">
       <Filter>NativeTest\DMX Engine</Filter>

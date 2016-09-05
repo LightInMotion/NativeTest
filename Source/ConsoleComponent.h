@@ -23,10 +23,7 @@
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "BlueLiteDevice.h"
-#include "Device.h"
-#include "Cue.h"
-#include "Fader.h"
-#include "EffectPattern.h"
+#include "Console.h"
 //[/Headers]
 
 
@@ -39,8 +36,7 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class ConsoleComponent  : public Component,
-                          Thread
+class ConsoleComponent  : public Component
 {
 public:
     //==============================================================================
@@ -49,7 +45,6 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-    bool loadFile (File file);
     //[/UserMethods]
 
     void paint (Graphics& g) override;
@@ -59,15 +54,8 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    void run() override;
-
     BlueLiteDevice::Ptr blueliteDevice;
-    BlueLiteEvent::Ptr timeEvent;
-    
-    OwnedArray<EffectPattern> effectPatterns;
-    OwnedArray<Device> deviceList;
-    OwnedArray<Cue> cueList;
-    OwnedArray<Fader> faderList;
+    ScopedPointer<Console> console;
     //[/UserVariables]
 
     //==============================================================================
