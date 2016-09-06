@@ -44,6 +44,14 @@ ConsoleComponent::ConsoleComponent (BlueLiteDevice::Ptr blueliteDevice_)
     //[Constructor] You can add your own custom stuff here..
     console = new Console (blueliteDevice);
     console->loadShow (File ("/Users/jfitzpat/X1Test.x1"));
+    
+    Console::SliderHandle handle = console->addSlider();
+    if (handle)
+    {
+        console->setCue (handle, 1);
+        Logger::outputDebugString ("Cue: " + String (console->getCue (handle)));
+        console->setLevel (handle, FADER_MAX_LEVEL);
+    }
     //[/Constructor]
 }
 

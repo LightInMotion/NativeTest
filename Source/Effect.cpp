@@ -271,8 +271,8 @@ Effect::EffectCalculate (EffectData* pEffectData,
 ----------------------------------------------------------------------------*/
 
 void 
-Effect::EffectUpdate (int16& xPos,
-                      int16& yPos,
+Effect::EffectUpdate (uint16& xPos,
+                      uint16& yPos,
                       EffectData* pEffectData, 
                       int faderLevel)
 {

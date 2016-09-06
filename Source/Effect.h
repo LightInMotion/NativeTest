@@ -105,8 +105,8 @@ public:
     void EffectCalculate (EffectData* pEffectData,
                           int faderLevel);
 
-    void EffectUpdate (int16& xPos,
-                       int16& yPos,
+    void EffectUpdate (uint16& xPos,
+                       uint16& yPos,
                        EffectData* pEffectData,
                        int faderLevel);
 

@@ -11,7 +11,13 @@
 //
 Console::Console (BlueLiteDevice::Ptr blueliteDevice_)
     : Thread ("Console Update Thread"),
-      blueliteDevice (blueliteDevice_)
+      blueliteDevice (blueliteDevice_),
+      faderLevelsChanged (false),
+      faderCuesChanged (false),
+      grandMaster (FADER_MAX_LEVEL),
+      updateID (0),
+      outputBeforeEffects (MAIN_DMX_CHANNEL_BUFFER_COUNT * 2),
+      outputAfterEffects (MAIN_DMX_CHANNEL_BUFFER_COUNT)
 {
     // Initialize common entities
     loadEffects();
@@ -32,6 +38,101 @@ Console::~Console()
     timeEvent = nullptr;
     
 }
+
+//==============================================================================
+// Submaster Functions
+//
+Console::SliderHandle Console::addSlider()
+{
+    Fader* fader = new Fader();
+    if (fader)
+        faderList.add (fader);
+    return fader;
+}
+
+void Console::removeSlider (SliderHandle slider)
+{
+    faderList.removeObject ((Fader*)slider);
+}
+
+int Console::setCue (SliderHandle slider, int cueNumber)
+{
+    Fader* fader = (Fader*)slider;
+    if (faderList.contains (fader))
+    {
+        Cue* cue = lookupCue (cueNumber);
+        
+        const ScopedLock lock (faderList.getLock());
+        
+        if (cue)
+            fader->setCue (cue);
+        else
+            fader->clearCue();
+        faderCuesChanged = true;
+        
+        return fader->getCueNumber();
+    }
+    else
+        return 0;
+}
+
+int Console::getCue (SliderHandle slider)
+{
+    Fader* fader = (Fader*)slider;
+    if (faderList.contains (fader))
+        return fader->getCueNumber();
+    
+    return 0;
+}
+
+void Console::setLevel (SliderHandle slider, int level)
+{
+    if (level < 0)
+        level = 0;
+    else if (level > FADER_MAX_LEVEL)
+        level = FADER_MAX_LEVEL;
+    
+    Fader* fader = (Fader*)slider;
+    if (faderList.contains (fader))
+    {
+        const ScopedLock lock (faderList.getLock());
+        
+        fader->setLevel (level);
+        faderLevelsChanged = true;
+    }
+}
+
+inline int Console::getLevel (SliderHandle slider)
+{
+    Fader* fader = (Fader*)slider;
+    if (faderList.contains (fader))
+        return fader->getLevel();
+    
+    return 0;
+}
+
+inline void Console::setGrandMaster (int level)
+{
+    do {
+        const ScopedLock lock (faderList.getLock());
+        
+        if (level < 0)
+            level = 0;
+        else if (level > FADER_MAX_LEVEL)
+            level = FADER_MAX_LEVEL;
+        
+        grandMaster = level;
+        faderLevelsChanged = true;
+    } while (0);
+    
+    broadcastMessage (GrandMasterChanged, level);
+}
+
+inline int Console::getGrandMaster()
+{
+    return grandMaster;
+}
+
 
 //==============================================================================
 // Show Functions
@@ -100,32 +201,6 @@ bool Console::loadShow (File file)
             cue.release();
             ++cueIndex;
         }
-#if 0
-    ScopedPointer<uint8> outputBuffer = new uint8[MAIN_DMX_CHANNEL_BUFFER_COUNT * 2];
-    
-    if (cueList.size())
-    {
-        Fader fader;
-        
-        fader.setCue (cueList[0]);
-        fader.setLevel (FADER_MAX_LEVEL);
-        
-        zeromem (outputBuffer, MAIN_DMX_CHANNEL_BUFFER_COUNT * 2);
-        fader.updateBuffer (outputBuffer, FADER_MAX_LEVEL);
-        Logger::outputDebugString ("Full");
-        for (int n = 0; n < 32; ++n)
-            Logger::outputDebugString(String (outputBuffer[n]));
-        
-        zeromem (outputBuffer, MAIN_DMX_CHANNEL_BUFFER_COUNT * 2);
-        fader.setLevel (FADER_MAX_LEVEL >> 2);
-        fader.updateBuffer (outputBuffer, FADER_MAX_LEVEL);
-        Logger::outputDebugString ("Quarter");
-        for (int n = 0; n < 32; ++n)
-            Logger::outputDebugString(String (outputBuffer[n]));
-        
-        fader.clearCue();
-        Logger::outputDebugString ("It fades!");
-#endif
     }
     else
         result = false;
@@ -144,9 +219,9 @@ bool Console::loadShow (File file)
 //==============================================================================
 // Player Comm functions
 //
-void Console::broadcastMessage (Console::Message msg)
+void Console::broadcastMessage (Console::Message msg, uint32 param)
 {
-    Logger::outputDebugString ("Console broadcast: " + String (msg));
+    Logger::outputDebugString ("Console broadcast: " + String (msg) + ", " + String (param));
 }
 
 //==============================================================================
@@ -186,6 +261,92 @@ void Console::run()
         timeEvent->wait();
         if (threadShouldExit())
             return;
+        
+        do
+        {
+            const ScopedLock lock (faderList.getLock());
+            
+            // Increment our update indicator
+            updateID++;
+            
+            // For certain controls to summ correctly we must update faders from
+            // highest level to lowest, so we sort
+            if (faderLevelsChanged == true)
+                  faderList.sort (*this);
+            
+            // Only bother to recalculate pre-effects if a cue or level change
+            // has happened
+            if (faderLevelsChanged || faderCuesChanged)
+            {
+                outputBeforeEffects.fillWith (0);
+                
+                for (int faderIndex = 0; faderIndex < faderList.size(); ++faderIndex)
+                {
+                    if (faderList[faderIndex]->getLevel() > 0)
+                        faderList[faderIndex]->updateBuffer ((uint8*)outputBeforeEffects.getData(), grandMaster);
+                    else
+                        break;  // Since we are sorted we can stop at first 0
+                }
+                
+                faderLevelsChanged = false;
+                faderCuesChanged = false;
+            }
+            
+            // New or old, we copy what we have to apply effects
+            outputAfterEffects.copyFrom (outputBeforeEffects.getData(), 0, MAIN_DMX_CHANNEL_BUFFER_COUNT);
+            
+            // Effects take three passes, calculation, updating, then advancing
+            for (int faderIndex = 0; faderIndex < faderList.size(); ++faderIndex)
+            {
+                if (faderList[faderIndex]->getLevel() > 0)
+                    faderList[faderIndex]->calculateEffects();
+                else
+                    break;
+            }
+
+            for (int faderIndex = 0; faderIndex < faderList.size(); ++faderIndex)
+            {
+                if (faderList[faderIndex]->getLevel() > 0)
+                    faderList[faderIndex]->updateEffects ((uint8 *)outputAfterEffects.getData());
+                else
+                    break;
+            }
+
+            for (int faderIndex = 0; faderIndex < faderList.size(); ++faderIndex)
+            {
+                if (faderList[faderIndex]->getLevel() > 0)
+                    faderList[faderIndex]->advanceEffectPosition (updateID);
+                else
+                    break;
+            }
+
+        } while (0);
+        
+        String outstr("B: ");
+        uint8* bytes = (uint8 *)outputBeforeEffects.getData();
+        for (int n = 0; n < 16; ++n)
+            outstr += (String (bytes[n]) + " ");
+        Logger::outputDebugString (outstr);
+        outstr = "A: ";
+        bytes = (uint8 *)outputAfterEffects.getData();
+        for (int n = 0; n < 16; ++n)
+            outstr += (String (bytes[n]) + " ");
+        Logger::outputDebugString (outstr);
+        
     }
 }
 
+// FaderList sorting helper
+inline int Console::compareElements (Fader* first, Fader* second)
+{
+    int f = first->getLevel();
+    int s = second->getLevel();
+    
+    if (f > s)
+        return -1;
+    if (f < s)
+        return 1;
+    
+    return 0;
+}
+    

@@ -25,8 +25,11 @@ public:
     // Broadcast Messages
     typedef enum {
         NewShow = 0,
-        ShowLoaded = 1
+        ShowLoaded = 1,
+        GrandMasterChanged = 2
     } Message;
+    
+    typedef void* SliderHandle;
     
     // Construct/Destruct
     Console (BlueLiteDevice::Ptr blueliteDevice_);
@@ -36,15 +39,38 @@ public:
     void newShow();
     bool loadShow (File file);
 
-    // Update Thread
+
+    // Slider functions
+    SliderHandle addSlider();
+    void removeSlider (SliderHandle slider);
+    
+    int setCue (SliderHandle slider, int cueNumber);
+    int getCue (SliderHandle slider);
+    void setLevel (SliderHandle slider, int level);
+    inline int getLevel (SliderHandle slider);
+    inline void setGrandMaster (int level);
+    inline int getGrandMaster();
+    
+    // Update Thread stuff, don't call externally!
+    inline static int compareElements (Fader* first, Fader* second);
     void run() override;
 
 private:
     // Initialization helpers
     bool loadEffects();
     
+    // Cue List helper
+    Cue* lookupCue (int cueNumber)
+    {
+        for (int n = 0; n < cueList.size(); ++n)
+            if (cueList[n]->getNumber() == cueNumber)
+                return cueList[n];
+        
+        return nullptr;
+    }
+    
     // Player communication
-    void broadcastMessage (Console::Message msg);
+    void broadcastMessage (Console::Message msg, uint32 param = 0);
     
     BlueLiteDevice::Ptr blueliteDevice;
     BlueLiteEvent::Ptr timeEvent;
@@ -52,7 +78,17 @@ private:
     OwnedArray<EffectPattern> effectPatterns;
     OwnedArray<Device> deviceList;
     OwnedArray<Cue> cueList;
+    
+    bool faderLevelsChanged;
+    bool faderCuesChanged;
     OwnedArray<Fader, CriticalSection> faderList;
+    
+    int grandMaster;
+    
+    uint32 updateID;
+    
+    MemoryBlock outputBeforeEffects;
+    MemoryBlock outputAfterEffects;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Console)
 };

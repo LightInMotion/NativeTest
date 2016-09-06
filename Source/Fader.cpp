@@ -158,55 +158,51 @@ Fader::updateBuffer (uint8* pOutputBuffer,
     m_pCue->updateBuffer (pOutputBuffer, m_Level, GMAdjustedLevel);
 }
 
-
-#if 0
 /*----------------------------------------------------------------------------
-   Fader::calculateEffects
+    Fader::calculateEffects
 
-   Calls CueUpdateEffects() on the assigned cue 
+    Calls CueUpdateEffects() on the assigned cue
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Fader::calculateEffects( )
+Fader::calculateEffects()
 {
-   // call the update effect function on the cue
-   m_pCue->CueCalculateEffects( m_Level );
+    // call the update effect function on the cue
+    m_pCue->CueCalculateEffects (m_Level);
 }
 
 /*----------------------------------------------------------------------------
-   Fader::updateEffects
+    Fader::updateEffects
 
-   Calls CueUpdateEffects() on the assigned cue 
+    Calls CueUpdateEffects() on the assigned cue
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Fader::updateEffects( BYTE* pOutputBuffer )
+Fader::updateEffects (uint8* pOutputBuffer)
 {
-   // call the update effect function on the cue
-   m_pCue->CueUpdateEffects( pOutputBuffer, m_Level );
+    // call the update effect function on the cue
+    m_pCue->CueUpdateEffects( pOutputBuffer, m_Level);
 }
 
 
 /*----------------------------------------------------------------------------
-   Fader::advanceEffectPosition
+    Fader::advanceEffectPosition
 
-   Calls CueAdvanceEffectPosition on the assigned cue
+    Calls CueAdvanceEffectPosition on the assigned cue
 
-   Returns: no return value
+    Returns: no return value
 ----------------------------------------------------------------------------*/
 
 void 
-Fader::advanceEffectPosition( unsigned int updateID )
+Fader::advanceEffectPosition (unsigned int updateID)
 {
-   // call the advance position on the cue.
-   m_pCue->CueAdvanceEffectPositions( updateID );
+    // call the advance position on the cue.
+    m_pCue->CueAdvanceEffectPositions (updateID);
 }
-
-#endif
 
 
 // Private Functions .........................................................

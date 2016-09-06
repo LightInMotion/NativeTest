@@ -298,10 +298,10 @@ PositionControl::ControlUpdateEffect (uint8* pOutputBuffer,
 {
     // get the coarse position for the output buffer
 
-    int16 xPosOutput =
+    uint16 xPosOutput =
         *(pOutputBuffer + m_DeviceBaseAddress + m_PanCoarseChannelOffset ) << 8;
 
-    int16 yPosOutput =
+    uint16 yPosOutput =
         *(pOutputBuffer + m_DeviceBaseAddress + m_TiltCoarseChannelOffset ) <<8;
 
     // do we have 16bit resolution. If not we ignore the fine channels
