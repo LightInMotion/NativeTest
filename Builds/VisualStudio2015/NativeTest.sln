@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2015
+Project("{FDE44AA2-C89A-8AE1-6487-05E55F1BC17A}") = "NativeTest", "NativeTest.vcxproj", "{3DAE5A3C-92B1-AC95-5FF7-501F867ABF14}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3DAE5A3C-92B1-AC95-5FF7-501F867ABF14}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3DAE5A3C-92B1-AC95-5FF7-501F867ABF14}.Debug|Win32.Build.0 = Debug|Win32
+		{3DAE5A3C-92B1-AC95-5FF7-501F867ABF14}.Release|Win32.ActiveCfg = Release|Win32
+		{3DAE5A3C-92B1-AC95-5FF7-501F867ABF14}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
