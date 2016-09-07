@@ -206,7 +206,7 @@ EffectPattern::ReadPoints (ShowFile& show)  // Open file
 
 		// Load the Points
 		int count = sizeof(EffectPoint) * m_EffectPatCount;
-		if (show.readBytes ((uint8*)(&m_EffectPatData), count, bread) && bread == count)
+		if (show.readBytes ((uint8*)(&m_EffectPatData), count, bread) && bread == (uint32)count)
             result = true;
     }
     

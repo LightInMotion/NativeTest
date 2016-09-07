@@ -115,14 +115,14 @@ ModeControl::ControlClone() const
         for (int controlIndex = 0; controlIndex < subControlCount; controlIndex++)
         {
             // clone the control
-            Control* pNewControl =
+            Control* pNewControl_ =
                 pOldModePage->m_Controls[controlIndex]->ControlClone();
 
-            if (! pNewControl)
+            if (! pNewControl_)
                 return nullptr;
 
             // add the new control to the control vector of the new mode page
-            pNewModePage->m_Controls.add (pNewControl);
+            pNewModePage->m_Controls.add (pNewControl_);
         }
 
         // add the page to the new control
@@ -309,8 +309,10 @@ ModeControl::ControlUpdateBuffer(
         // it is than we are on the same page as the control before and we also
         // update all our sub-controls.
 
-        // is the output buffer zero
+        // Fetch the output value
         uint8 outputValue = *(pOutputBuffer+m_DeviceBaseAddress+m_ChannelOffset);
+
+		// Is it 0
         if (outputValue == 0)
         {
             // make copy of cue buffer value
@@ -351,8 +353,8 @@ ModeControl::ControlUpdateBuffer(
         else
         {
             // get the current output value
-            uint8 outputValue =
-                *(pOutputBuffer + m_DeviceBaseAddress + m_ChannelOffset);
+//            uint8 outputValue =
+//                *(pOutputBuffer + m_DeviceBaseAddress + m_ChannelOffset);
 
             // get the current cue buffer value
             uint8 cueValue =

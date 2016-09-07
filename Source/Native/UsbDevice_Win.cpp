@@ -463,8 +463,8 @@ Result UsbDevice::openDevice (int index)
     // Save the index
     deviceIndex = index;
 
-    String deviceName = supportedDevices.getDeviceName (vendorID, productID, index);
-    if (deviceName.isEmpty())
+    String devName = supportedDevices.getDeviceName (vendorID, productID, index);
+    if (devName.isEmpty())
         return Result::fail (getDeviceName() + " is not a supported device.");
 
     String semaphoreName = supportedDevices.getSemaphoreName (vendorID, productID, index);
@@ -473,7 +473,7 @@ Result UsbDevice::openDevice (int index)
     if (semaphore->isInUse())
         return Result::fail (getDeviceName() + " is already in use.");
 
-    WinDevice::Ptr device = new WinDevice (deviceName);
+    WinDevice::Ptr device = new WinDevice (devName);
     if (device->isNotOpen())
         return Result::fail ("Could not open " + getDeviceName() + ".");
 

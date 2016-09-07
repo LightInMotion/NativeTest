@@ -237,7 +237,7 @@ Control::ControlLoad( ShowFile& show,
       return false;
 
    // check read bytes
-   if( bytesRead != rectSize )
+   if( bytesRead != (uint32)rectSize )
       return false;
 
    // load control name

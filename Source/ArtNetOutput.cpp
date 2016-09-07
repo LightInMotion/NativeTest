@@ -82,10 +82,10 @@ void ArtNetOutput::run()
         {
             int channels = universeList[n].channels;
             
-            tdmx.Universe = universeList[n].subnet;
+            tdmx.Universe = (uint16)universeList[n].subnet;
             tdmx.Universe <<= 4;
-            tdmx.Universe += universeList[n].universe;
-            tdmx.Physical = universeList[n].universe;
+            tdmx.Universe += (uint16)universeList[n].universe;
+            tdmx.Physical = (uint8)universeList[n].universe;
             ((uint8*)(&tdmx.Length))[0] = (uint8)(channels >> 8);
             ((uint8*)(&tdmx.Length))[1] = (uint8)(channels & 0xFF);
             memcpy(tdmx.Data, (uint8*)outputBuffer.getData() + (universeList[n].physical * 512),

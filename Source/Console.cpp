@@ -192,7 +192,7 @@ bool Console::loadShow (File file)
             ++deviceIndex;
         }
     
-        uint cueIndex = 0;
+        uint32 cueIndex = 0;
         while (show.isDirectory("/Cues/" + String(cueIndex) + "/"))
         {
             show.setPath ("/Cues/" + String(cueIndex) + "/");
@@ -219,7 +219,7 @@ bool Console::loadShow (File file)
     }
     
     // Create ArtNet Output Universes as necessary
-    for (int universe = 0; universe < DMX_UNIVERSE_COUNT; ++universe)
+    for (uint32 universe = 0; universe < DMX_UNIVERSE_COUNT; ++universe)
     {
         Device* highestDevice = nullptr;
         
@@ -274,7 +274,11 @@ void Console::broadcastMessage (Console::Message msg, uint32 param)
 bool Console::loadEffects()
 {
     // !!!! Should be relative to the application location
+#ifdef JUCE_WINDOWS
+	File f("C:\\Program Files (x86)\\BlueLite X1\\Effects\\");
+#else
     File f("~/X1Effects/");
+#endif
     Array<File> effectFiles;
     f.findChildFiles (effectFiles, File::findFiles, false, "*.eff");
     

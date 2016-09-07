@@ -264,7 +264,7 @@ void ConsoleComponent::buttonClicked (Button* buttonThatWasClicked)
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void ConsoleComponent::updateThumb (Slider* slider)
 {
-    int val = slider->getValue();
+    int val = (int)slider->getValue();
 
     if (val == 0)
         slider->setColour (Slider::thumbColourId, Colour (0xff252525));

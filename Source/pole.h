@@ -66,6 +66,7 @@ wide string into utf8 char*:
 namespace POLE
 {
 
+#if 0
 #if defined WIN32 || defined WIN64 || defined _WIN32 || defined _WIN64 || defined _MSVC
 #define POLE_USE_UTF16_FILENAMES
 #define POLE_WIN
@@ -78,6 +79,7 @@ typedef int int32;
 typedef long long int64;
 typedef unsigned int uint32;
 typedef unsigned long long uint64;
+#endif
 #endif
 
 typedef uint64 t_offset;
