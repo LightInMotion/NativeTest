@@ -27,7 +27,8 @@ public:
     typedef enum {
         NewShow = 0,
         ShowLoaded = 1,
-        GrandMasterChanged = 2
+        GrandMasterChanged = 2,
+        FaderCuesCleared = 3
     } Message;
     
     typedef void* SliderHandle;
@@ -40,7 +41,11 @@ public:
     void newShow();
     bool loadShow (File file);
 
-
+    // Info functions
+    int getDeviceCount() { return deviceList.size(); }
+    int getCueCount() { return cueList.size(); }
+    int getUniverseCount() { return artnetOut->getUniverseCount(); }
+    
     // Slider functions
     SliderHandle addSlider();
     void removeSlider (SliderHandle slider);
@@ -51,6 +56,10 @@ public:
     int getLevel (SliderHandle slider);
     void setGrandMaster (int level);
     int getGrandMaster();
+    
+    // Admin stuff
+    int getFaderCount() { return faderList.size(); }
+    void clearAllFaders();
     
     // Update Thread stuff, don't call externally!
     inline static int compareElements (Fader* first, Fader* second);

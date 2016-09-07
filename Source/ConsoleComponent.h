@@ -37,7 +37,9 @@
                                                                     //[/Comments]
 */
 class ConsoleComponent  : public Component,
-                          public SliderListener
+                          Timer,
+                          public SliderListener,
+                          public ButtonListener
 {
 public:
     //==============================================================================
@@ -46,25 +48,38 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-    void updateThumb (Slider* slider);
+    void timerCallback() override;
     //[/UserMethods]
 
     void paint (Graphics& g) override;
     void resized() override;
     void sliderValueChanged (Slider* sliderThatWasMoved) override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
 
 
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
+    void updateThumb (Slider* slider);
+    void updateStats();
+
     BlueLiteDevice::Ptr blueliteDevice;
     ScopedPointer<Console> console;
+    int numberOfFaders;
     //[/UserVariables]
 
     //==============================================================================
     ScopedPointer<Label> gmLabel;
     ScopedPointer<Label> label;
     ScopedPointer<Slider> gmSlider;
+    ScopedPointer<TextButton> loadButton;
+    ScopedPointer<Label> loadedLabel;
+    ScopedPointer<Label> cuesLabel;
+    ScopedPointer<Label> devsLabel;
+    ScopedPointer<Label> universesLabel;
+    ScopedPointer<TextButton> newButton;
+    ScopedPointer<Label> fadersLabel;
+    ScopedPointer<TextButton> clearAllButton;
 
 
     //==============================================================================

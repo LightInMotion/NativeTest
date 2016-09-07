@@ -20,7 +20,6 @@ Console::Console (BlueLiteDevice::Ptr blueliteDevice_)
       outputAfterEffects (DMX_CHANNEL_BUFFER_COUNT)
 {
     artnetOut = new ArtNetOutput;
-    artnetOut->setUniverse(0, 64, 0, 0);
     
     // Initialize common entities
     loadEffects();
@@ -28,6 +27,7 @@ Console::Console (BlueLiteDevice::Ptr blueliteDevice_)
     // Start our update Thread
     timeEvent = new BlueLiteEvent();
     blueliteDevice->addTimeEvent (timeEvent.getObject());
+    setPriority (6);
     startThread();
 }
 
@@ -154,6 +154,9 @@ void Console::newShow()
     cueList.clear();
     deviceList.clear();
     
+    // Abandon all ArtNet output
+    artnetOut->clearAllUniverses();
+    
     broadcastMessage (Console::NewShow);
 }
 
@@ -215,8 +218,47 @@ bool Console::loadShow (File file)
         return false;
     }
     
+    // Create ArtNet Output Universes as necessary
+    for (int universe = 0; universe < DMX_UNIVERSE_COUNT; ++universe)
+    {
+        Device* highestDevice = nullptr;
+        
+        for (int n = 0; n < deviceList.size(); ++n)
+        {
+            uint32 baseaddress = deviceList[n]->DeviceGetBaseAddress();
+            if (baseaddress >= universe * DMX_CHANNELS_PER_UNIVERSE &&
+                baseaddress < (universe + 1) * DMX_CHANNELS_PER_UNIVERSE)
+            {
+                if (! highestDevice || baseaddress > highestDevice->DeviceGetBaseAddress())
+                    highestDevice = deviceList[n];
+            }
+        }
+        
+        if (highestDevice)
+        {
+            int channels = highestDevice->DeviceGetBaseAddress() - (universe * DMX_CHANNELS_PER_UNIVERSE);
+            channels += highestDevice->DeviceGetNumberOfChannels();
+            
+            artnetOut->setUniverse(universe, channels, universe / 16, universe % 16);
+        }
+    }
+    
     broadcastMessage (Console::ShowLoaded);
     return true;
+}
+
+//==============================================================================
+// Admin functions
+//
+void Console::clearAllFaders()
+{
+    const ScopedLock lock (faderList.getLock());
+    
+    for (int n = 0; n < faderList.size(); ++n)
+        faderList[n]->clearCue();
+    
+    faderCuesChanged = true;
+    broadcastMessage (FaderCuesCleared);
 }
 
 //==============================================================================

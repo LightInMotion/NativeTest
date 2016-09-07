@@ -24,6 +24,9 @@ public:
     // Set/Update a universe for ArtNet
     void setUniverse (int physcialUniverse, int channels, int subnet, int universe);
     void clearUniverse (int physicalUniverse);
+    void clearAllUniverses() { universeList.clear(); }
+    
+    int getUniverseCount() { return universeList.size(); }
     
 private:
     // Update Thread
