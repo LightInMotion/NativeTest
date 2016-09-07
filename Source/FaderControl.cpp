@@ -18,7 +18,7 @@
 
 // Includes ..................................................................
 
-#include "dmx.h"
+#include "DMX.h"
 #include "FaderControl.h"
 #include "Fader.h"
 //#include "FileHelper.h"

@@ -1401,7 +1401,7 @@
     <ClInclude Include="..\..\Source\ArtNetOutput.h">
       <Filter>NativeTest\DMX Outputs\ArtNet</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\rdm.h">
+    <ClInclude Include="..\..\Source\RDM.h">
       <Filter>NativeTest\DMX Outputs\ArtNet</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\DemoDevice.h">

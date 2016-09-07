@@ -84,7 +84,7 @@
         <FILE id="yuhROT" name="ArtNetOutput.cpp" compile="1" resource="0"
               file="Source/ArtNetOutput.cpp"/>
         <FILE id="qTl5az" name="ArtNetOutput.h" compile="0" resource="0" file="Source/ArtNetOutput.h"/>
-        <FILE id="Wr3L09" name="rdm.h" compile="0" resource="0" file="Source/rdm.h"/>
+        <FILE id="Wr3L09" name="RDM.h" compile="0" resource="0" file="Source/RDM.h"/>
       </GROUP>
       <GROUP id="{AC26B227-F2C9-67AD-58E2-EA77B4A29FA4}" name="BlueLite">
         <FILE id="hEVSqt" name="DemoDevice.cpp" compile="1" resource="0" file="Source/DemoDevice.cpp"/>

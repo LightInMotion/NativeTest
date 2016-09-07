@@ -12,8 +12,7 @@
 // Includes ..................................................................
 
 #include "EffectDataEntry.h"
-//#include "DeviceManager.h"
-#include "effect.h"
+#include "Effect.h"
 #include "Device.h"
 #include "Control.h"
 

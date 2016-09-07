@@ -1167,7 +1167,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Source\art-net.h"/>
     <ClInclude Include="..\..\Source\ArtNetOutput.h"/>
-    <ClInclude Include="..\..\Source\rdm.h"/>
+    <ClInclude Include="..\..\Source\RDM.h"/>
     <ClInclude Include="..\..\Source\DemoDevice.h"/>
     <ClInclude Include="..\..\Source\BlueLiteUsbDevices.h"/>
     <ClInclude Include="..\..\Source\BlueLiteUsbDevice.h"/>
