@@ -55,6 +55,11 @@
 
 #include "pole.h"
 
+#ifdef JUCE_WINDOWS
+#pragma warning(push)
+#pragma warning(disable: 4244)
+#endif
+
 #ifdef POLE_USE_UTF16_FILENAMES
 #include <codecvt>
 #endif //POLE_USE_UTF16_FILENAMES
@@ -860,8 +865,8 @@ DirEntry* DirTree::entry( const std::string& name, bool create, int64 bigBlockSi
            io->bbat->set(nblock, AllocTable::Eof);
            io->bbat->markAsDirty(nblock, bigBlockSize);
            blocks.push_back(nblock);
-           uint64 bbidx = nblock / (io->bbat->blockSize / sizeof(uint64));
-           while (bbidx >= io->header->num_bat)
+           uint64 bbidx_ = nblock / (io->bbat->blockSize / sizeof(uint64));
+           while (bbidx_ >= io->header->num_bat)
                io->addbbatBlock();
        }
      }
@@ -984,10 +989,10 @@ void DirTree::save( unsigned char* buffer )
   
   // root is fixed as "Root Entry"
   DirEntry* root = entry( 0 );
-  std::string name = "Root Entry";
-  for( unsigned int j = 0; j < name.length(); j++ )
-    buffer[ j*2 ] = name[j];
-  writeU16( buffer + 0x40, static_cast<uint32>(name.length()*2 + 2) );
+  std::string name_ = "Root Entry";
+  for( unsigned int j = 0; j < name_.length(); j++ )
+    buffer[ j*2 ] = name_[j];
+  writeU16( buffer + 0x40, static_cast<uint32>(name_.length()*2 + 2) );
   writeU32( buffer + 0x74, 0xffffffff );
   writeU32( buffer + 0x78, 0 );
   writeU32( buffer + 0x44, 0xffffffff );
@@ -2370,3 +2375,7 @@ bool Stream::fail()
 {
   return io ? io->fail : true;
 }
+
+#ifdef JUCE_WINDOWS
+#pragma warning(pop)
+#endif

@@ -18,6 +18,9 @@
 #include "ShowFile.h"
 #include "Effect.h"
 
+#ifdef JUCE_WINDOWS
+#pragma warning(disable: 4100)
+#endif
 
 // Defines ...................................................................
 

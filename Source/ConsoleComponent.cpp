@@ -19,6 +19,10 @@
 
 //[Headers] You can add your own extra header files here...
 #include "ShowFile.h"
+
+#ifdef JUCE_WINDOWS
+#pragma warning(disable: 4100)
+#endif
 //[/Headers]
 
 #include "ConsoleComponent.h"

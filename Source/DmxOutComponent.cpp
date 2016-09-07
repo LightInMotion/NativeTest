@@ -24,7 +24,9 @@
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
-//[/MiscUserDefs]
+#ifdef JUCE_WINDOWS
+#pragma warning(disable: 4100)
+#endif//[/MiscUserDefs]
 
 //==============================================================================
 DmxOutComponent::DmxOutComponent (BlueLiteDevice::Ptr blueliteDevice_)

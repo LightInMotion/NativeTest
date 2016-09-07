@@ -89,7 +89,7 @@ const short Effect::m_SinTable[] = {
 
 bool
 EffectData::EffectDataLoad (ShowFile& show,     // Stream to load from
-                            uint32 version,     // version to load
+                            uint32 /* version */,     // version to load
                             const OwnedArray<EffectPattern>& patterns) // Patterns to match
 {
 	// Read the variables
