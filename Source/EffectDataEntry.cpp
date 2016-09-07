@@ -14,7 +14,6 @@
 #include "EffectDataEntry.h"
 //#include "DeviceManager.h"
 #include "effect.h"
-#include "Main.h"
 #include "Device.h"
 #include "Control.h"
 

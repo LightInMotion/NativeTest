@@ -63,71 +63,86 @@
         <FILE id="e5IJl8" name="X1IDLE.HEX" compile="0" resource="1" file="Firmware/X1IDLE.HEX"/>
       </GROUP>
     </GROUP>
-    <GROUP id="{AC26B227-F2C9-67AD-58E2-EA77B4A29FA4}" name="BlueLite">
-      <FILE id="hEVSqt" name="DemoDevice.cpp" compile="1" resource="0" file="Source/DemoDevice.cpp"/>
-      <FILE id="ZneOvV" name="DemoDevice.h" compile="0" resource="0" file="Source/DemoDevice.h"/>
-      <FILE id="dlXoCs" name="BlueLiteUsbDevices.h" compile="0" resource="0"
-            file="Source/BlueLiteUsbDevices.h"/>
-      <FILE id="vmAIkC" name="BlueLiteUsbDevice.cpp" compile="1" resource="0"
-            file="Source/BlueLiteUsbDevice.cpp"/>
-      <FILE id="WLkvIe" name="BlueLiteUsbDevice.h" compile="0" resource="0"
-            file="Source/BlueLiteUsbDevice.h"/>
-      <FILE id="wpfokJ" name="BlueLiteUsb.h" compile="0" resource="0" file="Source/BlueLiteUsb.h"/>
-      <FILE id="Da5hWi" name="BlueLiteDevice.h" compile="0" resource="0"
-            file="Source/BlueLiteDevice.h"/>
-      <FILE id="o0El1T" name="IntelHexReader.cpp" compile="1" resource="0"
-            file="Source/IntelHexReader.cpp"/>
-      <FILE id="x9Iqng" name="IntelHexReader.h" compile="0" resource="0"
-            file="Source/IntelHexReader.h"/>
-      <FILE id="sK6AhB" name="UsbDevice.cpp" compile="1" resource="0" file="Source/UsbDevice.cpp"/>
-      <FILE id="MtOeTN" name="UsbDevice.h" compile="0" resource="0" file="Source/UsbDevice.h"/>
-      <GROUP id="{B8C7406E-E38D-80EB-4916-495532CA3288}" name="Native">
-        <FILE id="O85xyk" name="UsbDevice_Win.cpp" compile="0" resource="0"
-              file="Source/Native/UsbDevice_Win.cpp"/>
-        <FILE id="IuO3AT" name="libusb.h" compile="0" resource="0" file="Source/Native/libusb.h"/>
-        <FILE id="gd8zRP" name="UsbDevice_Unix.cpp" compile="0" resource="0"
-              file="Source/Native/UsbDevice_Unix.cpp"/>
+    <GROUP id="{64E75B04-A739-5F8A-78D4-28F283B2B19D}" name="DMX Outputs">
+      <GROUP id="{6925CD45-8BD5-6D9F-1ABD-CBA852037D0B}" name="ArtNet">
+        <FILE id="rfZQZi" name="art-net.h" compile="0" resource="0" file="Source/art-net.h"/>
+        <FILE id="yuhROT" name="ArtNetOutput.cpp" compile="1" resource="0"
+              file="Source/ArtNetOutput.cpp"/>
+        <FILE id="qTl5az" name="ArtNetOutput.h" compile="0" resource="0" file="Source/ArtNetOutput.h"/>
+        <FILE id="Wr3L09" name="rdm.h" compile="0" resource="0" file="Source/rdm.h"/>
+      </GROUP>
+      <GROUP id="{AC26B227-F2C9-67AD-58E2-EA77B4A29FA4}" name="BlueLite">
+        <FILE id="hEVSqt" name="DemoDevice.cpp" compile="1" resource="0" file="Source/DemoDevice.cpp"/>
+        <FILE id="ZneOvV" name="DemoDevice.h" compile="0" resource="0" file="Source/DemoDevice.h"/>
+        <FILE id="dlXoCs" name="BlueLiteUsbDevices.h" compile="0" resource="0"
+              file="Source/BlueLiteUsbDevices.h"/>
+        <FILE id="vmAIkC" name="BlueLiteUsbDevice.cpp" compile="1" resource="0"
+              file="Source/BlueLiteUsbDevice.cpp"/>
+        <FILE id="WLkvIe" name="BlueLiteUsbDevice.h" compile="0" resource="0"
+              file="Source/BlueLiteUsbDevice.h"/>
+        <FILE id="wpfokJ" name="BlueLiteUsb.h" compile="0" resource="0" file="Source/BlueLiteUsb.h"/>
+        <FILE id="Da5hWi" name="BlueLiteDevice.h" compile="0" resource="0"
+              file="Source/BlueLiteDevice.h"/>
+        <FILE id="o0El1T" name="IntelHexReader.cpp" compile="1" resource="0"
+              file="Source/IntelHexReader.cpp"/>
+        <FILE id="x9Iqng" name="IntelHexReader.h" compile="0" resource="0"
+              file="Source/IntelHexReader.h"/>
+        <FILE id="sK6AhB" name="UsbDevice.cpp" compile="1" resource="0" file="Source/UsbDevice.cpp"/>
+        <FILE id="MtOeTN" name="UsbDevice.h" compile="0" resource="0" file="Source/UsbDevice.h"/>
+        <GROUP id="{B8C7406E-E38D-80EB-4916-495532CA3288}" name="Native">
+          <FILE id="O85xyk" name="UsbDevice_Win.cpp" compile="0" resource="0"
+                file="Source/Native/UsbDevice_Win.cpp"/>
+          <FILE id="IuO3AT" name="libusb.h" compile="0" resource="0" file="Source/Native/libusb.h"/>
+          <FILE id="gd8zRP" name="UsbDevice_Unix.cpp" compile="0" resource="0"
+                file="Source/Native/UsbDevice_Unix.cpp"/>
+        </GROUP>
       </GROUP>
     </GROUP>
     <GROUP id="{5DD81CC4-9BBD-5500-8824-9A456E656543}" name="DMX Engine">
+      <GROUP id="{02E55616-474F-3C97-6CFB-B8A397E83069}" name="Show File">
+        <FILE id="ar0uYX" name="ShowFile.cpp" compile="1" resource="0" file="Source/ShowFile.cpp"/>
+        <FILE id="qW0ZLN" name="ShowFile.h" compile="0" resource="0" file="Source/ShowFile.h"/>
+        <GROUP id="{CDC39F3E-ECF0-78D9-C2E2-F0F4C94AE6D9}" name="Pole">
+          <FILE id="M1tN7M" name="pole.cpp" compile="1" resource="0" file="Source/pole.cpp"/>
+          <FILE id="X1zaLj" name="pole.h" compile="0" resource="0" file="Source/pole.h"/>
+        </GROUP>
+      </GROUP>
       <FILE id="RHDU40" name="Console.cpp" compile="1" resource="0" file="Source/Console.cpp"/>
       <FILE id="oUYP9l" name="Console.h" compile="0" resource="0" file="Source/Console.h"/>
-      <FILE id="ar0uYX" name="ShowFile.cpp" compile="1" resource="0" file="Source/ShowFile.cpp"/>
-      <FILE id="qW0ZLN" name="ShowFile.h" compile="0" resource="0" file="Source/ShowFile.h"/>
-      <GROUP id="{CDC39F3E-ECF0-78D9-C2E2-F0F4C94AE6D9}" name="Pole">
-        <FILE id="M1tN7M" name="pole.cpp" compile="1" resource="0" file="Source/pole.cpp"/>
-        <FILE id="X1zaLj" name="pole.h" compile="0" resource="0" file="Source/pole.h"/>
-      </GROUP>
       <FILE id="T6Sxsv" name="Fader.cpp" compile="1" resource="0" file="Source/Fader.cpp"/>
       <FILE id="Y4ZSDA" name="Fader.h" compile="0" resource="0" file="Source/Fader.h"/>
       <FILE id="iyI2Yc" name="Cue.cpp" compile="1" resource="0" file="Source/Cue.cpp"/>
       <FILE id="gX3lRG" name="Cue.h" compile="0" resource="0" file="Source/Cue.h"/>
       <FILE id="z6lNra" name="Device.cpp" compile="1" resource="0" file="Source/Device.cpp"/>
       <FILE id="nz3UZF" name="Device.h" compile="0" resource="0" file="Source/Device.h"/>
-      <FILE id="VGZyLo" name="ModeControl.cpp" compile="1" resource="0" file="Source/ModeControl.cpp"/>
-      <FILE id="DTRnMR" name="ModeControl.h" compile="0" resource="0" file="Source/ModeControl.h"/>
-      <FILE id="SELNvK" name="PositionControl.cpp" compile="1" resource="0"
-            file="Source/PositionControl.cpp"/>
-      <FILE id="sDVEm1" name="PositionControl.h" compile="0" resource="0"
-            file="Source/PositionControl.h"/>
-      <FILE id="B3XJLP" name="SelectControl.cpp" compile="1" resource="0"
-            file="Source/SelectControl.cpp"/>
-      <FILE id="jNoDXF" name="SelectControl.h" compile="0" resource="0" file="Source/SelectControl.h"/>
-      <FILE id="swMnkc" name="FaderControl.cpp" compile="1" resource="0"
-            file="Source/FaderControl.cpp"/>
-      <FILE id="pPLG5x" name="FaderControl.h" compile="0" resource="0" file="Source/FaderControl.h"/>
-      <FILE id="b51hJg" name="Control.h" compile="0" resource="0" file="Source/Control.h"/>
-      <FILE id="BkOAhP" name="Control.cpp" compile="1" resource="0" file="Source/Control.cpp"/>
-      <FILE id="pNSjEz" name="EffectDataEntry.cpp" compile="1" resource="0"
-            file="Source/EffectDataEntry.cpp"/>
-      <FILE id="qsRkJv" name="EffectDataEntry.h" compile="0" resource="0"
-            file="Source/EffectDataEntry.h"/>
-      <FILE id="j9Jz0H" name="Effect.cpp" compile="1" resource="0" file="Source/Effect.cpp"/>
-      <FILE id="ivXtqv" name="Effect.h" compile="0" resource="0" file="Source/Effect.h"/>
-      <FILE id="M0yyKT" name="EffectPattern.cpp" compile="1" resource="0"
-            file="Source/EffectPattern.cpp"/>
-      <FILE id="ZlVhlP" name="EffectPattern.h" compile="0" resource="0" file="Source/EffectPattern.h"/>
-      <FILE id="fUA2Pl" name="Main.h" compile="0" resource="0" file="Source/Main.h"/>
+      <GROUP id="{AF353953-36E3-7F9D-6D8C-C561EC9A4FA9}" name="Device Controls">
+        <FILE id="VGZyLo" name="ModeControl.cpp" compile="1" resource="0" file="Source/ModeControl.cpp"/>
+        <FILE id="DTRnMR" name="ModeControl.h" compile="0" resource="0" file="Source/ModeControl.h"/>
+        <FILE id="SELNvK" name="PositionControl.cpp" compile="1" resource="0"
+              file="Source/PositionControl.cpp"/>
+        <FILE id="sDVEm1" name="PositionControl.h" compile="0" resource="0"
+              file="Source/PositionControl.h"/>
+        <FILE id="B3XJLP" name="SelectControl.cpp" compile="1" resource="0"
+              file="Source/SelectControl.cpp"/>
+        <FILE id="jNoDXF" name="SelectControl.h" compile="0" resource="0" file="Source/SelectControl.h"/>
+        <FILE id="swMnkc" name="FaderControl.cpp" compile="1" resource="0"
+              file="Source/FaderControl.cpp"/>
+        <FILE id="pPLG5x" name="FaderControl.h" compile="0" resource="0" file="Source/FaderControl.h"/>
+        <FILE id="b51hJg" name="Control.h" compile="0" resource="0" file="Source/Control.h"/>
+        <FILE id="BkOAhP" name="Control.cpp" compile="1" resource="0" file="Source/Control.cpp"/>
+      </GROUP>
+      <GROUP id="{67A30F2F-90DD-7D47-0BE3-84C42A4A09DC}" name="Effects">
+        <FILE id="pNSjEz" name="EffectDataEntry.cpp" compile="1" resource="0"
+              file="Source/EffectDataEntry.cpp"/>
+        <FILE id="qsRkJv" name="EffectDataEntry.h" compile="0" resource="0"
+              file="Source/EffectDataEntry.h"/>
+        <FILE id="j9Jz0H" name="Effect.cpp" compile="1" resource="0" file="Source/Effect.cpp"/>
+        <FILE id="ivXtqv" name="Effect.h" compile="0" resource="0" file="Source/Effect.h"/>
+        <FILE id="M0yyKT" name="EffectPattern.cpp" compile="1" resource="0"
+              file="Source/EffectPattern.cpp"/>
+        <FILE id="ZlVhlP" name="EffectPattern.h" compile="0" resource="0" file="Source/EffectPattern.h"/>
+      </GROUP>
+      <FILE id="fUA2Pl" name="DMX.h" compile="0" resource="0" file="Source/DMX.h"/>
     </GROUP>
     <GROUP id="{DE0EFEC2-E357-A5DF-7171-6764ED593CB5}" name="UI">
       <GROUP id="{46BAFC1C-3EA3-DD3E-DC8F-57DDA0F6C685}" name="Test Tabs">

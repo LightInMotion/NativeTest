@@ -27,7 +27,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "ShowFile.h"
-#include "Main.h"
+#include "DMX.h"
 #include "Effect.h"
 #include "EffectDataEntry.h"
 
@@ -137,10 +137,7 @@ private:
 
     // the cue buffer. It contains all the settings for that cue. The
     // controls know what the values 'mean' and can modify them.
-    uint8 m_CueBuffer[ MAIN_DMX_CHANNEL_BUFFER_COUNT ];
-
-    // we use std::vector instead of std::list because access it is much
-    // faster (shown in performance tests)
+    uint8 m_CueBuffer[DMX_CHANNEL_BUFFER_COUNT];
 
     // vector of devices in this cue
     Array<Device*> m_DeviceList;

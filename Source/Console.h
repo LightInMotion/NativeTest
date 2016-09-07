@@ -18,6 +18,7 @@
 #include "Device.h"
 #include "Cue.h"
 #include "Fader.h"
+#include "ArtNetOutput.h"
 
 class Console : public Thread
 {
@@ -89,6 +90,8 @@ private:
     
     MemoryBlock outputBeforeEffects;
     MemoryBlock outputAfterEffects;
+    
+    ScopedPointer<ArtNetOutput> artnetOut;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Console)
 };

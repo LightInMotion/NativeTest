@@ -97,10 +97,10 @@ MainAppWindow::MainAppWindow()
 //        testwrite->close();
 //    }
     
-    ScopedPointer<POLE::Storage> storage = new POLE::Storage( "/Users/jfitzpat/X1Test.x1" );
-    storage->open();
-    if( storage->result() == POLE::Storage::Ok )
-        visit( 0, storage, "/" );
+//    ScopedPointer<POLE::Storage> storage = new POLE::Storage( "/Users/jfitzpat/X1Test.x1" );
+//    storage->open();
+//    if( storage->result() == POLE::Storage::Ok )
+//        visit( 0, storage, "/" );
         
     blueliteDevice = new BlueLiteX1();
     int count = blueliteDevice->getCount();

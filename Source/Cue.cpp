@@ -23,7 +23,7 @@
 
 #include "Cue.h"
 #include "Device.h"
-#include "Main.h"
+#include "DMX.h"
 #include "Control.h"
 
 
@@ -46,7 +46,7 @@ Cue Cue::dummy(0);  // 0 is reserved for an empty Cue
 Cue::Cue()
     : m_Number(0)
 {
-    zeromem (m_CueBuffer, MAIN_DMX_CHANNEL_BUFFER_COUNT);
+    zeromem (m_CueBuffer, DMX_CHANNEL_BUFFER_COUNT);
 }
 
 
@@ -61,7 +61,7 @@ Cue::Cue()
 Cue::Cue (int number)
     : m_Number (number)
 {
-    zeromem (m_CueBuffer, MAIN_DMX_CHANNEL_BUFFER_COUNT);
+    zeromem (m_CueBuffer, DMX_CHANNEL_BUFFER_COUNT);
 }
 
 
@@ -662,7 +662,7 @@ Cue::clone(
    // copy the cue buffer
    memcpy( &(pNewCue->m_CueBuffer),
                &m_CueBuffer, 
-               MAIN_DMX_CHANNEL_BUFFER_COUNT );
+               DMX_CHANNEL_BUFFER_COUNT );
 
    // the cue contains pointers to existing devices and  controls. We can just
    // copy the entire vector. 
@@ -1144,7 +1144,7 @@ Cue::SerializeBuffer( IStream* pStream ) const
    // start and end of cue buffer, the end points to the first byte outside
    // the cue buffer (we will never try to access that byte)
    const BYTE* pStart = m_CueBuffer;
-   const BYTE* pEnd = pStart + MAIN_DMX_CHANNEL_BUFFER_COUNT;
+   const BYTE* pEnd = pStart + DMX_CHANNEL_BUFFER_COUNT;
 
    // current and next pointer for byte compare
    const BYTE* pCurrent = pStart;
@@ -1269,7 +1269,7 @@ Cue::loadBuffer( ShowFile& show )
    // maximum of the cue buffer
    while(( show.readBytes( &flagByte, 1, bytesRead )) &&
          ( bytesRead == 1 ) &&
-         ( position < MAIN_DMX_CHANNEL_BUFFER_COUNT ))
+         ( position < DMX_CHANNEL_BUFFER_COUNT ))
    {
       // extract the length from the flag byte, the length consists of the
       // 7 least significant bits of the flag byte plus one
@@ -1277,7 +1277,7 @@ Cue::loadBuffer( ShowFile& show )
 
       // double check that the current position plus the new length doesn't
       // exceed the cue buffer
-      if(( position + length ) > MAIN_DMX_CHANNEL_BUFFER_COUNT )
+      if(( position + length ) > DMX_CHANNEL_BUFFER_COUNT )
          return false;
 
       // is the most significant bit set (the flag)
@@ -1313,8 +1313,8 @@ Cue::loadBuffer( ShowFile& show )
    }
 
    // double check if we filled the cue buffer completely
-   if( position != MAIN_DMX_CHANNEL_BUFFER_COUNT  &&
-	   position != (MAIN_DMX_CHANNEL_BUFFER_COUNT >> 2))	// Old files
+   if( position != DMX_CHANNEL_BUFFER_COUNT  &&
+	   position != (DMX_CHANNEL_BUFFER_COUNT >> 2))	// Old files
       return false;
 
    return true;

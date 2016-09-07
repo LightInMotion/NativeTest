@@ -49,13 +49,14 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/ArtNetOutput_bb30b4e4.o \
   $(OBJDIR)/DemoDevice_8611b322.o \
   $(OBJDIR)/BlueLiteUsbDevice_3ad0d213.o \
   $(OBJDIR)/IntelHexReader_5ed5ab11.o \
   $(OBJDIR)/UsbDevice_a591255b.o \
-  $(OBJDIR)/Console_9204b238.o \
   $(OBJDIR)/ShowFile_29e40422.o \
   $(OBJDIR)/pole_adebdc21.o \
+  $(OBJDIR)/Console_9204b238.o \
   $(OBJDIR)/Fader_6a7919d7.o \
   $(OBJDIR)/Cue_578b3714.o \
   $(OBJDIR)/Device_57ed22df.o \
@@ -98,6 +99,11 @@ strip:
 	@echo Stripping NativeTest
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
 
+$(OBJDIR)/ArtNetOutput_bb30b4e4.o: ../../Source/ArtNetOutput.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling ArtNetOutput.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
 $(OBJDIR)/DemoDevice_8611b322.o: ../../Source/DemoDevice.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling DemoDevice.cpp"
@@ -118,11 +124,6 @@ $(OBJDIR)/UsbDevice_a591255b.o: ../../Source/UsbDevice.cpp
 	@echo "Compiling UsbDevice.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Console_9204b238.o: ../../Source/Console.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling Console.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
 $(OBJDIR)/ShowFile_29e40422.o: ../../Source/ShowFile.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling ShowFile.cpp"
@@ -131,6 +132,11 @@ $(OBJDIR)/ShowFile_29e40422.o: ../../Source/ShowFile.cpp
 $(OBJDIR)/pole_adebdc21.o: ../../Source/pole.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling pole.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Console_9204b238.o: ../../Source/Console.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Console.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/Fader_6a7919d7.o: ../../Source/Fader.cpp

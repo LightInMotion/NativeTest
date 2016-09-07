@@ -18,7 +18,7 @@
 
 // Includes ..................................................................
 
-#include "main.h"
+#include "dmx.h"
 #include "FaderControl.h"
 #include "Fader.h"
 //#include "FileHelper.h"
@@ -217,7 +217,7 @@ FaderControl::ControlUpdateBuffer(
    {
       // Get our state flag.  0 = first pass, 1 = work subtractively
       uint8 *pFlag = pOutputBuffer + m_DeviceBaseAddress
-                  + m_LowChannelOffset + MAIN_DMX_CHANNEL_BUFFER_COUNT;
+                  + m_LowChannelOffset + DMX_CHANNEL_BUFFER_COUNT;
 
       // Turn into a range
  		cueValue -= m_MinValue;

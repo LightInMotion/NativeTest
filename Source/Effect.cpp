@@ -21,9 +21,6 @@
 
 #include "Effect.h"		// Our stuff
 #include "Fader.h"		// We need FADER defines for scaling
-#include "main.h"		// For EffectData Serialize
-//#include "EffectManager.h"
-
 
 // Local Defines .............................................................
 

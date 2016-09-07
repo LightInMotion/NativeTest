@@ -16,9 +16,12 @@ Console::Console (BlueLiteDevice::Ptr blueliteDevice_)
       faderCuesChanged (false),
       grandMaster (FADER_MAX_LEVEL),
       updateID (0),
-      outputBeforeEffects (MAIN_DMX_CHANNEL_BUFFER_COUNT * 2),
-      outputAfterEffects (MAIN_DMX_CHANNEL_BUFFER_COUNT)
+      outputBeforeEffects (DMX_CHANNEL_UPDATE_BUFFER_COUNT),
+      outputAfterEffects (DMX_CHANNEL_BUFFER_COUNT)
 {
+    artnetOut = new ArtNetOutput;
+    artnetOut->setUniverse(0, 64, 0, 0);
+    
     // Initialize common entities
     loadEffects();
     
@@ -293,7 +296,7 @@ void Console::run()
             }
             
             // New or old, we copy what we have to apply effects
-            outputAfterEffects.copyFrom (outputBeforeEffects.getData(), 0, MAIN_DMX_CHANNEL_BUFFER_COUNT);
+            outputAfterEffects.copyFrom (outputBeforeEffects.getData(), 0, DMX_CHANNEL_BUFFER_COUNT);
             
             // Effects take three passes, calculation, updating, then advancing
             for (int faderIndex = 0; faderIndex < faderList.size(); ++faderIndex)
@@ -321,7 +324,10 @@ void Console::run()
             }
 
         } while (0);
+
+        artnetOut->updateChannels (outputAfterEffects);
         
+#if 0
         String outstr("B: ");
         uint8* bytes = (uint8 *)outputBeforeEffects.getData();
         for (int n = 0; n < 16; ++n)
@@ -332,7 +338,7 @@ void Console::run()
         for (int n = 0; n < 16; ++n)
             outstr += (String (bytes[n]) + " ");
         Logger::outputDebugString (outstr);
-        
+#endif
     }
 }
 

@@ -123,6 +123,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\ArtNetOutput.cpp"/>
     <ClCompile Include="..\..\Source\DemoDevice.cpp"/>
     <ClCompile Include="..\..\Source\BlueLiteUsbDevice.cpp"/>
     <ClCompile Include="..\..\Source\IntelHexReader.cpp"/>
@@ -133,9 +134,9 @@
     <ClCompile Include="..\..\Source\Native\UsbDevice_Unix.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Console.cpp"/>
     <ClCompile Include="..\..\Source\ShowFile.cpp"/>
     <ClCompile Include="..\..\Source\pole.cpp"/>
+    <ClCompile Include="..\..\Source\Console.cpp"/>
     <ClCompile Include="..\..\Source\Fader.cpp"/>
     <ClCompile Include="..\..\Source\Cue.cpp"/>
     <ClCompile Include="..\..\Source\Device.cpp"/>
@@ -1158,6 +1159,9 @@
     <ClCompile Include="..\..\JuceLibraryCode\juce_gui_basics.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\art-net.h"/>
+    <ClInclude Include="..\..\Source\ArtNetOutput.h"/>
+    <ClInclude Include="..\..\Source\rdm.h"/>
     <ClInclude Include="..\..\Source\DemoDevice.h"/>
     <ClInclude Include="..\..\Source\BlueLiteUsbDevices.h"/>
     <ClInclude Include="..\..\Source\BlueLiteUsbDevice.h"/>
@@ -1166,9 +1170,9 @@
     <ClInclude Include="..\..\Source\IntelHexReader.h"/>
     <ClInclude Include="..\..\Source\UsbDevice.h"/>
     <ClInclude Include="..\..\Source\Native\libusb.h"/>
-    <ClInclude Include="..\..\Source\Console.h"/>
     <ClInclude Include="..\..\Source\ShowFile.h"/>
     <ClInclude Include="..\..\Source\pole.h"/>
+    <ClInclude Include="..\..\Source\Console.h"/>
     <ClInclude Include="..\..\Source\Fader.h"/>
     <ClInclude Include="..\..\Source\Cue.h"/>
     <ClInclude Include="..\..\Source\Device.h"/>
@@ -1180,7 +1184,7 @@
     <ClInclude Include="..\..\Source\EffectDataEntry.h"/>
     <ClInclude Include="..\..\Source\Effect.h"/>
     <ClInclude Include="..\..\Source\EffectPattern.h"/>
-    <ClInclude Include="..\..\Source\Main.h"/>
+    <ClInclude Include="..\..\Source\DMX.h"/>
     <ClInclude Include="..\..\Source\ConsoleComponent.h"/>
     <ClInclude Include="..\..\Source\TimeComponent.h"/>
     <ClInclude Include="..\..\Source\DmxOutComponent.h"/>
