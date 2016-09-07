@@ -59,7 +59,7 @@ ConsoleComponent::ConsoleComponent (BlueLiteDevice::Ptr blueliteDevice_)
 
     addAndMakeVisible (gmSlider = new Slider ("new slider"));
     gmSlider->setTooltip (TRANS("Grand Master"));
-    gmSlider->setRange (0, 8192, 0);
+    gmSlider->setRange (0, 8192, 1);
     gmSlider->setSliderStyle (Slider::LinearVertical);
     gmSlider->setTextBoxStyle (Slider::NoTextBox, true, 30, 20);
     gmSlider->addListener (this);
@@ -325,7 +325,7 @@ BEGIN_JUCER_METADATA
          bold="0" italic="0" justification="36"/>
   <SLIDER name="new slider" id="78e9a1645d3c105a" memberName="gmSlider"
           virtualName="" explicitFocusOrder="0" pos="12 40 48 200" tooltip="Grand Master"
-          min="0" max="8192" int="0" style="LinearVertical" textBoxPos="NoTextBox"
+          min="0" max="8192" int="1" style="LinearVertical" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="30" textBoxHeight="20" skewFactor="1"
           needsCallback="1"/>
   <TEXTBUTTON name="new button" id="674f4af2494810a4" memberName="loadButton"
