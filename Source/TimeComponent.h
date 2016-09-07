@@ -1,26 +1,24 @@
 /*
   ==============================================================================
 
-  This is an automatically generated file created by the Jucer!
-
-  Creation date:  29 Mar 2012 10:34:29pm
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Jucer version: 1.12
+  Created with Projucer version: 4.2.3
 
   ------------------------------------------------------------------------------
 
-  The Jucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-6 by Raw Material Software ltd.
+  The Projucer is part of the JUCE library - "Jules' Utility Class Extensions"
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_TIMECOMPONENT_TIMECOMPONENT_C3BAB86B__
-#define __JUCER_HEADER_TIMECOMPONENT_TIMECOMPONENT_C3BAB86B__
+#ifndef __JUCE_HEADER_963EE857F2177414__
+#define __JUCE_HEADER_963EE857F2177414__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "BlueLiteDevice.h"
@@ -49,13 +47,10 @@ public:
     //[UserMethods]     -- You can add your own custom methods in this section.
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
+    void paint (Graphics& g) override;
+    void resized() override;
 
 
-
-    //==============================================================================
-    juce_UseDebuggingNewOperator
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
@@ -66,15 +61,15 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    Label* timeLabel;
-    Label* label;
+    ScopedPointer<Label> timeLabel;
+    ScopedPointer<Label> label;
 
 
     //==============================================================================
-    // (prevent copy constructor and operator= being generated..)
-    TimeComponent (const TimeComponent&);
-    const TimeComponent& operator= (const TimeComponent&);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeComponent)
 };
 
+//[EndFile] You can add extra defines here...
+//[/EndFile]
 
-#endif   // __JUCER_HEADER_TIMECOMPONENT_TIMECOMPONENT_C3BAB86B__
+#endif   // __JUCE_HEADER_963EE857F2177414__

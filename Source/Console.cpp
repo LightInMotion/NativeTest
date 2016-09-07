@@ -105,7 +105,7 @@ void Console::setLevel (SliderHandle slider, int level)
     }
 }
 
-inline int Console::getLevel (SliderHandle slider)
+int Console::getLevel (SliderHandle slider)
 {
     Fader* fader = (Fader*)slider;
     if (faderList.contains (fader))
@@ -114,7 +114,7 @@ inline int Console::getLevel (SliderHandle slider)
     return 0;
 }
 
-inline void Console::setGrandMaster (int level)
+void Console::setGrandMaster (int level)
 {
     do {
         const ScopedLock lock (faderList.getLock());
@@ -131,7 +131,7 @@ inline void Console::setGrandMaster (int level)
     broadcastMessage (GrandMasterChanged, level);
 }
 
-inline int Console::getGrandMaster()
+int Console::getGrandMaster()
 {
     return grandMaster;
 }

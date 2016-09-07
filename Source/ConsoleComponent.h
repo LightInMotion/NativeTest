@@ -36,7 +36,8 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class ConsoleComponent  : public Component
+class ConsoleComponent  : public Component,
+                          public SliderListener
 {
 public:
     //==============================================================================
@@ -45,10 +46,12 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+    void updateThumb (Slider* slider);
     //[/UserMethods]
 
     void paint (Graphics& g) override;
     void resized() override;
+    void sliderValueChanged (Slider* sliderThatWasMoved) override;
 
 
 
@@ -59,6 +62,9 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<Label> gmLabel;
+    ScopedPointer<Label> label;
+    ScopedPointer<Slider> gmSlider;
 
 
     //==============================================================================

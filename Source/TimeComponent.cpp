@@ -1,20 +1,18 @@
 /*
   ==============================================================================
 
-  This is an automatically generated file created by the Jucer!
-
-  Creation date:  29 Mar 2012 10:34:29pm
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Jucer version: 1.12
+  Created with Projucer version: 4.2.3
 
   ------------------------------------------------------------------------------
 
-  The Jucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-6 by Raw Material Software ltd.
+  The Projucer is part of the JUCE library - "Jules' Utility Class Extensions"
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -35,28 +33,29 @@
 //==============================================================================
 TimeComponent::TimeComponent (BlueLiteDevice::Ptr blueliteDevice_)
     : Thread ("Time Input Thread"),
-      blueliteDevice (blueliteDevice_),
-      timeLabel (0),
-      label (0)
+      blueliteDevice (blueliteDevice_)
 {
-    addAndMakeVisible (timeLabel = new Label (L"Time Label",
-                                              L"00:00:00:00"));
-    timeLabel->setTooltip (L"Current Time");
-    timeLabel->setFont (Font (Font::getDefaultMonospacedFontName(), 24.0000f, Font::plain));
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
+    addAndMakeVisible (timeLabel = new Label ("Time Label",
+                                              TRANS("00:00:00:00")));
+    timeLabel->setTooltip (TRANS("Current Time"));
+    timeLabel->setFont (Font (Font::getDefaultMonospacedFontName(), 24.00f, Font::plain));
     timeLabel->setJustificationType (Justification::centredLeft);
     timeLabel->setEditable (false, false, false);
     timeLabel->setColour (Label::textColourId, Colours::azure);
     timeLabel->setColour (TextEditor::textColourId, Colours::black);
-    timeLabel->setColour (TextEditor::backgroundColourId, Colour (0x0));
+    timeLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (label = new Label (L"new label",
-                                          L"Writing SMPTE Timecode"));
-    label->setFont (Font (15.0000f, Font::plain));
+    addAndMakeVisible (label = new Label ("new label",
+                                          TRANS("Writing SMPTE Timecode")));
+    label->setFont (Font (15.00f, Font::plain));
     label->setJustificationType (Justification::centredLeft);
     label->setEditable (false, false, false);
     label->setColour (Label::textColourId, Colours::azure);
     label->setColour (TextEditor::textColourId, Colours::black);
-    label->setColour (TextEditor::backgroundColourId, Colour (0x0));
+    label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
 
     //[UserPreSize]
@@ -77,8 +76,8 @@ TimeComponent::~TimeComponent()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
-    deleteAndZero (timeLabel);
-    deleteAndZero (label);
+    timeLabel = nullptr;
+    label = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -92,7 +91,7 @@ TimeComponent::~TimeComponent()
 }
 
 //==============================================================================
-void TimeComponent::paint (Graphics& /*g*/)
+void TimeComponent::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
@@ -103,6 +102,9 @@ void TimeComponent::paint (Graphics& /*g*/)
 
 void TimeComponent::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     timeLabel->setBounds (40, 48, 144, 32);
     label->setBounds (40, 16, 159, 24);
     //[UserResized] Add your own custom resize handling here..
@@ -150,16 +152,17 @@ void TimeComponent::run()
 
 //==============================================================================
 #if 0
-/*  -- Jucer information section --
+/*  -- Projucer information section --
 
-    This is where the Jucer puts all of its metadata, so don't change anything in here!
+    This is where the Projucer stores the metadata that describe this GUI layout, so
+    make changes in here at your peril!
 
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="TimeComponent" componentName=""
                  parentClasses="public Component, Thread" constructorParams="BlueLiteDevice::Ptr blueliteDevice_"
                  variableInitialisers="Thread (&quot;Time Input Thread&quot;),&#10;blueliteDevice (blueliteDevice_)"
-                 snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330000013"
+                 snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="0" initialWidth="600" initialHeight="400">
   <BACKGROUND backgroundColour="ffffff"/>
   <LABEL name="Time Label" id="673b9c273c4ebc5e" memberName="timeLabel"
@@ -178,3 +181,7 @@ BEGIN_JUCER_METADATA
 END_JUCER_METADATA
 */
 #endif
+
+
+//[EndFile] You can add extra defines here...
+//[/EndFile]

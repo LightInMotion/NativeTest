@@ -312,30 +312,30 @@ void DmxOutComponent::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    slider1->setBounds (proportionOfWidth (0.0579f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider2->setBounds (proportionOfWidth (0.1334f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider3->setBounds (proportionOfWidth (0.2122f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider4->setBounds (proportionOfWidth (0.2878f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider5->setBounds (proportionOfWidth (0.3650f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider6->setBounds (proportionOfWidth (0.4421f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider7->setBounds (proportionOfWidth (0.5193f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider8->setBounds (proportionOfWidth (0.5949f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider9->setBounds (proportionOfWidth (0.6736f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider10->setBounds (proportionOfWidth (0.7476f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider11->setBounds (proportionOfWidth (0.8248f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider12->setBounds (proportionOfWidth (0.9019f), proportionOfHeight (0.0548f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider13->setBounds (proportionOfWidth (0.0579f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider14->setBounds (proportionOfWidth (0.1334f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider15->setBounds (proportionOfWidth (0.2122f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider16->setBounds (proportionOfWidth (0.2878f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider17->setBounds (proportionOfWidth (0.3650f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider18->setBounds (proportionOfWidth (0.4421f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider19->setBounds (proportionOfWidth (0.5193f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider20->setBounds (proportionOfWidth (0.5949f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider21->setBounds (proportionOfWidth (0.6736f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider22->setBounds (proportionOfWidth (0.7476f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider23->setBounds (proportionOfWidth (0.8248f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
-    slider24->setBounds (proportionOfWidth (0.9019f), proportionOfHeight (0.5265f), proportionOfWidth (0.0354f), proportionOfHeight (0.4168f));
+    slider1->setBounds (proportionOfWidth (0.0585f), proportionOfHeight (0.0552f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider2->setBounds (proportionOfWidth (0.1330f), proportionOfHeight (0.0552f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider3->setBounds (proportionOfWidth (0.2128f), proportionOfHeight (0.0552f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider4->setBounds (proportionOfWidth (0.2872f), proportionOfHeight (0.0552f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider5->setBounds (proportionOfWidth (0.3670f), proportionOfHeight (0.0552f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider6->setBounds (proportionOfWidth (0.4442f), proportionOfHeight (0.0552f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider7->setBounds (proportionOfWidth (0.5186f), proportionOfHeight (0.0552f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider8->setBounds (proportionOfWidth (0.5931f), proportionOfHeight (0.0552f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider9->setBounds (proportionOfWidth (0.6729f), proportionOfHeight (0.0552f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider10->setBounds (proportionOfWidth (0.7473f), proportionOfHeight (0.0552f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider11->setBounds (proportionOfWidth (0.8245f), proportionOfHeight (0.0552f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider12->setBounds (proportionOfWidth (0.9016f), proportionOfHeight (0.0552f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider13->setBounds (proportionOfWidth (0.0585f), proportionOfHeight (0.5259f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider14->setBounds (proportionOfWidth (0.1330f), proportionOfHeight (0.5259f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider15->setBounds (proportionOfWidth (0.2128f), proportionOfHeight (0.5259f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider16->setBounds (proportionOfWidth (0.2872f), proportionOfHeight (0.5259f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider17->setBounds (proportionOfWidth (0.3670f), proportionOfHeight (0.5259f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider18->setBounds (proportionOfWidth (0.4442f), proportionOfHeight (0.5259f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider19->setBounds (proportionOfWidth (0.5186f), proportionOfHeight (0.5259f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider20->setBounds (proportionOfWidth (0.5931f), proportionOfHeight (0.5259f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider21->setBounds (proportionOfWidth (0.6729f), proportionOfHeight (0.5259f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider22->setBounds (proportionOfWidth (0.7473f), proportionOfHeight (0.5259f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider23->setBounds (proportionOfWidth (0.8245f), proportionOfHeight (0.5259f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
+    slider24->setBounds (proportionOfWidth (0.9016f), proportionOfHeight (0.5259f), proportionOfWidth (0.0346f), proportionOfHeight (0.4172f));
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -539,125 +539,125 @@ BEGIN_JUCER_METADATA
                  fixedSize="0" initialWidth="416" initialHeight="440">
   <BACKGROUND backgroundColour="ffffff"/>
   <SLIDER name="slider1" id="3dd4263526f2660a" memberName="slider1" virtualName=""
-          explicitFocusOrder="1" pos="5.836% 5.505% 3.448% 41.651%" tooltip="Channel 1"
+          explicitFocusOrder="1" pos="5.851% 5.517% 3.457% 41.724%" tooltip="Channel 1"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider2" id="360ef04fca23b799" memberName="slider2" virtualName=""
-          explicitFocusOrder="2" pos="13.263% 5.505% 3.448% 41.651%" tooltip="Channel 2"
+          explicitFocusOrder="2" pos="13.298% 5.517% 3.457% 41.724%" tooltip="Channel 2"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider3" id="580efc4de85d7adc" memberName="slider3" virtualName=""
-          explicitFocusOrder="3" pos="21.22% 5.505% 3.448% 41.651%" tooltip="Channel 3"
+          explicitFocusOrder="3" pos="21.277% 5.517% 3.457% 41.724%" tooltip="Channel 3"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider4" id="f2dde0dd416c1e84" memberName="slider4" virtualName=""
-          explicitFocusOrder="4" pos="28.647% 5.505% 3.448% 41.651%" tooltip="Channel 4"
+          explicitFocusOrder="4" pos="28.723% 5.517% 3.457% 41.724%" tooltip="Channel 4"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider5" id="bfb4535b82185fed" memberName="slider5" virtualName=""
-          explicitFocusOrder="5" pos="36.605% 5.505% 3.448% 41.651%" tooltip="Channel 5"
+          explicitFocusOrder="5" pos="36.702% 5.517% 3.457% 41.724%" tooltip="Channel 5"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider6" id="679f90b8f07cb4ee" memberName="slider6" virtualName=""
-          explicitFocusOrder="6" pos="44.297% 5.505% 3.448% 41.651%" tooltip="Channel 6"
+          explicitFocusOrder="6" pos="44.415% 5.517% 3.457% 41.724%" tooltip="Channel 6"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider7" id="44ad98a2262cd229" memberName="slider7" virtualName=""
-          explicitFocusOrder="7" pos="51.989% 5.505% 3.448% 41.651%" tooltip="Channel 7"
+          explicitFocusOrder="7" pos="51.862% 5.517% 3.457% 41.724%" tooltip="Channel 7"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider8" id="85ff76e13a1ec2a3" memberName="slider8" virtualName=""
-          explicitFocusOrder="8" pos="59.416% 5.505% 3.448% 41.651%" tooltip="Channel 8"
+          explicitFocusOrder="8" pos="59.309% 5.517% 3.457% 41.724%" tooltip="Channel 8"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider9" id="776c3f04e2556496" memberName="slider9" virtualName=""
-          explicitFocusOrder="9" pos="67.374% 5.505% 3.448% 41.651%" tooltip="Channel 9"
+          explicitFocusOrder="9" pos="67.287% 5.517% 3.457% 41.724%" tooltip="Channel 9"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider10" id="3ae59e3cf4f55f86" memberName="slider10" virtualName=""
-          explicitFocusOrder="10" pos="74.801% 5.505% 3.448% 41.651%" tooltip="Channel 10"
+          explicitFocusOrder="10" pos="74.734% 5.517% 3.457% 41.724%" tooltip="Channel 10"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider11" id="79792787596ae791" memberName="slider11" virtualName=""
-          explicitFocusOrder="11" pos="82.493% 5.505% 3.448% 41.651%" tooltip="Channel 11"
+          explicitFocusOrder="11" pos="82.447% 5.517% 3.457% 41.724%" tooltip="Channel 11"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider12" id="71d7be10add7e20b" memberName="slider12" virtualName=""
-          explicitFocusOrder="12" pos="90.186% 5.505% 3.448% 41.651%" tooltip="Channel 12"
+          explicitFocusOrder="12" pos="90.16% 5.517% 3.457% 41.724%" tooltip="Channel 12"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider13" id="f4fec1d538673f4a" memberName="slider13" virtualName=""
-          explicitFocusOrder="13" pos="5.836% 52.661% 3.448% 41.651%" tooltip="Channel 13"
+          explicitFocusOrder="13" pos="5.851% 52.586% 3.457% 41.724%" tooltip="Channel 13"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider14" id="2a85667136c4a974" memberName="slider14" virtualName=""
-          explicitFocusOrder="14" pos="13.263% 52.661% 3.448% 41.651%"
+          explicitFocusOrder="14" pos="13.298% 52.586% 3.457% 41.724%"
           tooltip="Channel 14" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider15" id="dd34e28ad89b9dbd" memberName="slider15" virtualName=""
-          explicitFocusOrder="15" pos="21.22% 52.661% 3.448% 41.651%" tooltip="Channel 15"
-          thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
-          textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
+          explicitFocusOrder="15" pos="21.277% 52.586% 3.457% 41.724%"
+          tooltip="Channel 15" thumbcol="ff252525" min="0" max="255" int="1"
+          style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider16" id="1800066dd5b0e135" memberName="slider16" virtualName=""
-          explicitFocusOrder="16" pos="28.647% 52.661% 3.448% 41.651%"
+          explicitFocusOrder="16" pos="28.723% 52.586% 3.457% 41.724%"
           tooltip="Channel 16" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider17" id="246bcbd8f7c8a43" memberName="slider17" virtualName=""
-          explicitFocusOrder="0" pos="36.605% 52.661% 3.448% 41.651%" tooltip="Channel 17"
+          explicitFocusOrder="0" pos="36.702% 52.586% 3.457% 41.724%" tooltip="Channel 17"
           thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider18" id="b0c57e3500d80cd5" memberName="slider18" virtualName=""
-          explicitFocusOrder="18" pos="44.297% 52.661% 3.448% 41.651%"
+          explicitFocusOrder="18" pos="44.415% 52.586% 3.457% 41.724%"
           tooltip="Channel 18" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider19" id="ae0da53a6fe6f1b9" memberName="slider19" virtualName=""
-          explicitFocusOrder="19" pos="51.989% 52.661% 3.448% 41.651%"
+          explicitFocusOrder="19" pos="51.862% 52.586% 3.457% 41.724%"
           tooltip="Channel 19" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider20" id="bf3f1185e99f8568" memberName="slider20" virtualName=""
-          explicitFocusOrder="20" pos="59.416% 52.661% 3.448% 41.651%"
+          explicitFocusOrder="20" pos="59.309% 52.586% 3.457% 41.724%"
           tooltip="Channel 20" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider21" id="d00d46b0bf7a97d5" memberName="slider21" virtualName=""
-          explicitFocusOrder="21" pos="67.374% 52.661% 3.448% 41.651%"
+          explicitFocusOrder="21" pos="67.287% 52.586% 3.457% 41.724%"
           tooltip="Channel 21" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider22" id="f1e61468b0b315f8" memberName="slider22" virtualName=""
-          explicitFocusOrder="22" pos="74.801% 52.661% 3.448% 41.651%"
+          explicitFocusOrder="22" pos="74.734% 52.586% 3.457% 41.724%"
           tooltip="Channel 22" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider23" id="3c9af5933de7a732" memberName="slider23" virtualName=""
-          explicitFocusOrder="23" pos="82.493% 52.661% 3.448% 41.651%"
+          explicitFocusOrder="23" pos="82.447% 52.586% 3.457% 41.724%"
           tooltip="Channel 23" thumbcol="ff252525" min="0" max="255" int="1"
           style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
   <SLIDER name="slider24" id="112c3bb5c3f5dbb9" memberName="slider24" virtualName=""
-          explicitFocusOrder="24" pos="90.186% 52.661% 3.448% 41.651%"
-          tooltip="Channel 24" thumbcol="ff252525" min="0" max="255" int="1"
-          style="LinearVertical" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
+          explicitFocusOrder="24" pos="90.16% 52.586% 3.457% 41.724%" tooltip="Channel 24"
+          thumbcol="ff252525" min="0" max="255" int="1" style="LinearVertical"
+          textBoxPos="NoTextBox" textBoxEditable="0" textBoxWidth="80"
+          textBoxHeight="20" skewFactor="1" needsCallback="1"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

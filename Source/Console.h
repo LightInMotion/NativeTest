@@ -48,9 +48,9 @@ public:
     int setCue (SliderHandle slider, int cueNumber);
     int getCue (SliderHandle slider);
     void setLevel (SliderHandle slider, int level);
-    inline int getLevel (SliderHandle slider);
-    inline void setGrandMaster (int level);
-    inline int getGrandMaster();
+    int getLevel (SliderHandle slider);
+    void setGrandMaster (int level);
+    int getGrandMaster();
     
     // Update Thread stuff, don't call externally!
     inline static int compareElements (Fader* first, Fader* second);
