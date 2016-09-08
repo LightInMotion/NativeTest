@@ -52,7 +52,7 @@ public:
     // Info functions
     int getDeviceCount() { return deviceList.size(); }
     int getCueCount() { return cueList.size(); }
-    int getUniverseCount() { return artnetOut->getUniverseCount(); }
+    int getUniverseCount() { return universeCount; }
     
     // Slider functions
     SliderHandle addSlider();
@@ -67,7 +67,11 @@ public:
     
     bool startFade (SliderHandle slider, int target, float fadeTime);
     void stopFade (SliderHandle slider);
-        
+    
+    // Output Control
+    void setArtNetOutput (bool state);
+    bool isArtNetOutput() { if (artnetOutput) return true; else return false; }
+    
     // Admin stuff
     int getFaderCount() { return faderList.size(); }
     void clearAllFaders();
@@ -79,7 +83,10 @@ public:
 private:
     // Initialization helpers
     bool loadEffects();
-    
+
+    // Output Helpers
+    void createRequiredArtNetUniverses();
+
     // Cue List helper
     Cue* lookupCue (int cueNumber)
     {
@@ -114,7 +121,8 @@ private:
     MemoryBlock outputBeforeEffects;
     MemoryBlock outputAfterEffects;
     
-    ScopedPointer<ArtNetOutput> artnetOut;
+    ScopedPointer<ArtNetOutput> artnetOutput;
+    int universeCount;
     
     class TimedFade {
     public:

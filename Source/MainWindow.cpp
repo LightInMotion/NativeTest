@@ -81,9 +81,9 @@ MainAppWindow::MainAppWindow()
                       Colour (0xff233746),
                       DocumentWindow::allButtons)
 {
-    setResizable (true, false);
-    setResizeLimits (100, 100, 8192, 8192);
-    centreWithSize (640, 480);    
+    setResizable (false, false);
+//    setResizeLimits (100, 100, 8192, 8192);
+    centreWithSize (456, 346);
     setUsingNativeTitleBar (true);
     setVisible (true);
 

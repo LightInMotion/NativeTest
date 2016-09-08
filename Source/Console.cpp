@@ -17,10 +17,9 @@ Console::Console (BlueLiteDevice::Ptr blueliteDevice_)
       grandMaster (FADER_MAX_LEVEL),
       updateID (0),
       outputBeforeEffects (DMX_CHANNEL_UPDATE_BUFFER_COUNT),
-      outputAfterEffects (DMX_CHANNEL_BUFFER_COUNT)
+      outputAfterEffects (DMX_CHANNEL_BUFFER_COUNT),
+      universeCount (0)
 {
-    artnetOut = new ArtNetOutput;
-    
     // Initialize common entities
     loadEffects();
     
@@ -206,7 +205,8 @@ void Console::newShow()
     deviceList.clear();
     
     // Abandon all ArtNet output
-    artnetOut->clearAllUniverses();
+    if (artnetOutput)
+        artnetOutput->clearAllUniverses();
     
     broadcastMessage (Console::NewShow);
 }
@@ -296,6 +296,32 @@ bool Console::loadShow (File file, LoadListener* listener)
     }
     
     // Create ArtNet Output Universes as necessary
+    createRequiredArtNetUniverses();
+    
+    broadcastMessage (Console::ShowLoaded);
+    return true;
+}
+
+//==============================================================================
+// Output Functions
+//
+void Console::setArtNetOutput (bool state)
+{
+    if (! state)
+        artnetOutput = nullptr;
+    else
+    {
+        artnetOutput = new ArtNetOutput();
+        createRequiredArtNetUniverses();
+    }
+}
+
+void Console::createRequiredArtNetUniverses()
+{
+    // We also use this as an opporunity to count universes used
+    universeCount = 0;
+    
+    // Create ArtNet Output Universes as necessary
     for (uint32 universe = 0; universe < DMX_UNIVERSE_COUNT; ++universe)
     {
         Device* highestDevice = nullptr;
@@ -313,15 +339,17 @@ bool Console::loadShow (File file, LoadListener* listener)
         
         if (highestDevice)
         {
-            int channels = highestDevice->DeviceGetBaseAddress() - (universe * DMX_CHANNELS_PER_UNIVERSE);
-            channels += highestDevice->DeviceGetNumberOfChannels();
+            universeCount++;
             
-            artnetOut->setUniverse(universe, channels, universe / 16, universe % 16);
+            if (artnetOutput)
+            {
+                int channels = highestDevice->DeviceGetBaseAddress() - (universe * DMX_CHANNELS_PER_UNIVERSE);
+                channels += highestDevice->DeviceGetNumberOfChannels();
+            
+                artnetOutput->setUniverse(universe, channels, universe / 16, universe % 16);
+            }
         }
     }
-    
-    broadcastMessage (Console::ShowLoaded);
-    return true;
 }
 
 //==============================================================================
@@ -476,20 +504,8 @@ void Console::run()
 
         } while (0);
 
-        artnetOut->updateChannels (outputAfterEffects);
-        
-#if 0
-        String outstr("B: ");
-        uint8* bytes = (uint8 *)outputBeforeEffects.getData();
-        for (int n = 0; n < 16; ++n)
-            outstr += (String (bytes[n]) + " ");
-        Logger::outputDebugString (outstr);
-        outstr = "A: ";
-        bytes = (uint8 *)outputAfterEffects.getData();
-        for (int n = 0; n < 16; ++n)
-            outstr += (String (bytes[n]) + " ");
-        Logger::outputDebugString (outstr);
-#endif
+        if (artnetOutput)
+            artnetOutput->updateChannels (outputAfterEffects);
     }
 }
 

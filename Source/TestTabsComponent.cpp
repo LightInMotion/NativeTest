@@ -21,10 +21,9 @@
 //[/Headers]
 
 #include "TestTabsComponent.h"
-#include "DmxOutComponent.h"
+#include "ConsoleComponent.h"
 #include "DmxInComponent.h"
 #include "TimeComponent.h"
-#include "ConsoleComponent.h"
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
@@ -42,10 +41,9 @@ TestTabsComponent::TestTabsComponent (BlueLiteDevice::Ptr blueliteDevice_)
 
     addAndMakeVisible (tabbedComponent = new TabbedComponent (TabbedButtonBar::TabsAtTop));
     tabbedComponent->setTabBarDepth (35);
-    tabbedComponent->addTab (TRANS("DMX Output"), Colour (0xff344756), new DmxOutComponent (blueliteDevice), true);
+    tabbedComponent->addTab (TRANS("Console"), Colour (0xff344756), new ConsoleComponent (blueliteDevice), true);
     tabbedComponent->addTab (TRANS("DMX Input"), Colour (0xff435666), new DmxInComponent (blueliteDevice), true);
     tabbedComponent->addTab (TRANS("Time"), Colour (0xff546675), new TimeComponent (blueliteDevice), true);
-    tabbedComponent->addTab (TRANS("Console"), Colour (0xff647685), new ConsoleComponent (blueliteDevice), true);
     tabbedComponent->setCurrentTabIndex (0);
 
 
@@ -86,7 +84,7 @@ void TestTabsComponent::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    tabbedComponent->setBounds (-1, 0, proportionOfWidth (1.0080f), proportionOfHeight (1.0017f));
+    tabbedComponent->setBounds (-1, 0, proportionOfWidth (1.0077f), proportionOfHeight (1.0017f));
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -113,16 +111,14 @@ BEGIN_JUCER_METADATA
                  initialWidth="600" initialHeight="400">
   <BACKGROUND backgroundColour="ffffff"/>
   <TABBEDCOMPONENT name="new tabbed component" id="16b48baabf12e68c" memberName="tabbedComponent"
-                   virtualName="" explicitFocusOrder="0" pos="-1 0 100.798% 100.172%"
+                   virtualName="" explicitFocusOrder="0" pos="-1 0 100.766% 100.174%"
                    orientation="top" tabBarDepth="35" initialTab="0">
-    <TAB name="DMX Output" colour="ff344756" useJucerComp="1" contentClassName=""
-         constructorParams="blueliteDevice" jucerComponentFile="DmxOutComponent.cpp"/>
+    <TAB name="Console" colour="ff344756" useJucerComp="1" contentClassName=""
+         constructorParams="blueliteDevice" jucerComponentFile="ConsoleComponent.cpp"/>
     <TAB name="DMX Input" colour="ff435666" useJucerComp="1" contentClassName=""
          constructorParams="blueliteDevice" jucerComponentFile="DmxInComponent.cpp"/>
     <TAB name="Time" colour="ff546675" useJucerComp="1" contentClassName=""
          constructorParams="blueliteDevice" jucerComponentFile="TimeComponent.cpp"/>
-    <TAB name="Console" colour="ff647685" useJucerComp="1" contentClassName=""
-         constructorParams="blueliteDevice" jucerComponentFile="ConsoleComponent.cpp"/>
   </TABBEDCOMPONENT>
 </JUCER_COMPONENT>
 

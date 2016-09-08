@@ -37,15 +37,15 @@ public:
       console (console_),
       file (fileToLoad),
       result (0) {};
-    
+
     void run()
     {
         result = console->loadShow (file, this);
     }
-    
+
     void reportProgress (double progress) { setProgress (progress); };
     bool getResult() { return result; }
-    
+
 private:
     Console* console;
     File file;
@@ -88,11 +88,11 @@ ConsoleComponent::ConsoleComponent (BlueLiteDevice::Ptr blueliteDevice_)
 
     addAndMakeVisible (loadButton = new TextButton ("new button"));
     loadButton->setTooltip (TRANS("Load an existing show from disk"));
-    loadButton->setButtonText (TRANS("Load"));
+    loadButton->setButtonText (TRANS("Open"));
     loadButton->addListener (this);
 
     addAndMakeVisible (loadedLabel = new Label ("new label",
-                                                TRANS("Loaded:")));
+                                                TRANS("File:")));
     loadedLabel->setFont (Font (15.00f, Font::plain));
     loadedLabel->setJustificationType (Justification::centredLeft);
     loadedLabel->setEditable (false, false, false);
@@ -206,6 +206,21 @@ ConsoleComponent::ConsoleComponent (BlueLiteDevice::Ptr blueliteDevice_)
     yCueButton->setButtonText (TRANS("0"));
     yCueButton->addListener (this);
 
+    addAndMakeVisible (artnetButton = new ToggleButton ("new toggle button"));
+    artnetButton->setTooltip (TRANS("Turn Art-Net output on and off"));
+    artnetButton->setButtonText (TRANS("Art-Net Output"));
+    artnetButton->addListener (this);
+    artnetButton->setColour (ToggleButton::textColourId, Colour (0xffd8d8d8));
+
+    addAndMakeVisible (dmxLabel = new Label ("dmxLabel",
+                                             TRANS("DMX:")));
+    dmxLabel->setFont (Font (15.00f, Font::plain));
+    dmxLabel->setJustificationType (Justification::centredLeft);
+    dmxLabel->setEditable (false, false, false);
+    dmxLabel->setColour (Label::textColourId, Colour (0xffd8d8d8));
+    dmxLabel->setColour (TextEditor::textColourId, Colours::black);
+    dmxLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
 
     //[UserPreSize]
     gmSlider->setValue (8192, dontSendNotification);
@@ -214,9 +229,13 @@ ConsoleComponent::ConsoleComponent (BlueLiteDevice::Ptr blueliteDevice_)
     updateThumb (xSlider);
     ySlider->setValue (8192, dontSendNotification);
     updateThumb (ySlider);
+
+    artnetButton->setWantsKeyboardFocus (false);
+
+    dmxLabel->setText ("DMX: " + blueliteDevice->getDeviceName(), dontSendNotification);
     //[/UserPreSize]
 
-    setSize (600, 400);
+    setSize (456, 312);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -256,6 +275,8 @@ ConsoleComponent::~ConsoleComponent()
     ySlider = nullptr;
     xCueButton = nullptr;
     yCueButton = nullptr;
+    artnetButton = nullptr;
+    dmxLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -277,25 +298,27 @@ void ConsoleComponent::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    gmLabel->setBounds (16, 238, 40, 24);
-    label->setBounds (16, 16, 40, 24);
-    gmSlider->setBounds (12, 40, 48, 200);
-    loadButton->setBounds (80, 48, 80, 24);
-    loadedLabel->setBounds (80, 16, 208, 24);
-    cuesLabel->setBounds (168, 40, 120, 24);
-    devsLabel->setBounds (168, 64, 120, 24);
-    universesLabel->setBounds (168, 88, 120, 24);
-    newButton->setBounds (80, 80, 80, 24);
-    fadersLabel->setBounds (80, 144, 120, 24);
-    clearAllButton->setBounds (80, 176, 80, 24);
-    xLabel->setBounds (304, 238, 40, 24);
-    label2->setBounds (304, 16, 40, 24);
-    xSlider->setBounds (300, 40, 48, 200);
-    yLabel->setBounds (376, 238, 40, 24);
-    label3->setBounds (376, 16, 40, 24);
-    ySlider->setBounds (372, 40, 48, 200);
-    xCueButton->setBounds (292, 264, 64, 24);
-    yCueButton->setBounds (364, 264, 64, 24);
+    gmLabel->setBounds (240, 238, 40, 24);
+    label->setBounds (240, 16, 40, 24);
+    gmSlider->setBounds (236, 40, 48, 200);
+    loadButton->setBounds (24, 56, 80, 24);
+    loadedLabel->setBounds (24, 24, 208, 24);
+    cuesLabel->setBounds (112, 48, 120, 24);
+    devsLabel->setBounds (112, 72, 120, 24);
+    universesLabel->setBounds (112, 96, 120, 24);
+    newButton->setBounds (24, 88, 80, 24);
+    fadersLabel->setBounds (24, 128, 120, 24);
+    clearAllButton->setBounds (24, 160, 80, 24);
+    xLabel->setBounds (312, 238, 40, 24);
+    label2->setBounds (312, 16, 40, 24);
+    xSlider->setBounds (308, 40, 48, 200);
+    yLabel->setBounds (384, 238, 40, 24);
+    label3->setBounds (384, 16, 40, 24);
+    ySlider->setBounds (380, 40, 48, 200);
+    xCueButton->setBounds (300, 264, 64, 24);
+    yCueButton->setBounds (372, 264, 64, 24);
+    artnetButton->setBounds (24, 200, 150, 24);
+    dmxLabel->setBounds (24, 224, 184, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -349,12 +372,12 @@ void ConsoleComponent::buttonClicked (Button* buttonThatWasClicked)
         if (chooser.browseForFileToOpen())
         {
             File show (chooser.getResult());
-            
+
             ShowLoader loader (show, console);
             loader.runThread();
             if (loader.getResult())
             {
-                loadedLabel->setText ("Loaded: " + show.getFileName(), dontSendNotification);
+                loadedLabel->setText ("File: " + show.getFileName(), dontSendNotification);
                 updateStats();
 
                 int n;
@@ -381,7 +404,7 @@ void ConsoleComponent::buttonClicked (Button* buttonThatWasClicked)
     {
         //[UserButtonCode_newButton] -- add your button handler code here..
         console->newShow();
-        loadedLabel->setText ("Loaded:", dontSendNotification);
+        loadedLabel->setText ("File:", dontSendNotification);
         updateStats();
         //[/UserButtonCode_newButton]
     }
@@ -406,6 +429,12 @@ void ConsoleComponent::buttonClicked (Button* buttonThatWasClicked)
         console->startFade (xFader, 0, 3.0);
         console->startFade (yFader, 8192, 3.0);
         //[/UserButtonCode_yCueButton]
+    }
+    else if (buttonThatWasClicked == artnetButton)
+    {
+        //[UserButtonCode_artnetButton] -- add your button handler code here..
+        console->setArtNetOutput (artnetButton->getToggleState());
+        //[/UserButtonCode_artnetButton]
     }
 
     //[UserbuttonClicked_Post]
@@ -476,93 +505,102 @@ BEGIN_JUCER_METADATA
                  parentClasses="public Component, Timer" constructorParams="BlueLiteDevice::Ptr blueliteDevice_"
                  variableInitialisers="blueliteDevice (blueliteDevice_)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
-                 initialWidth="600" initialHeight="400">
+                 initialWidth="456" initialHeight="312">
   <BACKGROUND backgroundColour="ffffff"/>
   <LABEL name="new label" id="644af4ccad58ddb2" memberName="gmLabel" virtualName=""
-         explicitFocusOrder="0" pos="16 238 40 24" textCol="ffd8d8d8"
+         explicitFocusOrder="0" pos="240 238 40 24" textCol="ffd8d8d8"
          edTextCol="ff000000" edBkgCol="0" labelText="100%" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="4f9d8f328d7aa677" memberName="label" virtualName=""
-         explicitFocusOrder="0" pos="16 16 40 24" textCol="ffd8d8d8" edTextCol="ff000000"
-         edBkgCol="0" labelText="GM" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         bold="0" italic="0" justification="36"/>
+         explicitFocusOrder="0" pos="240 16 40 24" textCol="ffd8d8d8"
+         edTextCol="ff000000" edBkgCol="0" labelText="GM" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="36"/>
   <SLIDER name="new slider" id="78e9a1645d3c105a" memberName="gmSlider"
-          virtualName="" explicitFocusOrder="0" pos="12 40 48 200" tooltip="Grand Master"
+          virtualName="" explicitFocusOrder="0" pos="236 40 48 200" tooltip="Grand Master"
           min="0" max="8192" int="1" style="LinearVertical" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="30" textBoxHeight="20" skewFactor="1"
           needsCallback="1"/>
   <TEXTBUTTON name="new button" id="674f4af2494810a4" memberName="loadButton"
-              virtualName="" explicitFocusOrder="0" pos="80 48 80 24" tooltip="Load an existing show from disk"
-              buttonText="Load" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+              virtualName="" explicitFocusOrder="0" pos="24 56 80 24" tooltip="Load an existing show from disk"
+              buttonText="Open" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <LABEL name="new label" id="7ea17f29f38d756f" memberName="loadedLabel"
-         virtualName="" explicitFocusOrder="0" pos="80 16 208 24" textCol="ffd8d8d8"
-         edTextCol="ff000000" edBkgCol="0" labelText="Loaded:" editableSingleClick="0"
+         virtualName="" explicitFocusOrder="0" pos="24 24 208 24" textCol="ffd8d8d8"
+         edTextCol="ff000000" edBkgCol="0" labelText="File:" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="dd3ec43eadf1ea48" memberName="cuesLabel"
-         virtualName="" explicitFocusOrder="0" pos="168 40 120 24" textCol="ffd8d8d8"
+         virtualName="" explicitFocusOrder="0" pos="112 48 120 24" textCol="ffd8d8d8"
          edTextCol="ff000000" edBkgCol="0" labelText="Cues:" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="376108cecbdd7679" memberName="devsLabel"
-         virtualName="" explicitFocusOrder="0" pos="168 64 120 24" textCol="ffd8d8d8"
+         virtualName="" explicitFocusOrder="0" pos="112 72 120 24" textCol="ffd8d8d8"
          edTextCol="ff000000" edBkgCol="0" labelText="Devs:" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="b1043d718f9855e9" memberName="universesLabel"
-         virtualName="" explicitFocusOrder="0" pos="168 88 120 24" textCol="ffd8d8d8"
+         virtualName="" explicitFocusOrder="0" pos="112 96 120 24" textCol="ffd8d8d8"
          edTextCol="ff000000" edBkgCol="0" labelText="Universes:" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="33"/>
   <TEXTBUTTON name="new button" id="61869a5b86ebd3df" memberName="newButton"
-              virtualName="" explicitFocusOrder="0" pos="80 80 80 24" tooltip="Create a new show"
+              virtualName="" explicitFocusOrder="0" pos="24 88 80 24" tooltip="Create a new show"
               buttonText="New" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <LABEL name="new label" id="73601fe355fe9669" memberName="fadersLabel"
-         virtualName="" explicitFocusOrder="0" pos="80 144 120 24" textCol="ffd8d8d8"
+         virtualName="" explicitFocusOrder="0" pos="24 128 120 24" textCol="ffd8d8d8"
          edTextCol="ff000000" edBkgCol="0" labelText="Faders:" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="33"/>
   <TEXTBUTTON name="new button" id="506e419a6b143eb0" memberName="clearAllButton"
-              virtualName="" explicitFocusOrder="0" pos="80 176 80 24" tooltip="Clear all fader cue assignements"
+              virtualName="" explicitFocusOrder="0" pos="24 160 80 24" tooltip="Clear all fader cue assignements"
               buttonText="Clear All" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <LABEL name="new label" id="673ff7e328cc28f2" memberName="xLabel" virtualName=""
-         explicitFocusOrder="0" pos="304 238 40 24" textCol="ffd8d8d8"
+         explicitFocusOrder="0" pos="312 238 40 24" textCol="ffd8d8d8"
          edTextCol="ff000000" edBkgCol="0" labelText="100%" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="bceb4029973f3ff4" memberName="label2" virtualName=""
-         explicitFocusOrder="0" pos="304 16 40 24" textCol="ffd8d8d8"
+         explicitFocusOrder="0" pos="312 16 40 24" textCol="ffd8d8d8"
          edTextCol="ff000000" edBkgCol="0" labelText="X" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="36"/>
   <SLIDER name="new slider" id="92a1f57ad4893958" memberName="xSlider"
-          virtualName="" explicitFocusOrder="0" pos="300 40 48 200" tooltip="X Fader"
+          virtualName="" explicitFocusOrder="0" pos="308 40 48 200" tooltip="X Fader"
           min="0" max="8192" int="1" style="LinearVertical" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="30" textBoxHeight="20" skewFactor="1"
           needsCallback="1"/>
   <LABEL name="new label" id="fe45cc5b811191a5" memberName="yLabel" virtualName=""
-         explicitFocusOrder="0" pos="376 238 40 24" textCol="ffd8d8d8"
+         explicitFocusOrder="0" pos="384 238 40 24" textCol="ffd8d8d8"
          edTextCol="ff000000" edBkgCol="0" labelText="0%" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="a967f9ed0a8fda55" memberName="label3" virtualName=""
-         explicitFocusOrder="0" pos="376 16 40 24" textCol="ffd8d8d8"
+         explicitFocusOrder="0" pos="384 16 40 24" textCol="ffd8d8d8"
          edTextCol="ff000000" edBkgCol="0" labelText="Y" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="36"/>
   <SLIDER name="new slider" id="9b89e8f28e93d447" memberName="ySlider"
-          virtualName="" explicitFocusOrder="0" pos="372 40 48 200" tooltip="Y Fader"
+          virtualName="" explicitFocusOrder="0" pos="380 40 48 200" tooltip="Y Fader"
           min="0" max="8192" int="1" style="LinearVertical" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="30" textBoxHeight="20" skewFactor="1"
           needsCallback="1"/>
   <TEXTBUTTON name="new button" id="a851097a5860e164" memberName="xCueButton"
-              virtualName="" explicitFocusOrder="0" pos="292 264 64 24" tooltip="Crossfade to X"
+              virtualName="" explicitFocusOrder="0" pos="300 264 64 24" tooltip="Crossfade to X"
               buttonText="0" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="new button" id="ccbed26f7922afc2" memberName="yCueButton"
-              virtualName="" explicitFocusOrder="0" pos="364 264 64 24" tooltip="Crossfade to Y"
+              virtualName="" explicitFocusOrder="0" pos="372 264 64 24" tooltip="Crossfade to Y"
               buttonText="0" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+  <TOGGLEBUTTON name="new toggle button" id="1c892aa11497cdbd" memberName="artnetButton"
+                virtualName="" explicitFocusOrder="0" pos="24 200 150 24" tooltip="Turn Art-Net output on and off"
+                txtcol="ffd8d8d8" buttonText="Art-Net Output" connectedEdges="0"
+                needsCallback="1" radioGroupId="0" state="0"/>
+  <LABEL name="dmxLabel" id="4c15ba7a42f2dbf2" memberName="dmxLabel" virtualName=""
+         explicitFocusOrder="0" pos="24 224 184 24" textCol="ffd8d8d8"
+         edTextCol="ff000000" edBkgCol="0" labelText="DMX:" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="33"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

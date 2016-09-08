@@ -92,6 +92,8 @@ private:
     ScopedPointer<Slider> ySlider;
     ScopedPointer<TextButton> xCueButton;
     ScopedPointer<TextButton> yCueButton;
+    ScopedPointer<ToggleButton> artnetButton;
+    ScopedPointer<Label> dmxLabel;
 
 
     //==============================================================================
