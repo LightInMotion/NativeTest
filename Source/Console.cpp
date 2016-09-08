@@ -27,7 +27,7 @@ Console::Console (BlueLiteDevice::Ptr blueliteDevice_)
     // Start our update Thread
     timeEvent = new BlueLiteEvent();
     blueliteDevice->addTimeEvent (timeEvent.getObject());
-    setPriority (6);
+    setPriority (7);
     startThread();
 }
 
@@ -361,7 +361,6 @@ void Console::run()
         timeEvent->wait();
         if (threadShouldExit())
             return;
-        
         do
         {
             const ScopedLock lock (faderList.getLock());

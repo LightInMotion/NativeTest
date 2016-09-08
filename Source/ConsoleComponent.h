@@ -65,6 +65,10 @@ private:
 
     BlueLiteDevice::Ptr blueliteDevice;
     ScopedPointer<Console> console;
+
+    Console::SliderHandle xFader;
+    Console::SliderHandle yFader;
+
     int numberOfFaders;
     //[/UserVariables]
 
@@ -80,6 +84,14 @@ private:
     ScopedPointer<TextButton> newButton;
     ScopedPointer<Label> fadersLabel;
     ScopedPointer<TextButton> clearAllButton;
+    ScopedPointer<Label> xLabel;
+    ScopedPointer<Label> label2;
+    ScopedPointer<Slider> xSlider;
+    ScopedPointer<Label> yLabel;
+    ScopedPointer<Label> label3;
+    ScopedPointer<Slider> ySlider;
+    ScopedPointer<TextButton> xCueButton;
+    ScopedPointer<TextButton> yCueButton;
 
 
     //==============================================================================

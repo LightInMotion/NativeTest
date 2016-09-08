@@ -59,7 +59,7 @@ public:
     
     bool startFade (SliderHandle slider, int target, float fadeTime);
     void stopFade (SliderHandle slider);
-    
+        
     // Admin stuff
     int getFaderCount() { return faderList.size(); }
     void clearAllFaders();
@@ -75,6 +75,9 @@ private:
     // Cue List helper
     Cue* lookupCue (int cueNumber)
     {
+        if (cueNumber == 0)
+            return &Cue::dummy;
+        
         for (int n = 0; n < cueList.size(); ++n)
             if (cueList[n]->getNumber() == cueNumber)
                 return cueList[n];
