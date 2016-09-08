@@ -39,7 +39,15 @@ public:
 
     // Show functions
     void newShow();
-    bool loadShow (File file);
+    
+    class LoadListener
+    {
+    public:
+        virtual ~LoadListener() {};
+        virtual void reportProgress (double progress) = 0;
+    };
+    
+    bool loadShow (File file, LoadListener* listener = nullptr);
 
     // Info functions
     int getDeviceCount() { return deviceList.size(); }

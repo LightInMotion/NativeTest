@@ -212,20 +212,34 @@ void Console::newShow()
 }
 
 // Load a show from disk
-bool Console::loadShow (File file)
+bool Console::loadShow (File file, LoadListener* listener)
 {
     bool result = true;
+    if (listener)
+        listener->reportProgress (0);
     
     newShow();  // Clear the existing show
     
-    // Lock the update thread
-    const ScopedLock lock (faderList.getLock());
-
+    // We don't lock the fader list here because there should be
+    // no cues assigned to any faders and locking would block the UI
+    // from updating progress
+    
     ShowFile show(file.getFullPathName());
     if (show.open())
     {
         // !!!! fail for unknown version
         uint32 version = show.getVersion();
+        
+        uint32 deviceCount = 0;
+        while (show.isDirectory("/Devices/" + String(deviceCount) + "/"))
+            deviceCount++;
+        
+        uint32 cueCount = 0;
+        while (show.isDirectory("/Cues/" + String(cueCount) + "/"))
+            cueCount++;
+        
+        double loadCount = 0;
+        double loadTotal = deviceCount + cueCount;
         
         uint32 deviceIndex = 0;
         while (show.isDirectory("/Devices/" + String(deviceIndex) + "/"))
@@ -241,6 +255,12 @@ bool Console::loadShow (File file)
             deviceList.add (device);
             device.release();
             ++deviceIndex;
+            
+            if (listener)
+            {
+                loadCount++;
+                listener->reportProgress (loadCount / loadTotal);
+            }
         }
     
         uint32 cueIndex = 0;
@@ -257,6 +277,12 @@ bool Console::loadShow (File file)
             cueList.add (cue);
             cue.release();
             ++cueIndex;
+            
+            if (listener)
+            {
+                loadCount++;
+                listener->reportProgress (loadCount / loadTotal);
+            }
         }
     }
     else

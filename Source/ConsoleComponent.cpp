@@ -29,6 +29,28 @@
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
+class ShowLoader : public ThreadWithProgressWindow, Console::LoadListener
+{
+public:
+    ShowLoader (File fileToLoad, Console* console_)
+    : ThreadWithProgressWindow ("Loading show file...", true, false),
+      console (console_),
+      file (fileToLoad),
+      result (0) {};
+    
+    void run()
+    {
+        result = console->loadShow (file, this);
+    }
+    
+    void reportProgress (double progress) { setProgress (progress); };
+    bool getResult() { return result; }
+    
+private:
+    Console* console;
+    File file;
+    bool result;
+};
 //[/MiscUserDefs]
 
 //==============================================================================
@@ -327,8 +349,10 @@ void ConsoleComponent::buttonClicked (Button* buttonThatWasClicked)
         if (chooser.browseForFileToOpen())
         {
             File show (chooser.getResult());
-
-            if (console->loadShow (show))
+            
+            ShowLoader loader (show, console);
+            loader.runThread();
+            if (loader.getResult())
             {
                 loadedLabel->setText ("Loaded: " + show.getFileName(), dontSendNotification);
                 updateStats();
@@ -348,6 +372,8 @@ void ConsoleComponent::buttonClicked (Button* buttonThatWasClicked)
                 if (n < 1000000)
                     yCueButton->setButtonText (String (n));
             }
+            else
+                AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Error", "The file could not be loaded.");
         }
         //[/UserButtonCode_loadButton]
     }
@@ -363,6 +389,8 @@ void ConsoleComponent::buttonClicked (Button* buttonThatWasClicked)
     {
         //[UserButtonCode_clearAllButton] -- add your button handler code here..
         console->clearAllFaders();
+        xCueButton->setButtonText("0");
+        yCueButton->setButtonText("0");
         //[/UserButtonCode_clearAllButton]
     }
     else if (buttonThatWasClicked == xCueButton)
@@ -423,7 +451,7 @@ void ConsoleComponent::timerCallback()
         xSlider->setValue (x, dontSendNotification);
         updateThumb (xSlider);
     }
-    
+
     int y = console->getLevel (yFader);
     if (y != 8192 - (int)ySlider->getValue())
     {
