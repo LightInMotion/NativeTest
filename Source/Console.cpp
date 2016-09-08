@@ -18,6 +18,7 @@ Console::Console (BlueLiteDevice::Ptr blueliteDevice_)
       updateID (0),
       outputBeforeEffects (DMX_CHANNEL_UPDATE_BUFFER_COUNT),
       outputAfterEffects (DMX_CHANNEL_BUFFER_COUNT),
+      dmxOutput (blueliteDevice->getDmxDataSize()),
       universeCount (0)
 {
     // Initialize common entities
@@ -504,6 +505,13 @@ void Console::run()
 
         } while (0);
 
+        // Output to our device
+        // !!!! Alternate version of update to eliminate copy!
+        dmxOutput.copyFrom (outputAfterEffects.getData(), 0, dmxOutput.getSize());
+        Result r = blueliteDevice->updateDmxData(0, dmxOutput);
+        if (r.failed())
+            Logger::outputDebugString(r.getErrorMessage());
+        
         if (artnetOutput)
             artnetOutput->updateChannels (outputAfterEffects);
     }

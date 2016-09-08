@@ -221,6 +221,7 @@ ConsoleComponent::ConsoleComponent (BlueLiteDevice::Ptr blueliteDevice_)
     dmxLabel->setColour (TextEditor::textColourId, Colours::black);
     dmxLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
+    drawable1 = Drawable::createFromImageData (BinaryData::x2large_png, BinaryData::x2large_pngSize);
 
     //[UserPreSize]
     gmSlider->setValue (8192, dontSendNotification);
@@ -277,6 +278,7 @@ ConsoleComponent::~ConsoleComponent()
     yCueButton = nullptr;
     artnetButton = nullptr;
     dmxLabel = nullptr;
+    drawable1 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -288,6 +290,12 @@ void ConsoleComponent::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
+
+    g.setColour (Colours::black.withAlpha (0.700f));
+    jassert (drawable1 != 0);
+    if (drawable1 != 0)
+        drawable1->drawWithin (g, Rectangle<float> (0, 5, 456, 300),
+                               RectanglePlacement::stretchToFit, 0.700f);
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
@@ -506,7 +514,10 @@ BEGIN_JUCER_METADATA
                  variableInitialisers="blueliteDevice (blueliteDevice_)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
                  initialWidth="456" initialHeight="312">
-  <BACKGROUND backgroundColour="ffffff"/>
+  <BACKGROUND backgroundColour="ffffff">
+    <IMAGE pos="0 5 456 300" resource="BinaryData::x2large_png" opacity="0.70000000000000006661"
+           mode="0"/>
+  </BACKGROUND>
   <LABEL name="new label" id="644af4ccad58ddb2" memberName="gmLabel" virtualName=""
          explicitFocusOrder="0" pos="240 238 40 24" textCol="ffd8d8d8"
          edTextCol="ff000000" edBkgCol="0" labelText="100%" editableSingleClick="0"

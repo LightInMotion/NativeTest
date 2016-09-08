@@ -206,7 +206,6 @@ Result BlueLiteUsbDevice::sendConfig()
     int transferred;
     Result r = usbDevice.bulkTransfer (dmxOutEndpoint, 
                                        (uint8*)(&conf), sizeof (conf), transferred);
-    
     if (r.failed())
         return r;
     

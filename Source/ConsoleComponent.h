@@ -94,6 +94,7 @@ private:
     ScopedPointer<TextButton> yCueButton;
     ScopedPointer<ToggleButton> artnetButton;
     ScopedPointer<Label> dmxLabel;
+    ScopedPointer<Drawable> drawable1;
 
 
     //==============================================================================

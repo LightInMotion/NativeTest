@@ -2555,6 +2555,9 @@
     <None Include="..\..\Images\icon.png">
       <Filter>NativeTest\Binary Files\Images</Filter>
     </None>
+    <None Include="..\..\Images\x2-large.png">
+      <Filter>NativeTest\Binary Files\Images</Filter>
+    </None>
     <None Include="..\..\Firmware\minifirm.hex">
       <Filter>NativeTest\Binary Files\Firmware Files</Filter>
     </None>

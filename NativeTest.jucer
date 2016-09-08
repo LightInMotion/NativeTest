@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="aB3KXd" name="NativeTest" projectType="guiapp" version="1.0.1"
-              bundleIdentifier="co.limsc.NativeTest" jucerVersion="4.2.3" includeBinaryInAppConfig="1">
+<JUCERPROJECT id="aB3KXd" name="Engine Test" projectType="guiapp" version="1.0.0"
+              bundleIdentifier="co.limsc.EngineTest" jucerVersion="4.2.3" includeBinaryInAppConfig="1">
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" objCExtraSuffix="c7R03f" extraLinkerFlags="-lusb-1.0-darwin"
                bigIcon="F2D0rs">
@@ -67,10 +67,11 @@
       </MODULEPATHS>
     </VS2015>
   </EXPORTFORMATS>
-  <MAINGROUP id="U3dy7s" name="NativeTest">
+  <MAINGROUP id="U3dy7s" name="Engine Test">
     <GROUP id="{D5BDE6B8-839C-AD51-641E-0EB31E237593}" name="Binary Files">
       <GROUP id="{7A6C8045-0389-F669-639B-CCD25D86F98E}" name="Images">
         <FILE id="F2D0rs" name="icon.png" compile="0" resource="1" file="Images/icon.png"/>
+        <FILE id="sawrnE" name="x2-large.png" compile="0" resource="1" file="Images/x2-large.png"/>
       </GROUP>
       <GROUP id="{DD75A8D1-4C12-BF17-1D61-64820DA51901}" name="Firmware Files">
         <FILE id="XysZCQ" name="minifirm.hex" compile="0" resource="1" file="Firmware/minifirm.hex"/>

@@ -120,6 +120,7 @@ private:
     
     MemoryBlock outputBeforeEffects;
     MemoryBlock outputAfterEffects;
+    MemoryBlock dmxOutput;
     
     ScopedPointer<ArtNetOutput> artnetOutput;
     int universeCount;

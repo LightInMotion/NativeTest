@@ -1553,6 +1553,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Images\icon.png"/>
+    <None Include="..\..\Images\x2-large.png"/>
     <None Include="..\..\Firmware\minifirm.hex"/>
     <None Include="..\..\Firmware\X1FIRM.HEX"/>
     <None Include="..\..\Firmware\X1IDLE.HEX"/>

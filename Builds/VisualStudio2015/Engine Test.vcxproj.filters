@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="NativeTest">
-      <UniqueIdentifier>{DCA0DEE6-797D-6F0A-4D1D-7742D9E7D13D}</UniqueIdentifier>
+    <Filter Include="Engine Test">
+      <UniqueIdentifier>{07503B98-F96F-7550-25C7-746382DEF841}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\Binary Files">
-      <UniqueIdentifier>{F990020E-D8CA-95D5-AD46-F7BC8C6DB78C}</UniqueIdentifier>
+    <Filter Include="Engine Test\Binary Files">
+      <UniqueIdentifier>{1B61970B-18FC-AE4A-B5A2-835AB60A95A0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\Binary Files\Images">
-      <UniqueIdentifier>{CFFA16F0-15F8-3489-AF09-C9D4B308AEF9}</UniqueIdentifier>
+    <Filter Include="Engine Test\Binary Files\Images">
+      <UniqueIdentifier>{062F8DB5-8162-1988-E9C0-AFB66BB76AB7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\Binary Files\Firmware Files">
-      <UniqueIdentifier>{A1A4FF79-2FE7-4250-558A-6DE8A5E7DBA2}</UniqueIdentifier>
+    <Filter Include="Engine Test\Binary Files\Firmware Files">
+      <UniqueIdentifier>{CFC1496C-3B2E-4016-4602-BA72F84B0083}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\DMX Outputs">
-      <UniqueIdentifier>{EA40511A-2051-7E78-13DD-6CC3A842E4DD}</UniqueIdentifier>
+    <Filter Include="Engine Test\DMX Outputs">
+      <UniqueIdentifier>{77E51BC8-B8B4-549B-2CD0-2A2763D506DB}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\DMX Outputs\ArtNet">
-      <UniqueIdentifier>{C6E8FC9B-F2CE-754B-D1D4-D7EA67FDC8F2}</UniqueIdentifier>
+    <Filter Include="Engine Test\DMX Outputs\ArtNet">
+      <UniqueIdentifier>{9EB81FB2-04BA-5723-0EE5-AB5BA32494DB}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\DMX Outputs\BlueLite">
-      <UniqueIdentifier>{B37FC418-A29D-C15A-A62C-36E4EB171B1D}</UniqueIdentifier>
+    <Filter Include="Engine Test\DMX Outputs\BlueLite">
+      <UniqueIdentifier>{589AD62C-AA8D-B657-8F1A-33F34B7666CB}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\DMX Outputs\BlueLite\Native">
-      <UniqueIdentifier>{C7DC9789-E8F7-90CB-B7ED-73F6AE1DD7A2}</UniqueIdentifier>
+    <Filter Include="Engine Test\DMX Outputs\BlueLite\Native">
+      <UniqueIdentifier>{D1156311-C5F0-B024-13B1-759A4DB9D2B6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\DMX Engine">
-      <UniqueIdentifier>{0C3613DF-FB94-02E8-940A-BCD36413A849}</UniqueIdentifier>
+    <Filter Include="Engine Test\DMX Engine">
+      <UniqueIdentifier>{DDA89D5C-67DC-F394-4DC1-933A027E9931}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\DMX Engine\Show File">
-      <UniqueIdentifier>{EDAE6041-28F3-CB8B-D395-46ABA56317CD}</UniqueIdentifier>
+    <Filter Include="Engine Test\DMX Engine\Show File">
+      <UniqueIdentifier>{8140EE75-3084-AD69-09AE-5016D71D7D30}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\DMX Engine\Show File\Pole">
-      <UniqueIdentifier>{3DA86646-7C28-E561-6804-75BA4514E608}</UniqueIdentifier>
+    <Filter Include="Engine Test\DMX Engine\Show File\Pole">
+      <UniqueIdentifier>{A144EAC6-AB12-8BFF-7B0E-669051A61FE2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\DMX Engine\Device Controls">
-      <UniqueIdentifier>{063709F6-A36F-645E-29D3-5474AC1F705C}</UniqueIdentifier>
+    <Filter Include="Engine Test\DMX Engine\Device Controls">
+      <UniqueIdentifier>{01632138-9562-281D-8E34-43A17AAF52F1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\DMX Engine\Effects">
-      <UniqueIdentifier>{96C9D77E-B498-6373-3645-E7579AF00CC4}</UniqueIdentifier>
+    <Filter Include="Engine Test\DMX Engine\Effects">
+      <UniqueIdentifier>{A3CE3560-49B0-1026-6111-860AA7EFF492}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\UI">
-      <UniqueIdentifier>{5CD4CE4A-3265-B1E4-784C-8481A364C962}</UniqueIdentifier>
+    <Filter Include="Engine Test\UI">
+      <UniqueIdentifier>{9063246E-BBEE-A9D8-38BB-B24AA5B067B4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NativeTest\UI\Test Tabs">
-      <UniqueIdentifier>{5EAEF634-7A7C-1A9B-0578-496B235C81B4}</UniqueIdentifier>
+    <Filter Include="Engine Test\UI\Test Tabs">
+      <UniqueIdentifier>{DBEEE0B5-92A1-2DB2-42D2-10993164EA72}</UniqueIdentifier>
     </Filter>
     <Filter Include="Juce Modules">
       <UniqueIdentifier>{422C46B7-0467-2DB0-BF3C-16DFCAFD69AC}</UniqueIdentifier>
@@ -233,88 +233,88 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\ArtNetOutput.cpp">
-      <Filter>NativeTest\DMX Outputs\ArtNet</Filter>
+      <Filter>Engine Test\DMX Outputs\ArtNet</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\DemoDevice.cpp">
-      <Filter>NativeTest\DMX Outputs\BlueLite</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\BlueLiteUsbDevice.cpp">
-      <Filter>NativeTest\DMX Outputs\BlueLite</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\IntelHexReader.cpp">
-      <Filter>NativeTest\DMX Outputs\BlueLite</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\UsbDevice.cpp">
-      <Filter>NativeTest\DMX Outputs\BlueLite</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Native\UsbDevice_Win.cpp">
-      <Filter>NativeTest\DMX Outputs\BlueLite\Native</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite\Native</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Native\UsbDevice_Unix.cpp">
-      <Filter>NativeTest\DMX Outputs\BlueLite\Native</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite\Native</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\ShowFile.cpp">
-      <Filter>NativeTest\DMX Engine\Show File</Filter>
+      <Filter>Engine Test\DMX Engine\Show File</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\pole.cpp">
-      <Filter>NativeTest\DMX Engine\Show File\Pole</Filter>
+      <Filter>Engine Test\DMX Engine\Show File\Pole</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Console.cpp">
-      <Filter>NativeTest\DMX Engine</Filter>
+      <Filter>Engine Test\DMX Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Fader.cpp">
-      <Filter>NativeTest\DMX Engine</Filter>
+      <Filter>Engine Test\DMX Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Cue.cpp">
-      <Filter>NativeTest\DMX Engine</Filter>
+      <Filter>Engine Test\DMX Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Device.cpp">
-      <Filter>NativeTest\DMX Engine</Filter>
+      <Filter>Engine Test\DMX Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\ModeControl.cpp">
-      <Filter>NativeTest\DMX Engine\Device Controls</Filter>
+      <Filter>Engine Test\DMX Engine\Device Controls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\PositionControl.cpp">
-      <Filter>NativeTest\DMX Engine\Device Controls</Filter>
+      <Filter>Engine Test\DMX Engine\Device Controls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\SelectControl.cpp">
-      <Filter>NativeTest\DMX Engine\Device Controls</Filter>
+      <Filter>Engine Test\DMX Engine\Device Controls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\FaderControl.cpp">
-      <Filter>NativeTest\DMX Engine\Device Controls</Filter>
+      <Filter>Engine Test\DMX Engine\Device Controls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Control.cpp">
-      <Filter>NativeTest\DMX Engine\Device Controls</Filter>
+      <Filter>Engine Test\DMX Engine\Device Controls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\EffectDataEntry.cpp">
-      <Filter>NativeTest\DMX Engine\Effects</Filter>
+      <Filter>Engine Test\DMX Engine\Effects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Effect.cpp">
-      <Filter>NativeTest\DMX Engine\Effects</Filter>
+      <Filter>Engine Test\DMX Engine\Effects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\EffectPattern.cpp">
-      <Filter>NativeTest\DMX Engine\Effects</Filter>
+      <Filter>Engine Test\DMX Engine\Effects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\ConsoleComponent.cpp">
-      <Filter>NativeTest\UI\Test Tabs</Filter>
+      <Filter>Engine Test\UI\Test Tabs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\TimeComponent.cpp">
-      <Filter>NativeTest\UI\Test Tabs</Filter>
+      <Filter>Engine Test\UI\Test Tabs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\DmxOutComponent.cpp">
-      <Filter>NativeTest\UI\Test Tabs</Filter>
+      <Filter>Engine Test\UI\Test Tabs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\DmxInComponent.cpp">
-      <Filter>NativeTest\UI\Test Tabs</Filter>
+      <Filter>Engine Test\UI\Test Tabs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\TestTabsComponent.cpp">
-      <Filter>NativeTest\UI</Filter>
+      <Filter>Engine Test\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\MainWindow.cpp">
-      <Filter>NativeTest\UI</Filter>
+      <Filter>Engine Test\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Main.cpp">
-      <Filter>NativeTest</Filter>
+      <Filter>Engine Test</Filter>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_core\containers\juce_AbstractFifo.cpp">
       <Filter>Juce Modules\juce_core\containers</Filter>
@@ -1396,100 +1396,100 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\art-net.h">
-      <Filter>NativeTest\DMX Outputs\ArtNet</Filter>
+      <Filter>Engine Test\DMX Outputs\ArtNet</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\ArtNetOutput.h">
-      <Filter>NativeTest\DMX Outputs\ArtNet</Filter>
+      <Filter>Engine Test\DMX Outputs\ArtNet</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\RDM.h">
-      <Filter>NativeTest\DMX Outputs\ArtNet</Filter>
+      <Filter>Engine Test\DMX Outputs\ArtNet</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\DemoDevice.h">
-      <Filter>NativeTest\DMX Outputs\BlueLite</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\BlueLiteUsbDevices.h">
-      <Filter>NativeTest\DMX Outputs\BlueLite</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\BlueLiteUsbDevice.h">
-      <Filter>NativeTest\DMX Outputs\BlueLite</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\BlueLiteUsb.h">
-      <Filter>NativeTest\DMX Outputs\BlueLite</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\BlueLiteDevice.h">
-      <Filter>NativeTest\DMX Outputs\BlueLite</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\IntelHexReader.h">
-      <Filter>NativeTest\DMX Outputs\BlueLite</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\UsbDevice.h">
-      <Filter>NativeTest\DMX Outputs\BlueLite</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Native\libusb.h">
-      <Filter>NativeTest\DMX Outputs\BlueLite\Native</Filter>
+      <Filter>Engine Test\DMX Outputs\BlueLite\Native</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\ShowFile.h">
-      <Filter>NativeTest\DMX Engine\Show File</Filter>
+      <Filter>Engine Test\DMX Engine\Show File</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\pole.h">
-      <Filter>NativeTest\DMX Engine\Show File\Pole</Filter>
+      <Filter>Engine Test\DMX Engine\Show File\Pole</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Console.h">
-      <Filter>NativeTest\DMX Engine</Filter>
+      <Filter>Engine Test\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Fader.h">
-      <Filter>NativeTest\DMX Engine</Filter>
+      <Filter>Engine Test\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Cue.h">
-      <Filter>NativeTest\DMX Engine</Filter>
+      <Filter>Engine Test\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Device.h">
-      <Filter>NativeTest\DMX Engine</Filter>
+      <Filter>Engine Test\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\ModeControl.h">
-      <Filter>NativeTest\DMX Engine\Device Controls</Filter>
+      <Filter>Engine Test\DMX Engine\Device Controls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PositionControl.h">
-      <Filter>NativeTest\DMX Engine\Device Controls</Filter>
+      <Filter>Engine Test\DMX Engine\Device Controls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\SelectControl.h">
-      <Filter>NativeTest\DMX Engine\Device Controls</Filter>
+      <Filter>Engine Test\DMX Engine\Device Controls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\FaderControl.h">
-      <Filter>NativeTest\DMX Engine\Device Controls</Filter>
+      <Filter>Engine Test\DMX Engine\Device Controls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Control.h">
-      <Filter>NativeTest\DMX Engine\Device Controls</Filter>
+      <Filter>Engine Test\DMX Engine\Device Controls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\EffectDataEntry.h">
-      <Filter>NativeTest\DMX Engine\Effects</Filter>
+      <Filter>Engine Test\DMX Engine\Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Effect.h">
-      <Filter>NativeTest\DMX Engine\Effects</Filter>
+      <Filter>Engine Test\DMX Engine\Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\EffectPattern.h">
-      <Filter>NativeTest\DMX Engine\Effects</Filter>
+      <Filter>Engine Test\DMX Engine\Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\DMX.h">
-      <Filter>NativeTest\DMX Engine</Filter>
+      <Filter>Engine Test\DMX Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\ConsoleComponent.h">
-      <Filter>NativeTest\UI\Test Tabs</Filter>
+      <Filter>Engine Test\UI\Test Tabs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\TimeComponent.h">
-      <Filter>NativeTest\UI\Test Tabs</Filter>
+      <Filter>Engine Test\UI\Test Tabs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\DmxOutComponent.h">
-      <Filter>NativeTest\UI\Test Tabs</Filter>
+      <Filter>Engine Test\UI\Test Tabs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\DmxInComponent.h">
-      <Filter>NativeTest\UI\Test Tabs</Filter>
+      <Filter>Engine Test\UI\Test Tabs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\TestTabsComponent.h">
-      <Filter>NativeTest\UI</Filter>
+      <Filter>Engine Test\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\MainWindow.h">
-      <Filter>NativeTest\UI</Filter>
+      <Filter>Engine Test\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\containers\juce_AbstractFifo.h">
       <Filter>Juce Modules\juce_core\containers</Filter>
@@ -2553,19 +2553,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Images\icon.png">
-      <Filter>NativeTest\Binary Files\Images</Filter>
+      <Filter>Engine Test\Binary Files\Images</Filter>
     </None>
     <None Include="..\..\Images\x2-large.png">
-      <Filter>NativeTest\Binary Files\Images</Filter>
+      <Filter>Engine Test\Binary Files\Images</Filter>
     </None>
     <None Include="..\..\Firmware\minifirm.hex">
-      <Filter>NativeTest\Binary Files\Firmware Files</Filter>
+      <Filter>Engine Test\Binary Files\Firmware Files</Filter>
     </None>
     <None Include="..\..\Firmware\X1FIRM.HEX">
-      <Filter>NativeTest\Binary Files\Firmware Files</Filter>
+      <Filter>Engine Test\Binary Files\Firmware Files</Filter>
     </None>
     <None Include="..\..\Firmware\X1IDLE.HEX">
-      <Filter>NativeTest\Binary Files\Firmware Files</Filter>
+      <Filter>Engine Test\Binary Files\Firmware Files</Filter>
     </None>
     <None Include="..\..\JuceLibraryCode\modules\juce_graphics\image_formats\jpglib\changes to libjpeg for JUCE.txt">
       <Filter>Juce Modules\juce_graphics\image_formats\jpglib</Filter>

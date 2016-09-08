@@ -925,7 +925,7 @@
 					190E38614D89DB02CD10C4DD,
 					6803EBCF3C828959210E66F1,
 					E6A9E000F8A56E565FF3D9C6,
-					D5865E5EDA0F61E75FA30A36, ); name = NativeTest; sourceTree = "<group>"; };
+					D5865E5EDA0F61E75FA30A36, ); name = "Engine Test"; sourceTree = "<group>"; };
 		40A2DA792FB67D715A147C1D = {isa = PBXGroup; children = (
 					7A31629663C88DD4487C56D6,
 					869A8903929A2BABE12D4AFC,
@@ -1791,8 +1791,8 @@
 					"_DEBUG=1",
 					"DEBUG=1",
 					"JUCER_XCODE_MAC_F6D2F4CF=1",
-					"JUCE_APP_VERSION=1.0.1",
-					"JUCE_APP_VERSION_HEX=0x10001", );
+					"JUCE_APP_VERSION=1.0.0",
+					"JUCE_APP_VERSION_HEX=0x10000", );
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = ("../../JuceLibraryCode", "../../JuceLibraryCode/modules", "$(inherited)");
 				INFOPLIST_FILE = Info-App.plist;
@@ -1801,7 +1801,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = "-lusb-1.0-darwin";
-				PRODUCT_BUNDLE_IDENTIFIER = co.limsc.NativeTest;
+				PRODUCT_BUNDLE_IDENTIFIER = co.limsc.EngineTest;
 				SDKROOT_ppc = macosx10.5; }; name = Debug; };
 		D3B14EB86413186D09841247 = {isa = XCBuildConfiguration; buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1816,8 +1816,8 @@
 					"_NDEBUG=1",
 					"NDEBUG=1",
 					"JUCER_XCODE_MAC_F6D2F4CF=1",
-					"JUCE_APP_VERSION=1.0.1",
-					"JUCE_APP_VERSION_HEX=0x10001", );
+					"JUCE_APP_VERSION=1.0.0",
+					"JUCE_APP_VERSION_HEX=0x10000", );
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = ("../../JuceLibraryCode", "../../JuceLibraryCode/modules", "$(inherited)");
@@ -1827,7 +1827,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = "-lusb-1.0-darwin";
-				PRODUCT_BUNDLE_IDENTIFIER = co.limsc.NativeTest;
+				PRODUCT_BUNDLE_IDENTIFIER = co.limsc.EngineTest;
 				SDKROOT_ppc = macosx10.5; }; name = Release; };
 		3C06D95EBC2A2730B71B44CC = {isa = XCBuildConfiguration; buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1911,7 +1911,7 @@
 		88461A5DD12686D28BADF3D2 = {isa = PBXNativeTarget; buildConfigurationList = 749A91902EB76AA5B159D70E; buildPhases = (
 					699694D32A402F611E753D26,
 					214526CC463A06259FA7FE5D,
-					3344B0E3C6F9A5EEDB2D7F0D, ); buildRules = ( ); dependencies = (  ); name = "NativeTest (App)"; productName = NativeTest; productReference = D0A03183A81CC2236E6FD003; productType = "com.apple.product-type.application"; };
+					3344B0E3C6F9A5EEDB2D7F0D, ); buildRules = ( ); dependencies = (  ); name = "Engine Test (App)"; productName = "Engine Test"; productReference = D0A03183A81CC2236E6FD003; productType = "com.apple.product-type.application"; };
 		68385444C7E0DE0BC49DE485 = {isa = PBXProject; buildConfigurationList = FD30A9E0A1C4AA6924A5EA71; attributes = { LastUpgradeCheck = 0440; TargetAttributes = { 88461A5DD12686D28BADF3D2 = { SystemCapabilities = {com.apple.InAppPurchase = { enabled = 0; }; com.apple.Sandbox = { enabled = 0; }; }; }; }; }; compatibilityVersion = "Xcode 3.2"; hasScannedForEncodings = 0; mainGroup = E28C632A79EC1A6092B6DDEC; projectDirPath = ""; projectRoot = ""; targets = (88461A5DD12686D28BADF3D2); };
 	};
 	rootObject = 68385444C7E0DE0BC49DE485;
