@@ -100,6 +100,7 @@ void Console::setLevel (SliderHandle slider, int level)
     {
         const ScopedLock lock (faderList.getLock());
         
+        stopFade (slider);
         fader->setLevel (level);
         faderLevelsChanged = true;
     }
@@ -112,6 +113,56 @@ int Console::getLevel (SliderHandle slider)
         return fader->getLevel();
     
     return 0;
+}
+
+bool Console::startFade (SliderHandle slider, int target, float time)
+{
+    Fader* fader = (Fader*)slider;
+    if (faderList.contains (fader))
+    {
+        const ScopedLock lock (faderList.getLock());
+        
+        // Stop any existing fade for this slider
+        stopFade (slider);
+        
+        TimedFade* fade = new TimedFade;
+        
+        fade->fader = fader;
+        fade->finalTarget = target;
+        fade->current = fader->getLevel();
+        if (fade->current < fade->finalTarget)
+        {
+            fade->isFadeUp = true;
+            fade->step = (fade->finalTarget - fade->current) / (time * 30.0);
+        }
+        else
+        {
+            fade->isFadeUp = false;
+            fade->step = (fade->current - fade->finalTarget) / (time * 30.0);
+        }
+        
+        activeFades.add (fade);
+        return true;
+    }
+    
+    return false;
+}
+
+void Console::stopFade (SliderHandle slider)
+{
+    Fader* fader = (Fader*)slider;
+    
+    const ScopedLock lock (faderList.getLock());
+    
+    // If there is already an active fade, kill it.
+    for (int n = 0; n < activeFades.size(); ++n)
+    {
+        if (activeFades[n]->fader == fader)
+        {
+            activeFades.remove (n);
+            break;
+        }
+    }
 }
 
 void Console::setGrandMaster (int level)
@@ -317,6 +368,35 @@ void Console::run()
             
             // Increment our update indicator
             updateID++;
+            
+            // Any active fades?
+            if (activeFades.size())
+            {
+                faderLevelsChanged = true;
+                
+                // Loop backwards for dropping completed fades
+                for (int n = activeFades.size() - 1; n >= 0; n--)
+                {
+                    TimedFade* fade = activeFades[n];
+                    
+                    if (fade->isFadeUp)
+                    {
+                        fade->current += fade->step;
+                        if (fade->current > fade->finalTarget)
+                            fade->current = fade->finalTarget;
+                    }
+                    else
+                    {
+                        fade->current -= fade->step;
+                        if (fade->current < fade->finalTarget)
+                            fade->current = fade->finalTarget;
+                    }
+                    
+                    fade->fader->setLevel ((int)(fade->current + 0.5f));
+                    if (fade->current == fade->finalTarget)
+                        activeFades.remove (n);
+                }
+            }
             
             // For certain controls to summ correctly we must update faders from
             // highest level to lowest, so we sort

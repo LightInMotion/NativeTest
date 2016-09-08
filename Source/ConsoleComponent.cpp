@@ -239,6 +239,7 @@ void ConsoleComponent::buttonClicked (Button* buttonThatWasClicked)
                     console->setCue (handle, 1);
                     Logger::outputDebugString ("Cue: " + String (console->getCue (handle)));
                     console->setLevel (handle, FADER_MAX_LEVEL);
+                    console->startFade (handle, 0, 10.0f);
                 }
             }
         }

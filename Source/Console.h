@@ -57,6 +57,9 @@ public:
     void setGrandMaster (int level);
     int getGrandMaster();
     
+    bool startFade (SliderHandle slider, int target, float fadeTime);
+    void stopFade (SliderHandle slider);
+    
     // Admin stuff
     int getFaderCount() { return faderList.size(); }
     void clearAllFaders();
@@ -101,6 +104,20 @@ private:
     MemoryBlock outputAfterEffects;
     
     ScopedPointer<ArtNetOutput> artnetOut;
+    
+    class TimedFade {
+    public:
+        Fader* fader;
+        bool isFadeUp;
+        float finalTarget;
+        float current;
+        float step;
+        
+    private:
+        JUCE_LEAK_DETECTOR(TimedFade)
+    };
+    
+    OwnedArray<TimedFade> activeFades;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Console)
 };
